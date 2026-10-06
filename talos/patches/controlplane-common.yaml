@@ -1,0 +1,13 @@
+# Control plane only.
+# Kubernetes API VIP (talosctl always talks to node IPs, never the VIP).
+apiVersion: v1alpha1
+kind: Layer2VIPConfig
+name: 10.20.8.100
+link: ens18
+---
+# No kube-proxy — Cilium kube-proxy replacement (S30). KubeProxyConfig is a control-plane-only document.
+# Talos 1.14: deleting it falls back to the default (enabled) — disable explicitly.
+# enabled=false only affects bootstrap manifests; an already-running kube-proxy DaemonSet must be deleted by hand.
+apiVersion: v1alpha1
+kind: KubeProxyConfig
+enabled: false

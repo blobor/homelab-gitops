@@ -10,7 +10,7 @@ talosctl gen config homelab https://10.20.8.100:6443 \
   --with-secrets <(sops -d secrets.sops.yaml) \
   --install-image "factory.talos.dev/installer/${SCHEMATIC}:${VERSION}" \
   --config-patch @patches/cluster.yaml \
-  --config-patch-control-plane @patches/controlplane.yaml \
+  --config-patch-control-plane @patches/controlplane-common.yaml \
   -o "$out" --force
 talosctl machineconfig patch "$out/controlplane.yaml" --patch @patches/talos-cp-1.yaml -o "$out/talos-cp-1.yaml"
 talosctl machineconfig patch "$out/worker.yaml" --patch @patches/talos-worker-1.yaml -o "$out/talos-worker-1.yaml"

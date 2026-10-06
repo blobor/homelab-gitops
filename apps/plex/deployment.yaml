@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+spec:
+  replicas: 0
+  strategy:
+    type: Recreate                  # RWO config volume
+  selector:
+    matchLabels: {app: plex}
+  template:
+    metadata:
+      labels: {app: plex}
+    spec:
+      hostname: plex                # server name if FriendlyName is unset
+      containers:
+        - name: plex
+          image: plexinc/pms-docker:1.43.4.10903-e5521bd8c
+          env:
+            - {name: TZ, value: Europe/Kyiv}
+            - {name: PLEX_UID, value: "999"}     # owner of the config copied from the LXC
+            - {name: PLEX_GID, value: "990"}
+            - {name: ADVERTISE_IP, value: "https://10.20.8.242:32400/"}
+          ports:
+            - {name: pms, containerPort: 32400, protocol: TCP}
+          readinessProbe:
+            tcpSocket: {port: pms}
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket: {port: pms}
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          resources:
+            requests: {cpu: "1", memory: 2Gi}
+            limits: {memory: 8Gi}
+          volumeMounts:
+            - {name: config, mountPath: /config}
+            - {name: transcode, mountPath: /transcode}
+            - {name: movies, mountPath: /mnt/movies, readOnly: true}
+            - {name: tv-shows, mountPath: /mnt/tv_shows, readOnly: true}
+            - {name: music, mountPath: /mnt/music, readOnly: true}
+            - {name: music-video, mountPath: /mnt/music_video, readOnly: true}
+      volumes:
+        - {name: config, persistentVolumeClaim: {claimName: plex-config}}
+        - {name: transcode, emptyDir: {sizeLimit: 30Gi}}
+        - {name: movies, persistentVolumeClaim: {claimName: media-movies, readOnly: true}}
+        - {name: tv-shows, persistentVolumeClaim: {claimName: media-tv-shows, readOnly: true}}
+        - {name: music, persistentVolumeClaim: {claimName: media-music, readOnly: true}}
+        - {name: music-video, persistentVolumeClaim: {claimName: media-music-video, readOnly: true}}

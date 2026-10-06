@@ -1,0 +1,124 @@
+# Media shares on Loki, read-only (same paths as in the old LXC: /mnt/<share>).
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: plex-media-movies
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes: [ReadOnlyMany]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions: [nfsvers=4.1, hard, noatime]
+  nfs:
+    server: 10.20.30.200
+    path: /volume1/movies
+    readOnly: true
+  claimRef:
+    namespace: plex
+    name: media-movies
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-movies
+spec:
+  accessModes: [ReadOnlyMany]
+  storageClassName: ""
+  volumeName: plex-media-movies
+  resources:
+    requests:
+      storage: 1Ti
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: plex-media-tv-shows
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes: [ReadOnlyMany]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions: [nfsvers=4.1, hard, noatime]
+  nfs:
+    server: 10.20.30.200
+    path: /volume1/tv_shows
+    readOnly: true
+  claimRef:
+    namespace: plex
+    name: media-tv-shows
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-tv-shows
+spec:
+  accessModes: [ReadOnlyMany]
+  storageClassName: ""
+  volumeName: plex-media-tv-shows
+  resources:
+    requests:
+      storage: 1Ti
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: plex-media-music
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes: [ReadOnlyMany]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions: [nfsvers=4.1, hard, noatime]
+  nfs:
+    server: 10.20.30.200
+    path: /volume1/music
+    readOnly: true
+  claimRef:
+    namespace: plex
+    name: media-music
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-music
+spec:
+  accessModes: [ReadOnlyMany]
+  storageClassName: ""
+  volumeName: plex-media-music
+  resources:
+    requests:
+      storage: 1Ti
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: plex-media-music-video
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes: [ReadOnlyMany]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions: [nfsvers=4.1, hard, noatime]
+  nfs:
+    server: 10.20.30.200
+    path: /volume1/music_video
+    readOnly: true
+  claimRef:
+    namespace: plex
+    name: media-music-video
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-music-video
+spec:
+  accessModes: [ReadOnlyMany]
+  storageClassName: ""
+  volumeName: plex-media-music-video
+  resources:
+    requests:
+      storage: 1Ti

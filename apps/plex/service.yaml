@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: plex
+  annotations:
+    lbipam.cilium.io/ips: 10.20.8.242
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local      # Plex sees real client IPs (local vs remote)
+  selector: {app: plex}
+  ports:
+    - {name: pms, port: 32400, targetPort: pms, protocol: TCP}

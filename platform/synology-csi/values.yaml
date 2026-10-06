@@ -1,4 +1,4 @@
-# synology-csi (SynologyOpenSource/synology-csi deploy/helm @ v1.4.0)
+# synology-csi (SynologyOpenSource/synology-csi deploy/helm @ v1.3.1)
 clientInfoSecret:
   create: false
   name: client-info-secret          # from manifests/client-info.sops.yaml (KSOPS)

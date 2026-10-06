@@ -1,0 +1,13 @@
+# Talos Image Factory schematic — one image for all nodes (V2 04 Talos §2).
+# ID: curl -X POST --data-binary @talos/schematic.yaml https://factory.talos.dev/schematics
+customization:
+  extraKernelArgs:
+    - console=tty0
+    - console=ttyS0
+  systemExtensions:
+    officialExtensions:
+      - siderolabs/i915
+      - siderolabs/iscsi-tools
+      - siderolabs/qemu-guest-agent
+      - siderolabs/tailscale
+      - siderolabs/util-linux-tools

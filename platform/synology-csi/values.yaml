@@ -1,0 +1,19 @@
+# synology-csi (SynologyOpenSource/synology-csi deploy/helm @ v1.4.0)
+clientInfoSecret:
+  create: false
+  name: client-info-secret          # from manifests/client-info.sops.yaml (KSOPS)
+node:
+  extraArgs:
+    - --iscsiadm-path=/usr/local/sbin/iscsiadm   # Talos: no /usr/bin/env on the host, iscsi-tools extension path
+storageClasses:
+  synology-iscsi-storage:
+    disabled: true
+  synology-iscsi:
+    isDefault: true
+    reclaimPolicy: Retain
+    parameters:
+      dsm: 10.20.30.200
+      location: /volume1
+      protocol: iscsi
+      fsType: ext4
+volumeSnapshotClasses: {}

@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: synology-csi
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/SynologyOpenSource/synology-csi.git
+      targetRevision: v1.4.0
+      path: deploy/helm
+      helm:
+        releaseName: synology-csi
+        valueFiles:
+          - $values/platform/synology-csi/values.yaml
+    - repoURL: https://github.com/blobor/homelab-gitops.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://github.com/blobor/homelab-gitops.git
+      targetRevision: main
+      path: platform/synology-csi/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: synology-csi
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged   # node plugin: privileged, hostPath /

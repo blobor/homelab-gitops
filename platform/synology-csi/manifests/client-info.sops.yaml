@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: client-info-secret
+    namespace: synology-csi
+type: Opaque
+stringData:
+    client-info.yml: ENC[AES256_GCM,data:aAmtHr+LR9rUmMPmWhUS5kj5mdmBMi+j3pQFk239epb+TU547tp649MVz/3QAxYN4XkJAmS1jhkMfDMzhu9mPBJQZu8DQeTmaQWnZz2qzWOeOa+ZjUVYwo3Opkn2RO/SgbXUdXAq4FgF7dgNdrNLO14O9oXo6JJadjejbdRS2ayai2PPQ60zjz9mbXOL8Q//QxLHLng1uaaPLkXatPuJEw7JCDD1zufotdiVqhva5gGQ61URZjDWbNvqnwFEwdNp2w==,iv:7iqGny0M92ierobDp53yITK4FSv9tW/u4zpxMQJT1/g=,tag:CNDcZuN32Wtyurr+/ekyuQ==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA4Q2NmUEhwQnRqeGZSckxH
+            MUFIYm5CNGRzK2o5VjRCNW5KRXV1T01pTVE0CmNWTFJpQVE1RWlnZFBCeGZQRFFi
+            MFZRbmJMSXpmSnI3UVRMZThRU3ZWbnMKLS0tIDY4eXVPNzM2elF2V0tZY3dyeTdN
+            TmNBTUVDWjJmN3ZYeTgyNDB4N1BGeHcKqgCwtNXf/cW+sRsjT48HvO8yGt0UNiea
+            IFaTOi/F9NGT5ZW0LAMzj+/MsH3670uqAIHpStq/fqAv4GzpUYp4Vg==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-06T09:18:55Z"
+    mac: ENC[AES256_GCM,data:ffVQ9J23zI2tRJtFfJgsnI739CAEbR5bhoMYdgo+0+yQVLg3OcVW+LZmoGLJDx090PXJy5cVjl+iXahhcL4MqUEgI2UTNnaC9+JFH5YQpKyJyXF2/B+lG+SUizLVAr1zxgT+D5Vx1vhaRu8p3WuzHbSDwZpHzcuwbb6ayGsmBro=,iv:MMisFaHq9pPirBIb+7d60ZP+NWgtTON/nJuMAXrDaBs=,tag:mAjZk70YjaEgftzcpAsqLA==,type:str]
+    version: 3.13.3

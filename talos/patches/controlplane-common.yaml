@@ -11,3 +11,11 @@ link: ens18
 apiVersion: v1alpha1
 kind: KubeProxyConfig
 enabled: false
+---
+# Lets pods in etcd-backup take etcd snapshots via the Talos API (and nothing else).
+apiVersion: v1alpha1
+kind: KubeTalosAPIAccessConfig
+allowedRoles:
+  - os:etcd:backup
+allowedKubernetesNamespaces:
+  - etcd-backup

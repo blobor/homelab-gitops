@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: etcd-snapshot
+spec:
+  schedule: "0 3 * * *"
+  timeZone: Europe/Kyiv
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            seccompProfile: {type: RuntimeDefault}
+          initContainers:
+            - name: snapshot
+              image: ghcr.io/siderolabs/talosctl:v1.14.2
+              args: [etcd, snapshot, /work/etcd.db, --nodes, 10.20.8.101]
+              securityContext: {allowPrivilegeEscalation: false, capabilities: {drop: [ALL]}}
+              volumeMounts:
+                - {name: talos-secrets, mountPath: /var/run/secrets/talos.dev}
+                - {name: work, mountPath: /work}
+          containers:
+            - name: store
+              image: busybox:1.37
+              command:
+                - sh
+                - -c
+                - |
+                  set -eu
+                  mkdir -p /backup/etcd
+                  cp /work/etcd.db "/backup/etcd/etcd-$(date +%F-%H%M).db"
+                  ls -1t /backup/etcd/etcd-*.db | tail -n +15 | xargs -r rm -f
+                  ls -lh /backup/etcd
+              securityContext: {allowPrivilegeEscalation: false, capabilities: {drop: [ALL]}}
+              volumeMounts:
+                - {name: work, mountPath: /work}
+                - {name: backup, mountPath: /backup}
+          volumes:
+            - {name: talos-secrets, secret: {secretName: etcd-backup-talos}}
+            - {name: work, emptyDir: {}}
+            - {name: backup, persistentVolumeClaim: {claimName: k8s-backups}}

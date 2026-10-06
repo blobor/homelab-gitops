@@ -1,0 +1,30 @@
+# NFS share on Loki for cluster backups (snapshots land in etcd/).
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: k8s-backups
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes: [ReadWriteOnce]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions: [nfsvers=4.1, hard, noatime]
+  nfs:
+    server: 10.20.30.200
+    path: /volume1/k8s-backups
+  claimRef:
+    namespace: etcd-backup
+    name: k8s-backups
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: k8s-backups
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: ""
+  volumeName: k8s-backups
+  resources:
+    requests:
+      storage: 20Gi

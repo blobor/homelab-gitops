@@ -1,0 +1,9 @@
+# Talos / k8s — generated files or credentials, never in the repo
+talosconfig
+kubeconfig
+controlplane.yaml
+worker.yaml
+*.decrypted.*
+# age key, in case it ever lands here
+keys.txt
+*.agekey

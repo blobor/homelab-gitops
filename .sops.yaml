@@ -1,0 +1,10 @@
+# SOPS rules for this repo. Private key: ~/.config/sops/age/keys.txt (copy in 1Password: "homelab age key (SOPS)").
+# First matching rule wins.
+creation_rules:
+  # Talos: encrypt the whole file
+  - path_regex: talos/.*\.sops\.ya?ml$
+    age: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+  # Kubernetes Secrets: only data/stringData, so ArgoCD/kustomize can read metadata
+  - path_regex: \.sops\.ya?ml$
+    encrypted_regex: ^(data|stringData)$
+    age: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q

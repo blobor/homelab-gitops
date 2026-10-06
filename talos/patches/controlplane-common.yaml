@@ -19,3 +19,20 @@ allowedRoles:
   - os:etcd:backup
 allowedKubernetesNamespaces:
   - etcd-backup
+---
+# Metrics for the monitoring stack (controller-manager :10257, scheduler :10259 — HTTPS + token).
+apiVersion: v1alpha1
+kind: KubeControllerManagerConfig
+extraArgs:
+  bind-address: 0.0.0.0
+---
+apiVersion: v1alpha1
+kind: KubeSchedulerConfig
+extraArgs:
+  bind-address: 0.0.0.0
+---
+# etcd metrics on :2381 (plain HTTP).
+cluster:
+  etcd:
+    extraArgs:
+      listen-metrics-urls: http://0.0.0.0:2381

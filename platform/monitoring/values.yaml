@@ -1,0 +1,68 @@
+fullnameOverride: vm
+
+victoria-metrics-operator:
+  crds:
+    cleanup:
+      enabled: false
+  # Helm-generated webhook cert changes on every render (endless OutOfSync in ArgoCD).
+  admissionWebhooks:
+    enabled: false
+
+vmsingle:
+  spec:
+    retentionPeriod: 30d
+    storage:
+      storageClassName: synology-iscsi
+      resources:
+        requests:
+          storage: 20Gi
+
+alertmanager:
+  spec:
+    configSecret: alertmanager-config
+
+grafana:
+  testFramework:
+    enabled: false
+  admin:
+    existingSecret: grafana-admin
+    userKey: admin-user
+    passwordKey: admin-password
+  service:
+    type: LoadBalancer
+    annotations:
+      lbipam.cilium.io/ips: 10.20.8.243
+
+# Talos: controller-manager and scheduler serve self-signed certs.
+kubeControllerManager:
+  vmScrape:
+    spec:
+      endpoints:
+        - port: http-metrics
+          scheme: https
+          bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+          tlsConfig:
+            insecureSkipVerify: true
+
+kubeScheduler:
+  vmScrape:
+    spec:
+      endpoints:
+        - port: http-metrics
+          scheme: https
+          bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+          tlsConfig:
+            insecureSkipVerify: true
+
+# Talos: etcd runs on the host, metrics on :2381 (plain HTTP).
+kubeEtcd:
+  endpoints:
+    - 10.20.8.101
+  service:
+    port: 2381
+    targetPort: 2381
+  vmScrape:
+    spec:
+      endpoints:
+        - port: http-metrics
+          scheme: http

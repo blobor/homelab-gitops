@@ -12,6 +12,16 @@ talosctl gen config homelab https://10.20.8.100:6443 \
   --config-patch @patches/cluster.yaml \
   --config-patch-control-plane @patches/controlplane-common.yaml \
   -o "$out" --force
-talosctl machineconfig patch "$out/controlplane.yaml" --patch @patches/talos-cp-1.yaml -o "$out/talos-cp-1.yaml"
-talosctl machineconfig patch "$out/worker.yaml" --patch @patches/talos-worker-1.yaml -o "$out/talos-worker-1.yaml"
+# Per-node: hostname + Tailscale extension config (SOPS-encrypted auth key, unique UDP port).
+node() { # $1 = base config (controlplane|worker), $2 = node name
+  local args=(--patch "@patches/$2.yaml")
+  if [[ -f "patches/$2.tailscale.sops.yaml" ]]; then
+    sops -d "patches/$2.tailscale.sops.yaml" > "$out/$2.tailscale.yaml"   # _out/ is 0700 + gitignored
+    args+=(--patch "@$out/$2.tailscale.yaml")
+  fi
+  talosctl machineconfig patch "$out/$1.yaml" "${args[@]}" -o "$out/$2.yaml"
+  rm -f "$out/$2.tailscale.yaml"
+}
+node controlplane talos-cp-1
+node worker talos-worker-1
 for n in talos-cp-1 talos-worker-1; do talosctl validate --mode metal --config "$out/$n.yaml"; done

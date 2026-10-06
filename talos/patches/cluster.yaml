@@ -1,0 +1,8 @@
+# Cluster-wide: no Flannel, no kube-proxy — Cilium (kube-proxy replacement) is installed in S30.
+apiVersion: v1alpha1
+kind: KubeFlannelCNIConfig
+$patch: delete
+---
+apiVersion: v1alpha1
+kind: KubeProxyConfig
+$patch: delete

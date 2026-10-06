@@ -7,3 +7,5 @@ worker.yaml
 # age key, in case it ever lands here
 keys.txt
 *.agekey
+# Talos generated configs (contain secrets) — regenerate with talos/gen-configs.sh
+talos/_out/

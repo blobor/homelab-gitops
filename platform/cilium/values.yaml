@@ -1,0 +1,27 @@
+# Cilium 1.20.2 on Talos 1.14.2 / Kubernetes 1.37.1 (S30, 2026-10-06).
+# Talos specifics: https://docs.siderolabs.com/kubernetes-guides/cni/deploying-cilium
+ipam:
+  mode: kubernetes
+kubeProxyReplacement: true          # kube-proxy is disabled in talos/patches/controlplane-common.yaml
+k8sServiceHost: localhost           # KubePrism
+k8sServicePort: 7445
+cgroup:                             # Talos already mounts cgroupv2 and bpffs
+  autoMount:
+    enabled: false
+  hostRoot: /sys/fs/cgroup
+securityContext:
+  capabilities:                     # Talos forbids SYS_MODULE
+    ciliumAgent: [CHOWN, KILL, NET_ADMIN, NET_RAW, IPC_LOCK, SYS_ADMIN, SYS_RESOURCE, DAC_OVERRIDE, FOWNER, SETGID, SETUID]
+    cleanCiliumState: [NET_ADMIN, SYS_ADMIN, SYS_RESOURCE]
+operator:
+  replicas: 1                       # one schedulable node (control plane is tainted)
+l2announcements:
+  enabled: true                     # LoadBalancer IPs 10.20.8.240–.254 announced via ARP (lb-ipam.yaml)
+k8sClientRateLimit:                 # L2 announcements use leases — raise the API client limits a bit
+  qps: 20
+  burst: 40
+hubble:
+  relay:
+    enabled: true
+  ui:
+    enabled: true

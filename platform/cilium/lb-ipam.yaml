@@ -1,0 +1,24 @@
+# LoadBalancer IPs for VLAN 8 (V2 01 Network): .240 ingress-public, .241 ingress-internal, .242 Plex, rest free.
+apiVersion: cilium.io/v2
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: vlan8
+spec:
+  blocks:
+    - start: 10.20.8.240
+      stop: 10.20.8.254
+---
+# Answer ARP for those IPs from the worker (where the workloads run).
+apiVersion: cilium.io/v2alpha1
+kind: CiliumL2AnnouncementPolicy
+metadata:
+  name: vlan8
+spec:
+  nodeSelector:
+    matchExpressions:
+      - key: node-role.kubernetes.io/control-plane
+        operator: DoesNotExist
+  interfaces:
+    - ^ens18$
+  loadBalancerIPs: true
+  externalIPs: true

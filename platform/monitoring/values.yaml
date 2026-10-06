@@ -54,15 +54,10 @@ kubeScheduler:
           tlsConfig:
             insecureSkipVerify: true
 
-# Talos: etcd runs on the host, metrics on :2381 (plain HTTP).
+# Talos: etcd runs on the host; scraped via VMStaticScrape in manifests/
+# (ArgoCD excludes Endpoints, so the chart's headless service never gets a target).
 kubeEtcd:
-  endpoints:
-    - 10.20.8.101
   service:
-    port: 2381
-    targetPort: 2381
+    enabled: false
   vmScrape:
-    spec:
-      endpoints:
-        - port: http-metrics
-          scheme: http
+    enabled: false

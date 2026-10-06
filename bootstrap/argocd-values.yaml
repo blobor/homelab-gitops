@@ -22,6 +22,14 @@ repoServer:
     - name: install-ksops
       image: viaductoss/ksops:v4.5.1
       command: ["/usr/local/bin/ksops", "install", "--with-kustomize", "/custom-tools"]
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: [ALL]
+        seccompProfile:
+          type: RuntimeDefault
       volumeMounts:
         - mountPath: /custom-tools
           name: custom-tools

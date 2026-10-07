@@ -6,3 +6,32 @@ spec:
   selector: {app: syncthing}
   ports:
     - {name: gui, port: 8384, targetPort: gui}
+---
+# Peers connect to tcp://syncthing:22000 / quic://syncthing:22000 — the tailnet name of this proxy.
+apiVersion: v1
+kind: Service
+metadata:
+  name: syncthing
+  annotations:
+    tailscale.com/hostname: syncthing
+spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
+  selector: {app: syncthing}
+  ports:
+    - {name: sync-tcp, port: 22000, targetPort: sync-tcp, protocol: TCP}
+    - {name: sync-quic, port: 22000, targetPort: sync-quic, protocol: UDP}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: syncthing-gui
+spec:
+  ingressClassName: traefik-internal
+  tls:
+    - hosts: [sync.private.home.lobor.dev]
+  rules:
+    - host: sync.private.home.lobor.dev
+      http:
+        paths:
+          - {path: /, pathType: Prefix, backend: {service: {name: syncthing-gui, port: {name: gui}}}}

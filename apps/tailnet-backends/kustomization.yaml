@@ -3,5 +3,4 @@ kind: Kustomization
 namespace: tailnet-backends
 resources:
   - home-assistant.yaml
-  - syncthing.yaml
   - proxmox.yaml

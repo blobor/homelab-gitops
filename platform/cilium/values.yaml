@@ -5,6 +5,8 @@ ipam:
 kubeProxyReplacement: true          # kube-proxy is disabled in talos/patches/controlplane-common.yaml
 devices: ens18                      # node NIC only — not tailscale0
 rollOutCiliumPods: true             # restart agents when the configmap changes
+socketLB:
+  hostNamespaceOnly: true           # pod→Service traffic via tc, not socket LB — required by Tailscale operator proxies
 k8sServiceHost: localhost           # KubePrism
 k8sServicePort: 7445
 cgroup:                             # Talos already mounts cgroupv2 and bpffs

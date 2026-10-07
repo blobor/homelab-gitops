@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://victoriametrics.github.io/helm-charts/
+      chart: victoria-metrics-k8s-stack
+      targetRevision: 0.95.0
+      helm:
+        releaseName: vm
+        valueFiles:
+          - $values/platform/monitoring/values.yaml
+    - repoURL: https://github.com/blobor/homelab-gitops.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://github.com/blobor/homelab-gitops.git
+      targetRevision: main
+      path: platform/monitoring/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged   # node-exporter: hostNetwork, hostPID, hostPath

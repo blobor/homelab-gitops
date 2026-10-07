@@ -4,7 +4,7 @@ GitOps configuration for a single-node homelab: Talos Linux on Proxmox, ArgoCD (
 
 - `talos/` — Talos machine secrets and config patches (secrets SOPS-encrypted)
 - `bootstrap/` — the only things applied by hand: ArgoCD Helm values and the root Application
-- `clusters/homelab/` — one ArgoCD Application per component
+- `clusters/springfield/` — one ArgoCD Application per component
 - `platform/`, `apps/` — manifests and Helm values
 
 ## Secrets

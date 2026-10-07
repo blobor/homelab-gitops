@@ -1,19 +1,23 @@
-# Root app-of-apps: one child Application per file in clusters/springfield/.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: root
+  name: intel-gpu-plugin
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/blobor/homelab-gitops.git
     targetRevision: main
-    path: clusters/springfield
+    path: platform/intel-gpu-plugin
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: intel-gpu-plugin
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged   # hostPath /dev/dri, /sys/class/drm

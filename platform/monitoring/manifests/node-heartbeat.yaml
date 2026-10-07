@@ -1,0 +1,51 @@
+# Pings a per-node healthchecks.io check every minute. No ping for 5 min => HealthchecksBot reports the node DOWN.
+# URL per node: Secret node-heartbeat, key = node name. Add a node: new check + key + node in the selector.
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-heartbeat
+spec:
+  selector:
+    matchLabels:
+      app: node-heartbeat
+  template:
+    metadata:
+      labels:
+        app: node-heartbeat
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: talos-worker-1
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: ping
+          image: curlimages/curl:8.22.0
+          command:
+            - sh
+            - -c
+            - |
+              while true; do
+                curl -fsS -m 10 --retry 3 -o /dev/null "$(cat "/urls/$NODE_NAME")" || echo "ping failed"
+                sleep 60
+              done
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef: {fieldPath: spec.nodeName}
+          resources:
+            requests: {cpu: 5m, memory: 8Mi}
+            limits: {memory: 32Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          volumeMounts:
+            - {name: urls, mountPath: /urls, readOnly: true}
+      volumes:
+        - name: urls
+          secret:
+            secretName: node-heartbeat

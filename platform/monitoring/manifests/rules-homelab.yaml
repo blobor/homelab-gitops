@@ -1,0 +1,27 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: homelab
+spec:
+  groups:
+    - name: homelab.plex
+      rules:
+        - alert: PlexDown
+          expr: max by (namespace, deployment) (kube_deployment_status_replicas_available{namespace="plex", deployment="plex"}) < 1
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Plex is down: no ready pod for 5 min"
+            resolved: Plex is up again
+    - name: homelab.control-plane
+      rules:
+        # The default KubeAPIDown uses absent(up) and never fires while the target exists with up=0.
+        - alert: ControlPlaneDown
+          expr: (sum(up{job="apiserver"}) or vector(0)) < 1
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: Kubernetes API (talos-cp-1) is down for 5 min. Plex keeps running.
+            resolved: Kubernetes API is up again

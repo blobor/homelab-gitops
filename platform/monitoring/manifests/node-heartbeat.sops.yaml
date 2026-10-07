@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: node-heartbeat
+    namespace: monitoring
+type: Opaque
+stringData:
+    talos-worker-1: ENC[AES256_GCM,data:gb4nyOKcXMo8+16XiJO1ElJILImq1hkNBLgkR1aWYe+9PRqVjn76LvSaqRaNVaZG/Nv4I80qFcI=,iv:B/z2Q90xAXYiDRG7z7CNPm9l42CTcbwe+NBNMAMR5Go=,tag:uoXKbpV8tVuMsG+xgeLeeA==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBjaFhsbU42SU1PYUw1czFs
+            Q2xYV1ZWaDFWVUkzeFd4cWVleVk1UWNzNDEwCkZXV1FBWGtwUnAyck51TkxURHlo
+            L01UMnJXNENyeEE5RHUwT3BvNS83c1EKLS0tIHRkako1YnVCTUI1Y0JlWVE5UGpi
+            aXk4UE5xSUJXeVh2VDJSNVBhclZZUWsKe8gyfgFeuvQQPhRv/BQIKFy5UMN5PoG9
+            ZEmg0b6dENYE+WypQlolL0QLX/4M21SF3UriWFDMMngfCXxoqUpjPg==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-07T08:23:59Z"
+    mac: ENC[AES256_GCM,data:Qy0MMkaGpd8H2C3hz3EJDadlzLLKsk5fgQ1cgGkZ6DSFxGHn+7nksAXnTrBwdtIdvrsYBJAuDQ2TtZJ5Qx0L9c6hcj/8RK38bRmtLDGxseU28VSFsUrut7eBDDxLb7GXNQA6xUANVm83zg2CdULmr3m+0yvrInJTSGAQTTlk/8U=,iv:H4C35w8WafgHKByfe4gTAmJks1JzxVNJUEmn1ZjpVow=,tag:sV79lUVckKy/pVkVZ1F4ug==,type:str]
+    version: 3.13.3

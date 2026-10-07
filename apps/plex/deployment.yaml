@@ -24,10 +24,10 @@ spec:
           ports:
             - {name: pms, containerPort: 32400, protocol: TCP}
           readinessProbe:
-            tcpSocket: {port: pms}
+            httpGet: {path: /identity, port: pms, scheme: HTTPS}
             periodSeconds: 10
           livenessProbe:
-            tcpSocket: {port: pms}
+            httpGet: {path: /identity, port: pms, scheme: HTTPS}
             initialDelaySeconds: 60
             periodSeconds: 30
           resources:

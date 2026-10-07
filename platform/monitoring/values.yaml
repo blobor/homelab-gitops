@@ -17,9 +17,51 @@ vmsingle:
         requests:
           storage: 20Gi
 
+external:
+  grafana:
+    host: 10.20.8.243
+
+# Only listed alerts reach Telegram; everything else stays in Grafana / vmalert UI.
 alertmanager:
   spec:
-    configSecret: alertmanager-config
+    secrets:
+      - alertmanager-secrets   # mounted at /etc/vm/secrets/alertmanager-secrets/
+  config:
+    route:
+      receiver: blackhole
+      group_by: [alertname, namespace]
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 12h
+      routes:
+        - receiver: healthchecks
+          matchers: [alertname="Watchdog"]
+          group_wait: 0s
+          group_interval: 1m
+          repeat_interval: 1m
+        - receiver: telegram-critical
+          matchers: [alertname=~"PlexDown|ControlPlaneDown", severity="critical"]
+          repeat_interval: 4h
+    receivers:
+      - name: blackhole
+      - name: telegram-critical
+        telegram_configs:
+          - bot_token_file: /etc/vm/secrets/alertmanager-secrets/telegram-token
+            chat_id: -5389980149
+            parse_mode: HTML
+            send_resolved: true
+            message: '{{ template "telegram.homelab.message" . }}'
+      - name: healthchecks
+        webhook_configs:
+          - url_file: /etc/vm/secrets/alertmanager-secrets/healthchecks-url
+            send_resolved: false
+  templateFiles:
+    telegram.tmpl: |-
+      {{/* One line per notification: rule annotations "summary" (firing) and "resolved". */}}
+      {{ define "telegram.homelab.message" -}}
+      {{ if eq .Status "firing" }}🔴 {{ or .CommonAnnotations.summary .CommonLabels.alertname | html }}
+      {{- else }}✅ {{ or .CommonAnnotations.resolved .CommonAnnotations.summary .CommonLabels.alertname | html }}{{ end }}
+      {{- end }}
 
 grafana:
   testFramework:

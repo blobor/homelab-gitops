@@ -1,0 +1,28 @@
+# tv.home.lobor.dev → Plex web app (Plex itself is reached directly on 32400, not through Traefik).
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: plex-web
+spec:
+  redirectRegex:
+    regex: ".*"
+    replacement: https://app.plex.tv/desktop/
+    permanent: false
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: tv
+  annotations:
+    kubernetes.io/ingress.class: traefik-public
+spec:
+  entryPoints: [websecure]
+  routes:
+    - match: Host(`tv.home.lobor.dev`)
+      kind: Rule
+      middlewares:
+        - name: plex-web
+      services:
+        - name: noop@internal
+          kind: TraefikService
+  tls: {}

@@ -1,0 +1,27 @@
+# ha.private.home.lobor.dev → Traefik internal → Tailscale egress proxy → kahovka-ha:8123 (tailnet device outside the cluster).
+apiVersion: v1
+kind: Service
+metadata:
+  name: home-assistant
+  annotations:
+    tailscale.com/tailnet-fqdn: kahovka-ha.hippo-lake.ts.net
+    tailscale.com/tags: tag:springfield-egress
+spec:
+  type: ExternalName
+  externalName: placeholder              # rewritten by the Tailscale operator to its egress proxy
+  ports:
+    - {name: web, port: 8123, protocol: TCP}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: home-assistant
+spec:
+  ingressClassName: traefik-internal
+  tls:
+    - hosts: [ha.private.home.lobor.dev]
+  rules:
+    - host: ha.private.home.lobor.dev
+      http:
+        paths:
+          - {path: /, pathType: Prefix, backend: {service: {name: home-assistant, port: {name: web}}}}

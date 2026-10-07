@@ -1,0 +1,37 @@
+# bender.private.home.lobor.dev → Traefik internal → Tailscale egress proxy → pve-bender:8006 (tailnet device outside the cluster).
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxmox
+  annotations:
+    tailscale.com/tailnet-fqdn: pve-bender.hippo-lake.ts.net
+    tailscale.com/tags: tag:springfield-egress
+    traefik.ingress.kubernetes.io/service.serversscheme: https
+    traefik.ingress.kubernetes.io/service.serverstransport: tailnet-backends-proxmox-insecure@kubernetescrd
+spec:
+  type: ExternalName
+  externalName: placeholder              # rewritten by the Tailscale operator to its egress proxy
+  ports:
+    - {name: web, port: 8006, protocol: TCP}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: proxmox
+spec:
+  ingressClassName: traefik-internal
+  tls:
+    - hosts: [bender.private.home.lobor.dev]
+  rules:
+    - host: bender.private.home.lobor.dev
+      http:
+        paths:
+          - {path: /, pathType: Prefix, backend: {service: {name: proxmox, port: {name: web}}}}
+---
+# Proxmox serves a self-signed certificate.
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: proxmox-insecure
+spec:
+  insecureSkipVerify: true

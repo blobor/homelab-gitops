@@ -1,0 +1,11 @@
+crds:
+  enabled: true
+  keep: true
+
+# Helm post-install hook — ArgoCD would rerun it on every sync.
+startupapicheck:
+  enabled: false
+
+# DNS-01 self-check against public resolvers (LAN DNS may later answer differently — Pi-hole split horizon).
+dns01RecursiveNameservers: "1.1.1.1:53,1.0.0.1:53"
+dns01RecursiveNameserversOnly: true

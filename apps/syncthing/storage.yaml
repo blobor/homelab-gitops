@@ -1,0 +1,42 @@
+# Vault data on Loki (same mount path as the old LXC, so config.xml folder paths stay valid).
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: syncthing-obsidian
+spec:
+  capacity:
+    storage: 50Gi
+  accessModes: [ReadWriteMany]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions: [nfsvers=4.1, hard, noatime]
+  nfs:
+    server: 10.20.30.200
+    path: /volume1/obsidian
+  claimRef:
+    namespace: syncthing
+    name: obsidian
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: obsidian
+spec:
+  accessModes: [ReadWriteMany]
+  storageClassName: ""
+  volumeName: syncthing-obsidian
+  resources:
+    requests:
+      storage: 50Gi
+---
+# Device key/cert, config.xml and the index database.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: syncthing-config
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: synology-iscsi
+  resources:
+    requests:
+      storage: 1Gi

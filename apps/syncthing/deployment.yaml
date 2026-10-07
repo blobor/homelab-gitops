@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: syncthing
+spec:
+  replicas: 0
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: {app: syncthing}
+  template:
+    metadata:
+      labels: {app: syncthing}
+    spec:
+      hostname: syncthing
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: syncthing
+          image: syncthing/syncthing:2.1.5
+          env:
+            - {name: TZ, value: Europe/Kyiv}
+            - {name: STNOUPGRADE, value: "1"}
+          ports:
+            - {name: gui, containerPort: 8384}
+            - {name: sync-tcp, containerPort: 22000, protocol: TCP}
+            - {name: sync-quic, containerPort: 22000, protocol: UDP}
+          readinessProbe:
+            httpGet: {path: /rest/noauth/health, port: gui}
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /rest/noauth/health, port: gui}
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          resources:
+            requests: {cpu: 50m, memory: 128Mi}
+            limits: {memory: 1Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+          volumeMounts:
+            - {name: config, mountPath: /var/syncthing/config}
+            - {name: obsidian, mountPath: /mnt/obsidian}
+      volumes:
+        - name: config
+          persistentVolumeClaim: {claimName: syncthing-config}
+        - name: obsidian
+          persistentVolumeClaim: {claimName: obsidian}

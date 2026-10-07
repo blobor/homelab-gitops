@@ -1,0 +1,12 @@
+# OAuth credentials come from Secret operator-oauth (KSOPS, manifests/).
+operatorConfig:
+  hostname: homelab-k8s-operator
+  defaultTags:
+    - tag:homelab-k8s-operator
+
+proxyConfig:
+  defaultTags: tag:homelab-k8s-proxy
+
+# Services are exposed via loadBalancerClass: tailscale; no Tailscale IngressClass needed.
+ingressClass:
+  enabled: false

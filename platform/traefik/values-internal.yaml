@@ -18,13 +18,27 @@ core:
 
 ports:
   web:
+    expose:
+      default: true
+      tailnet: false
     http:
       redirections:
         entryPoint:
           to: websecure
           scheme: https
           permanent: true
+  websecure:
+    expose:
+      default: true
+      tailnet: true
 
 service:
   annotations:
     lbipam.cilium.io/ips: 10.20.8.241
+  additionalServices:
+    tailnet:                                # exposed in the tailnet by the Tailscale operator as k8s-ingress
+      spec:
+        type: LoadBalancer
+        loadBalancerClass: tailscale
+      annotations:
+        tailscale.com/hostname: k8s-ingress

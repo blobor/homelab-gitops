@@ -14,11 +14,11 @@ spec:
     spec:
       hostname: syncthing
       automountServiceAccountToken: false
-      securityContext:
+      securityContext:                      # uid 100000 owns the vault files (root of the former unprivileged LXC)
         runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
+        runAsUser: 100000
+        runAsGroup: 100000
+        fsGroup: 100000
         seccompProfile: {type: RuntimeDefault}
       containers:
         - name: syncthing

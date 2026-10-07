@@ -7,7 +7,7 @@ spec:
   secretName: wildcard-home-tls
   issuerRef:
     kind: ClusterIssuer
-    name: letsencrypt-staging
+    name: letsencrypt-prod
   dnsNames:
     - home.lobor.dev
     - "*.home.lobor.dev"
@@ -20,6 +20,6 @@ spec:
   secretName: wildcard-private-tls
   issuerRef:
     kind: ClusterIssuer
-    name: letsencrypt-staging
+    name: letsencrypt-prod
   dnsNames:
     - "*.private.home.lobor.dev"

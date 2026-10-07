@@ -1,0 +1,25 @@
+# Wildcard certificates for both Traefik instances (served via TLSStore "default", picked by SNI).
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-home
+spec:
+  secretName: wildcard-home-tls
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-staging
+  dnsNames:
+    - home.lobor.dev
+    - "*.home.lobor.dev"
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-private
+spec:
+  secretName: wildcard-private-tls
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-staging
+  dnsNames:
+    - "*.private.home.lobor.dev"

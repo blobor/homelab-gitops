@@ -7,7 +7,7 @@ configs:
   cm:
     kustomize.buildOptions: "--enable-alpha-plugins --enable-exec"   # required for ksops
   params:
-    server.insecure: true            # TLS terminates at traefik-internal (S32b)
+    server.insecure: true            # TLS terminates at traefik-internal
 repoServer:
   env:
     - name: SOPS_AGE_KEY_FILE

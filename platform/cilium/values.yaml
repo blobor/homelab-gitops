@@ -1,4 +1,4 @@
-# Cilium 1.20.2 on Talos 1.14.2 / Kubernetes 1.37.1 (S30, 2026-10-06).
+# Cilium 1.20.2 on Talos 1.14.2 / Kubernetes 1.37.1.
 # Talos specifics: https://docs.siderolabs.com/kubernetes-guides/cni/deploying-cilium
 ipam:
   mode: kubernetes

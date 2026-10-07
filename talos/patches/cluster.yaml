@@ -1,4 +1,4 @@
-# Cluster-wide: no Flannel — Cilium is installed in S30 (kube-proxy is disabled in controlplane.yaml).
+# Cluster-wide: no Flannel — Cilium is the CNI (kube-proxy is disabled in controlplane-common.yaml).
 apiVersion: v1alpha1
 kind: KubeFlannelCNIConfig
 $patch: delete

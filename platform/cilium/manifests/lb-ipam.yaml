@@ -1,4 +1,4 @@
-# LoadBalancer IPs for VLAN 8 (V2 01 Network): .240 ingress-public, .241 ingress-internal, .242 Plex, rest free.
+# LoadBalancer IPs for VLAN 8: .240 traefik-public, .241 traefik-internal, .242 Plex, .243 Grafana, rest free.
 apiVersion: cilium.io/v2
 kind: CiliumLoadBalancerIPPool
 metadata:

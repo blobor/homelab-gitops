@@ -21,6 +21,11 @@ external:
   grafana:
     host: 10.20.8.243
 
+vmagent:
+  spec:
+    externalLabels:
+      cluster: springfield
+
 # Only listed alerts reach Telegram; everything else stays in Grafana / vmalert UI.
 alertmanager:
   spec:

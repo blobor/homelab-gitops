@@ -36,9 +36,9 @@ service:
   annotations:
     lbipam.cilium.io/ips: 10.20.8.241
   additionalServices:
-    tailnet:                                # exposed in the tailnet by the Tailscale operator as homelab-k8s-ingress
+    tailnet:                                # exposed in the tailnet by the Tailscale operator as springfield-ingress
       spec:
         type: LoadBalancer
         loadBalancerClass: tailscale
       annotations:
-        tailscale.com/hostname: homelab-k8s-ingress
+        tailscale.com/hostname: springfield-ingress

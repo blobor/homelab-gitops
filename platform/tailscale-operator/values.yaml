@@ -1,11 +1,11 @@
 # OAuth credentials come from Secret operator-oauth (KSOPS, manifests/).
 operatorConfig:
-  hostname: homelab-k8s-operator
+  hostname: springfield-operator
   defaultTags:
-    - tag:homelab-k8s-operator
+    - tag:springfield-operator
 
 proxyConfig:
-  defaultTags: tag:homelab-k8s-proxy
+  defaultTags: tag:springfield-proxy
 
 # Services are exposed via loadBalancerClass: tailscale; no Tailscale IngressClass needed.
 ingressClass:

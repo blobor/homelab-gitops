@@ -1,0 +1,47 @@
+# Devices report to http://10.20.8.244:8080/inform; STUN on 3478/udp.
+apiVersion: v1
+kind: Service
+metadata:
+  name: unifi-devices
+  annotations:
+    lbipam.cilium.io/ips: 10.20.8.244
+spec:
+  type: LoadBalancer
+  selector: {app: unifi}
+  ports:
+    - {name: inform, port: 8080, targetPort: inform, protocol: TCP}
+    - {name: stun, port: 3478, targetPort: stun, protocol: UDP}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: unifi-ui
+  annotations:
+    traefik.ingress.kubernetes.io/service.serversscheme: https
+    traefik.ingress.kubernetes.io/service.serverstransport: unifi-insecure@kubernetescrd
+spec:
+  selector: {app: unifi}
+  ports:
+    - {name: ui, port: 8443, targetPort: ui}
+---
+# The controller serves a self-signed certificate.
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: insecure
+spec:
+  insecureSkipVerify: true
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: unifi
+spec:
+  ingressClassName: traefik-internal
+  tls:
+    - hosts: [unifi.private.home.lobor.dev]
+  rules:
+    - host: unifi.private.home.lobor.dev
+      http:
+        paths:
+          - {path: /, pathType: Prefix, backend: {service: {name: unifi-ui, port: {name: ui}}}}

@@ -16,3 +16,6 @@ spec:
         auth: ["synology_v3"]
       relabelConfigs:
         - {targetLabel: instance, replacement: loki}
+      metricRelabelConfigs:            # DSM reports disk names hex-encoded: 0x4469736B2031 = "Disk 1"
+        - {sourceLabels: [diskID], regex: "0x4469736B203(\\d)", targetLabel: diskID, replacement: "Disk $1"}
+        - {sourceLabels: [diskID], regex: "0x43616368652064657669636520(?:3)(\\d)", targetLabel: diskID, replacement: "Cache $1"}

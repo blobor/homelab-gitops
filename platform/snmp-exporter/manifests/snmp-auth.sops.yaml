@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: snmp-exporter-auth
+    namespace: monitoring
+type: Opaque
+stringData:
+    auth.yml: ENC[AES256_GCM,data:NtrVTCmP7cLGjkCaTnYa2SHjlkkj4Z8Kc8bGhNWMcVDnsQejMc19MGuPr3jMojNJsw7v23XmV//hy5xA4I86RZ2h91vLNH0HC9307CMtuyFqaYsgNt8B0nbp4jo2Pjcnlj5TN0q2aJkiS02s6UV91luw5zNAKru1g//+1GFTu89q26BebNOxcMnBBw52mY1w/EDWN+FRTBM77d5zZmJY7Bxwgd9fmd5F4xW1CaXoZwpmsNMEDMeLU85xlLZkQtE9sRhFCXbK7RA1B2VL+PxYwWRogc2GX2cmLES+unOwXHZGkPj/ZLbOxUZxDz3ZmR+b,iv:LDD/IYqtZaQN9EaY3VoF4jV1o4Ej7O/LsrIBAP34bXI=,tag:WIJ99qNTkBkemnVq5VE0Dg==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA2K0U5VXFIMTNaMzhnNjBs
+            SVppZmhZM3ZoYkhXNUVSbVJSTEg0YWtTYUM4ClIyZldKb1VXTU5uL0F3ZUZ4Tndn
+            QWpPNElsRVdoSVQwSFRwbEdWc05na28KLS0tIFNWMUpYeFF4c3F0L0xSR0VRYllr
+            WWdNUTVOTmdMc3ovZ1RnSjlLaVM5blEKFVl7oCAo2dF4UGAJOotSM60qeQvUtqxH
+            GizVhFpsSFS7L61pkDtMt/N0VoUcZBVB/A3Exxn9B6QTWHSTxrqt3A==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-08T07:47:55Z"
+    mac: ENC[AES256_GCM,data:L5PpnfLdNkjOYGqN1eNhCYCRZUv0+J4c9e8wBTl6MdbWBkmTsemp6ZYuENOZLc2g4dMLwqHf+Rupfk7dSWIIdNlwVgUMbkz2eitMlAvKVw3QbKEPlwEjIOpwKjyP3SfKtDn5KyDvcDF7ezluN9Rlg7ZCiWwhwr4OludBxxQu8f8=,iv:iZ4ukQ67pklk64udaMswriYPmghs5TYN3j8bZZYw4Ek=,tag:wxq/+p1gQ0+2PQt3jNsI7w==,type:str]
+    version: 3.13.3

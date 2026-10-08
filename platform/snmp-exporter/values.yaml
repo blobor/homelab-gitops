@@ -1,0 +1,17 @@
+# Upstream modules (synology, if_mib, system) from the image + SNMPv3 credentials from Secret snmp-exporter-auth.
+extraArgs:
+  - --config.file=/etc/snmp_exporter/snmp.yml
+  - --config.file=/etc/snmp-auth/auth.yml
+
+extraSecretMounts:
+  - name: auth
+    mountPath: /etc/snmp-auth
+    secretName: snmp-exporter-auth
+    readOnly: true
+    defaultMode: 0440
+
+podSecurityContext:
+  fsGroup: 1000
+
+serviceMonitor:
+  enabled: false

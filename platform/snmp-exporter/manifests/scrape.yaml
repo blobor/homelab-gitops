@@ -1,0 +1,18 @@
+# Synology NAS (Loki) via SNMPv3, through the exporter's /snmp endpoint.
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMStaticScrape
+metadata:
+  name: synology-loki
+spec:
+  jobName: synology
+  targetEndpoints:
+    - targets: ["snmp-exporter-prometheus-snmp-exporter.monitoring.svc:9116"]
+      path: /snmp
+      interval: 60s
+      scrapeTimeout: 30s
+      params:
+        target: ["10.20.30.200"]
+        module: ["system,synology,if_mib"]
+        auth: ["synology_v3"]
+      relabelConfigs:
+        - {targetLabel: instance, replacement: loki}

@@ -20,6 +20,28 @@ pages:
             location: Kyiv, Ukraine
             units: metric
             hour-format: 24h
+          - type: custom-api
+            title: Курси валют
+            cache: 30m
+            url: https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json
+            template: |
+              {{ $mono := newRequest "https://api.monobank.ua/bank/currency" | getResponse }}
+              <div class="flex justify-between size-h6 color-subdue margin-bottom-5">
+                <span>&nbsp;</span><span>НБУ</span><span>mono купівля / продаж</span>
+              </div>
+              <ul class="list list-gap-10">
+              {{ range .JSON.Array "" }}
+                {{ $cc := .String "cc" }}
+                {{ if or (eq $cc "USD") (eq $cc "EUR") }}
+                {{ $code := .Int "r030" }}
+                <li class="flex justify-between">
+                  <span class="color-highlight">{{ $cc }}</span>
+                  <span>{{ printf "%.2f" (.Float "rate") }}</span>
+                  <span>{{ range $mono.JSON.Array "" }}{{ if and (eq (.Int "currencyCodeA") $code) (eq (.Int "currencyCodeB") 980) }}{{ printf "%.2f" (.Float "rateBuy") }} / {{ printf "%.2f" (.Float "rateSell") }}{{ end }}{{ end }}</span>
+                </li>
+                {{ end }}
+              {{ end }}
+              </ul>
 
       - size: full
         widgets:

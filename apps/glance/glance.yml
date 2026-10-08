@@ -72,6 +72,11 @@ pages:
                 check-url: https://proxmox.tailnet-backends.svc.cluster.local:8006
                 allow-insecure: true
                 icon: si:proxmox
+              - title: UniFi
+                url: https://unifi.private.home.lobor.dev
+                check-url: https://unifi-ui.unifi.svc.cluster.local:8443/status
+                allow-insecure: true
+                icon: si:ubiquiti
               - title: Grafana
                 url: https://grafana.private.home.lobor.dev
                 check-url: http://vm-grafana.monitoring.svc.cluster.local/api/health

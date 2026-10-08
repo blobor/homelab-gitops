@@ -17,10 +17,6 @@ vmsingle:
         requests:
           storage: 20Gi
 
-external:
-  grafana:
-    host: 10.20.8.243
-
 vmagent:
   spec:
     externalLabels:
@@ -84,10 +80,6 @@ grafana:
     existingSecret: grafana-admin
     userKey: admin-user
     passwordKey: admin-password
-  service:
-    type: LoadBalancer
-    annotations:
-      lbipam.cilium.io/ips: 10.20.8.243
 
 # Talos: controller-manager and scheduler serve self-signed certs.
 kubeControllerManager:

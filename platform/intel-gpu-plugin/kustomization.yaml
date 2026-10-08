@@ -8,4 +8,4 @@ patches:
     patch: |
       - op: add
         path: /spec/template/spec/containers/0/args
-        value: ["-shared-dev-num=3"]   # Plex, Immich server, Immich machine learning
+        value: ["-shared-dev-num=3"]

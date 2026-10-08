@@ -34,7 +34,7 @@ ports:
       tailnet: true
     transport:
       respondingTimeouts:
-        readTimeout: 0                      # large uploads (Immich videos) exceed the 60s default
+        readTimeout: 0
 
 service:
   annotations:

@@ -15,7 +15,7 @@ configs:
   cm:
     kustomize.buildOptions: "--enable-alpha-plugins --enable-exec"   # required for ksops
   repositories:
-    immich-charts:                           # Helm charts from an OCI registry need enableOCI
+    immich-charts:
       type: helm
       name: immich-charts
       url: ghcr.io/immich-app/immich-charts

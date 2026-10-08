@@ -1,4 +1,3 @@
-# Photo library on the NAS share `immich` (owner 1000:1000, immutable snapshots on the NAS).
 apiVersion: v1
 kind: PersistentVolume
 metadata:

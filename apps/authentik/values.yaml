@@ -1,6 +1,6 @@
 global:
   env:
-    - name: AUTHENTIK_LISTEN__TRUSTED_PROXY_CIDRS   # only reachable via Traefik, which sanitises X-Forwarded-For
+    - name: AUTHENTIK_LISTEN__TRUSTED_PROXY_CIDRS
       value: "0.0.0.0/0,::/0"
     - name: AUTHENTIK_SECRET_KEY
       valueFrom: {secretKeyRef: {name: authentik-secrets, key: secret-key}}

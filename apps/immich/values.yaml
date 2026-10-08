@@ -3,7 +3,7 @@ controllers:
     pod:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000                      # owner of the NFS share
+        runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
         seccompProfile: {type: RuntimeDefault}
@@ -18,7 +18,7 @@ immich:
   persistence:
     library:
       existingClaim: immich-library
-  existingConfiguration: immich-config      # immich-config.yaml, SOPS (contains the OAuth client secret)
+  existingConfiguration: immich-config
   configurationKind: Secret
 
 valkey:
@@ -35,7 +35,7 @@ valkey:
 server:
   controllers:
     main:
-      strategy: Recreate                     # one GPU slot and RWO volumes
+      strategy: Recreate
       containers:
         main:
           env:
@@ -49,7 +49,7 @@ server:
             requests: {cpu: 200m, memory: 1Gi}
             limits: {memory: 4Gi, gpu.intel.com/i915: "1"}   # QSV video transcoding
   persistence:
-    generated:                               # regenerable: thumbnails and transcoded videos on iSCSI, outside the NFS library
+    generated:
       enabled: true
       type: persistentVolumeClaim
       existingClaim: immich-generated
@@ -57,7 +57,7 @@ server:
         - {path: /data/thumbs, subPath: thumbs}
         - {path: /data/encoded-video, subPath: encoded-video}
   ingress:
-    main:                                    # tailnet: phone backup without the Cloudflare 100 MB body limit
+    main:
       enabled: true
       className: traefik-internal
       hosts:

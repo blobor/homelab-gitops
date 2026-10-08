@@ -88,19 +88,24 @@ pages:
             parameters:
               query: >-
                 sort_by_label(union(
-                  label_set(round(100 * (1 - raidFreeSize{job="synology",raidName="Volume 1"} / raidTotalSize{job="synology",raidName="Volume 1"})), "n", "1", "item", "Volume 1, зайнято %"),
-                  label_set(round(raidFreeSize{job="synology",raidName="Volume 1"} / 1e12, 0.1), "n", "2", "item", "Вільно, TB"),
-                  label_set(count(diskStatus{job="synology"} != 1) or vector(0), "n", "3", "item", "Дисків зі збоями"),
-                  label_set(max(diskTemperature{job="synology"}), "n", "4", "item", "Диски, макс °C"),
-                  label_set(temperature{job="synology"}, "n", "5", "item", "Система, °C"),
-                  label_set(systemStatus{job="synology"} != bool 1, "n", "6", "item", "Збій системи (0 = ні)")
+                  label_set(round(100 * (1 - raidFreeSize{job="synology",raidName="Volume 1"} / raidTotalSize{job="synology",raidName="Volume 1"})), "n", "1", "item", "Зайнято", "unit", "%"),
+                  label_set(round(raidFreeSize{job="synology",raidName="Volume 1"} / 1e12, 0.1), "n", "2", "item", "Вільно", "unit", " TB"),
+                  label_set(round(raidTotalSize{job="synology",raidName="Volume 1"} / 1e12, 0.1), "n", "3", "item", "Всього", "unit", " TB"),
+                  label_set(max(diskTemperature{job="synology"}), "n", "4", "item", "Темп. дисків (макс.)", "unit", " °C"),
+                  label_set(temperature{job="synology"}, "n", "5", "item", "Темп. системи", "unit", " °C"),
+                  label_set(max({__name__=~"systemStatus|powerStatus|systemFanStatus|cpuFanStatus", job="synology"}) == 1, "n", "6", "item", "Система", "text", "OK"),
+                  label_set(max({__name__=~"systemStatus|powerStatus|systemFanStatus|cpuFanStatus", job="synology"}) != 1, "n", "6", "item", "Система", "text", "Збій", "class", "color-negative"),
+                  label_set(max(raidStatus{job="synology"}) == 1, "n", "7", "item", "RAID", "text", "OK"),
+                  label_set(max(raidStatus{job="synology"}) != 1, "n", "7", "item", "RAID", "text", "Збій", "class", "color-negative"),
+                  label_set(max(diskStatus{job="synology"}) == 1, "n", "8", "item", "Диски", "text", "OK"),
+                  label_set(max(diskStatus{job="synology"}) != 1, "n", "8", "item", "Диски", "text", "Збій", "class", "color-negative")
                 ), "n")
             template: |
               <ul class="list list-gap-10">
                 {{ range .JSON.Array "data.result" }}
                 <li class="flex justify-between">
                   <span>{{ .String "metric.item" }}</span>
-                  <span class="color-highlight">{{ .String "value.1" }}</span>
+                  <span class="{{ .StringOr "metric.class" "color-highlight" }}">{{ .StringOr "metric.text" (concat (.String "value.1") (.StringOr "metric.unit" "")) }}</span>
                 </li>
                 {{ end }}
               </ul>

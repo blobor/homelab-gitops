@@ -71,6 +71,15 @@ alertmanager:
 grafana:
   testFramework:
     enabled: false
+  grafana.ini:
+    server:
+      root_url: https://grafana.private.home.lobor.dev
+  ingress:
+    enabled: true
+    ingressClassName: traefik-internal
+    hosts: [grafana.private.home.lobor.dev]
+    tls:
+      - hosts: [grafana.private.home.lobor.dev]   # wildcard certificate from the Traefik TLSStore
   admin:
     existingSecret: grafana-admin
     userKey: admin-user

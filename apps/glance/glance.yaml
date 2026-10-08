@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: glance
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: glance}
+  template:
+    metadata:
+      labels: {app: glance}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: glance
+          image: glanceapp/glance:v0.8.6
+          args: [--config, /app/config/glance.yml]
+          env:
+            - {name: TZ, value: Europe/Kyiv}
+          ports:
+            - {name: http, containerPort: 8080}
+          readinessProbe:
+            httpGet: {path: /api/healthz, port: http}
+          resources:
+            requests: {cpu: 10m, memory: 32Mi}
+            limits: {memory: 128Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          volumeMounts:
+            - {name: config, mountPath: /app/config, readOnly: true}
+      volumes:
+        - name: config
+          configMap: {name: glance-config}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: glance
+spec:
+  selector: {app: glance}
+  ports:
+    - {name: http, port: 80, targetPort: http}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: glance
+spec:
+  ingressClassName: traefik-internal
+  tls:
+    - hosts: [glance.private.home.lobor.dev]
+  rules:
+    - host: glance.private.home.lobor.dev
+      http:
+        paths:
+          - {path: /, pathType: Prefix, backend: {service: {name: glance, port: {name: http}}}}

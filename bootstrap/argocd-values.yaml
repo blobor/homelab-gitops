@@ -1,6 +1,14 @@
 # ArgoCD (argo/argo-cd chart) with KSOPS in the repo-server.
 # Applied by hand once: helm install argo-cd argo/argo-cd -n argocd -f bootstrap/argocd-values.yaml
 fullnameOverride: argocd
+global:
+  domain: argo.private.home.lobor.dev
+server:
+  ingress:
+    enabled: true
+    ingressClassName: traefik-internal
+    extraTls:
+      - hosts: [argo.private.home.lobor.dev]   # wildcard certificate from the Traefik TLSStore
 dex:
   enabled: false
 configs:

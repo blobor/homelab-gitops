@@ -1,0 +1,74 @@
+server:
+  port: 8080
+
+theme:
+  background-color: 225 14 15
+  primary-color: 157 47 65
+  contrast-multiplier: 1.1
+
+pages:
+  - name: Home
+    columns:
+      - size: small
+        widgets:
+          - type: clock
+            hour-format: 24h
+            timezones:
+              - timezone: Europe/Kyiv
+                label: Kyiv
+          - type: weather
+            location: Kyiv, Ukraine
+            units: metric
+            hour-format: 24h
+
+      - size: full
+        widgets:
+          - type: monitor
+            title: Services
+            cache: 1m
+            sites:
+              - title: Plex
+                url: https://app.plex.tv/desktop/
+                check-url: https://plex.plex.svc.cluster.local:32400/identity
+                allow-insecure: true
+                icon: si:plex
+              - title: Home Assistant
+                url: https://ha.private.home.lobor.dev
+                check-url: http://home-assistant.tailnet-backends.svc.cluster.local:8123
+                icon: si:homeassistant
+              - title: Syncthing
+                url: https://sync.private.home.lobor.dev
+                check-url: http://syncthing-gui.syncthing.svc.cluster.local:8384/rest/noauth/health
+                icon: si:syncthing
+              - title: Proxmox
+                url: https://bender.private.home.lobor.dev
+                check-url: https://proxmox.tailnet-backends.svc.cluster.local:8006
+                allow-insecure: true
+                icon: si:proxmox
+              - title: Grafana
+                url: https://grafana.private.home.lobor.dev
+                check-url: http://vm-grafana.monitoring.svc.cluster.local/api/health
+                icon: si:grafana
+              - title: ArgoCD
+                url: https://argo.private.home.lobor.dev
+                check-url: http://argocd-server.argocd.svc.cluster.local/healthz
+                icon: si:argo
+
+          - type: bookmarks
+            groups:
+              - title: Homelab
+                links:
+                  - title: Synology DSM
+                    url: https://loki.hippo-lake.ts.net:16990
+                  - title: MikroTik
+                    url: http://10.20.30.1
+                  - title: GitOps repo
+                    url: https://github.com/blobor/homelab-gitops
+              - title: Cloud
+                links:
+                  - title: Tailscale
+                    url: https://login.tailscale.com/admin/machines
+                  - title: Cloudflare
+                    url: https://dash.cloudflare.com
+                  - title: healthchecks.io
+                    url: https://healthchecks.io/projects/

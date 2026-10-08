@@ -10,6 +10,11 @@ global:
       valueFrom: {secretKeyRef: {name: authentik-secrets, key: bootstrap-password}}
     - name: AUTHENTIK_BOOTSTRAP_EMAIL
       valueFrom: {secretKeyRef: {name: authentik-secrets, key: bootstrap-email}}
+    - name: IMMICH_OAUTH_CLIENT_SECRET       # read by blueprints/immich.yaml
+      valueFrom: {secretKeyRef: {name: authentik-secrets, key: immich-client-secret}}
+
+blueprints:
+  configMaps: [authentik-blueprints]
 
 authentik:
   postgresql:

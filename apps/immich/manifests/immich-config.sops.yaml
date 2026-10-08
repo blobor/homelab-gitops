@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: immich-config
+    namespace: immich
+type: Opaque
+stringData:
+    immich-config.yaml: ENC[AES256_GCM,data:b3qwPxnCYJ022sNBcGD5Xxh6TBNfd1SOEVuzpNNJDNsthSOAQO6AdubRJRK3kzwkRP60E5ko7OX56lzYQ9q5lV0K/XIghBpUhI5qUa6GHPkcOTMLgrG4aJ59UzKRQ1v0biM3MyBxQf+d9z6gH062/Fh0HlIfJGALspROrY9RmyRa106jhO9vJ4jhcvvFTpf/2ckadhKM5xK3Phy+xBkNwoB8cmZL81/GQMJXMu8WfK6h9NFBqy9/dHJRLY2VuciNlaEzQ1nF2AuFLAyEKzpe+9vKGuMESuGXy1c7a5wEsX4icl8UTBBs5W0Wl68nK9hOsu42y5rfDHW3muCo3CE1vLsp89X0Zf6XfkES9Ziz9EUIPilnnCRgGq63rulL6ipSrQInO+6H5BwMhYtNZPN7eFG+yR4YLLA2dOvbomjDw2Vr29+s/n7dDoEdkXJFkrhrbLSxvAia2nCn2V3CowbRZp8SFqbj4qOVFv+fqTsVujO+nI2yHTtHahxGm73upUMgOVV0a3I1lEOixjPI3PwUSnllqTmllnJH8/ptJhiQCKJLS2v4FijLLKG7kTzRA0ush+TWjjsA+DstNoJDhVusCiBmjc+sTy/PpCwlYz75hC8zF3OsTI7hnBsRKvZ3BdiY4Xjh50gDt8chWccsjkKobEOC1ls0PRjFFS1OZHjW/96kB01hOWgUDz80iY5DviVcPiogCUdp7v7kwVxbBll3FPczAH9VLRM3eES6x9JKpmbAan/UiZv6RBZL4hAw2JrLxUsbS2gp/+nCTRFX6KhZf3NBMs8SQbzDpTRtF/d2IFkPdKH7h1u+e8I3WWdL+m68Z9bfsiN9g7ibt9iU9THP4nTJvMRrz3TLoU1Vx5+cZPxUTYQfDIuqoQl9ASgFtu1Yr+Av6O9X,iv:XEhKmtGEgwP4eycGiIJvKChcba9mkdgwsmi9yDtpwgY=,tag:5+n3hX0CO0FCsR+XrpVuhg==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA4ckJCWjdRMjViTko1TlpJ
+            RVVram5NeWw5YzVMY2NiT1N0c3J0b1llbFdvClRueWJxOVhDZUIxek1UU3BKanJo
+            eUZ1clhFNEhsOVZzeE1MUSs1S2I4cHcKLS0tIDlDUjhHcTd0MDJBU3VvRUdPSC9X
+            V0pYcTFMQlNwejFUdG50VWRWVUtBOEEK/aMx5A8ieqi2y+rkJV3OcU2EZW5QLyz0
+            xnGYunQNaea8YIBeJRO7ggZ2OODsKIjRW0LMGT3JNH9kZspM8QC4Rg==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-08T12:18:27Z"
+    mac: ENC[AES256_GCM,data:76RtFws3g493nW/VKDBAXJ+bHo7qVtREg0CNsUZBs4sDsUPkDtCBBuorr0Uw30UMG08fIcrJ9Sphv1PI5hX0TN0Ga4maO2UZIuvbD+JnXpIQp5PH+sLtj4o+H3zDfibuTYt5tt+EAJksVBmhRGlCyC4GN0v8zxQCYoHeDohB/FY=,iv:gXtJyp0Jsi0nAue/OXS1Ns+8gcjBZuMxZTn86SxWoxw=,tag:ul/jO1csDTRl/D3U4B/6uQ==,type:str]
+    version: 3.13.3

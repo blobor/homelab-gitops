@@ -1,0 +1,83 @@
+controllers:
+  main:
+    pod:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000                      # owner of the NFS share
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile: {type: RuntimeDefault}
+    containers:
+      main:
+        image:
+          tag: v3.3.0
+        env:
+          TZ: Europe/Kyiv
+
+immich:
+  persistence:
+    library:
+      existingClaim: immich-library
+  existingConfiguration: immich-config      # immich-config.yaml, SOPS (contains the OAuth client secret)
+  configurationKind: Secret
+
+valkey:
+  enabled: true
+  controllers:
+    main:
+      pod:
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 999
+          runAsGroup: 999
+          fsGroup: 999
+
+server:
+  controllers:
+    main:
+      containers:
+        main:
+          env:
+            DB_HOSTNAME: immich-db-rw
+            DB_DATABASE_NAME: immich
+            DB_USERNAME:
+              valueFrom: {secretKeyRef: {name: immich-db-app, key: username}}
+            DB_PASSWORD:
+              valueFrom: {secretKeyRef: {name: immich-db-app, key: password}}
+          resources:
+            requests: {cpu: 200m, memory: 1Gi}
+            limits: {memory: 4Gi, gpu.intel.com/i915: "1"}   # QSV video transcoding
+  persistence:
+    generated:                               # regenerable: thumbnails and transcoded videos on iSCSI, outside the NFS library
+      enabled: true
+      type: persistentVolumeClaim
+      existingClaim: immich-generated
+      globalMounts:
+        - {path: /data/thumbs, subPath: thumbs}
+        - {path: /data/encoded-video, subPath: encoded-video}
+  ingress:
+    main:                                    # tailnet: phone backup without the Cloudflare 100 MB body limit
+      enabled: true
+      className: traefik-internal
+      hosts:
+        - host: photos.private.home.lobor.dev
+          paths:
+            - path: /
+              service: {identifier: main}
+      tls:
+        - hosts: [photos.private.home.lobor.dev]
+
+machine-learning:
+  controllers:
+    main:
+      containers:
+        main:
+          image:
+            tag: v3.3.0-openvino
+          resources:
+            requests: {cpu: 100m, memory: 1Gi}
+            limits: {memory: 6Gi, gpu.intel.com/i915: "1"}
+  persistence:
+    cache:
+      type: persistentVolumeClaim
+      existingClaim: immich-ml-cache

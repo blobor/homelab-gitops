@@ -1,0 +1,16 @@
+# photos.home.lobor.dev via Cloudflare: browsing and shared links (uploads > 100 MB go via photos.private).
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: immich-public
+  annotations:
+    kubernetes.io/ingress.class: traefik-public
+spec:
+  entryPoints: [websecure]
+  routes:
+    - match: Host(`photos.home.lobor.dev`)
+      kind: Rule
+      services:
+        - name: immich-server
+          port: 2283
+  tls: {}

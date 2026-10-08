@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: immich
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: ghcr.io/immich-app/immich-charts
+      chart: immich
+      targetRevision: 0.13.4
+      helm:
+        releaseName: immich
+        valueFiles:
+          - $values/apps/immich/values.yaml
+    - repoURL: https://github.com/blobor/homelab-gitops.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://github.com/blobor/homelab-gitops.git
+      targetRevision: main
+      path: apps/immich/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: immich
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

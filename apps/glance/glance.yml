@@ -59,7 +59,7 @@ pages:
               - title: Homelab
                 links:
                   - title: Synology DSM
-                    url: https://loki.hippo-lake.ts.net:16990
+                    url: https://loki.hippo-lake.ts.net
                   - title: MikroTik
                     url: http://10.20.30.1
                   - title: GitOps repo

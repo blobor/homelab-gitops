@@ -105,7 +105,7 @@ pages:
                 {{ range .JSON.Array "data.result" }}
                 <li class="flex justify-between">
                   <span>{{ .String "metric.item" }}</span>
-                  <span class="{{ .StringOr "metric.class" "color-highlight" }}">{{ .StringOr "metric.text" (concat (.String "value.1") (.StringOr "metric.unit" "")) }}</span>
+                  <span class="{{ with .String "metric.class" }}{{ . }}{{ else }}color-highlight{{ end }}">{{ with .String "metric.text" }}{{ . }}{{ else }}{{ .String "value.1" }}{{ .String "metric.unit" }}{{ end }}</span>
                 </li>
                 {{ end }}
               </ul>

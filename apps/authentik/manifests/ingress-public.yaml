@@ -1,0 +1,16 @@
+# auth.home.lobor.dev via Cloudflare: login and OIDC flows only, the admin interface stays on auth.private.
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: authentik-public
+  annotations:
+    kubernetes.io/ingress.class: traefik-public
+spec:
+  entryPoints: [websecure]
+  routes:
+    - match: Host(`auth.home.lobor.dev`) && !PathPrefix(`/if/admin`)
+      kind: Rule
+      services:
+        - name: authentik-server
+          port: 80
+  tls: {}

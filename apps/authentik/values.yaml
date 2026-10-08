@@ -1,0 +1,32 @@
+global:
+  env:
+    - name: AUTHENTIK_SECRET_KEY
+      valueFrom: {secretKeyRef: {name: authentik-secrets, key: secret-key}}
+    - name: AUTHENTIK_POSTGRESQL__PASSWORD
+      valueFrom: {secretKeyRef: {name: authentik-db-app, key: password}}
+    - name: AUTHENTIK_BOOTSTRAP_PASSWORD     # read once, on the first start
+      valueFrom: {secretKeyRef: {name: authentik-secrets, key: bootstrap-password}}
+    - name: AUTHENTIK_BOOTSTRAP_EMAIL
+      valueFrom: {secretKeyRef: {name: authentik-secrets, key: bootstrap-email}}
+
+authentik:
+  postgresql:
+    host: authentik-db-rw
+    name: authentik
+    user: authentik
+
+server:
+  resources:
+    requests: {cpu: 100m, memory: 512Mi}
+    limits: {memory: 1Gi}
+  ingress:                                   # full UI incl. admin, tailnet only
+    enabled: true
+    ingressClassName: traefik-internal
+    hosts: [auth.private.home.lobor.dev]
+    tls:
+      - hosts: [auth.private.home.lobor.dev]
+
+worker:
+  resources:
+    requests: {cpu: 50m, memory: 384Mi}
+    limits: {memory: 1Gi}

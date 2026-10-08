@@ -3,3 +3,9 @@ kind: Kustomization
 namespace: intel-gpu-plugin
 resources:
   - https://github.com/intel/intel-device-plugins-for-kubernetes/deployments/gpu_plugin?ref=v0.37.1
+patches:
+  - target: {kind: DaemonSet, name: intel-gpu-plugin}
+    patch: |
+      - op: add
+        path: /spec/template/spec/containers/0/args
+        value: ["-shared-dev-num=3"]   # Plex, Immich server, Immich machine learning

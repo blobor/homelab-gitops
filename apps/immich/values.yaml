@@ -35,6 +35,7 @@ valkey:
 server:
   controllers:
     main:
+      strategy: Recreate                     # one GPU slot and RWO volumes
       containers:
         main:
           env:
@@ -70,6 +71,7 @@ server:
 machine-learning:
   controllers:
     main:
+      strategy: Recreate
       containers:
         main:
           image:

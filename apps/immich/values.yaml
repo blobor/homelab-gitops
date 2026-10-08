@@ -46,8 +46,8 @@ server:
             DB_PASSWORD:
               valueFrom: {secretKeyRef: {name: immich-db-app, key: password}}
           resources:
-            requests: {cpu: 200m, memory: 1Gi}
-            limits: {memory: 4Gi, gpu.intel.com/i915: "1"}   # QSV video transcoding
+            requests: {cpu: 200m, memory: 2Gi}
+            limits: {memory: 8Gi, gpu.intel.com/i915: "1"}   # QSV video transcoding
   persistence:
     generated:
       enabled: true
@@ -77,8 +77,8 @@ machine-learning:
           image:
             tag: v3.3.0-openvino
           resources:
-            requests: {cpu: 100m, memory: 1Gi}
-            limits: {memory: 6Gi, gpu.intel.com/i915: "1"}
+            requests: {cpu: 100m, memory: 3Gi}
+            limits: {memory: 12Gi, gpu.intel.com/i915: "1"}
   persistence:
     cache:
       type: persistentVolumeClaim

@@ -89,6 +89,10 @@ pages:
                 url: https://argo.private.home.lobor.dev
                 check-url: http://argocd-server.argocd.svc.cluster.local/healthz
                 icon: si:argo
+              - title: Authentik
+                url: https://auth.private.home.lobor.dev
+                check-url: http://authentik-server.authentik.svc.cluster.local/-/health/live/
+                icon: si:authentik
 
           - type: custom-api
             title: NAS · Loki

@@ -76,6 +76,11 @@ machine-learning:
         main:
           image:
             tag: v3.3.0-openvino
+          probes:
+            liveness:
+              spec:
+                timeoutSeconds: 5
+                failureThreshold: 6
           resources:
             requests: {cpu: 100m, memory: 3Gi}
             limits: {memory: 12Gi, gpu.intel.com/i915: "1"}

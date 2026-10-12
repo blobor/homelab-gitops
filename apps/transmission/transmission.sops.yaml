@@ -1,0 +1,22 @@
+apiVersion: v1
+data:
+    PASS: ENC[AES256_GCM,data:Mn6YgZq3B4rHw2D645BYxR1nSmA8E2hcdHDou06UCrE=,iv:0oc01zzBPqek4ntuGViVhjoUdIBngVWLUM8b8SMHhnI=,tag:LJErhxN6QVPlfTg+OpMNPg==,type:str]
+    USER: ENC[AES256_GCM,data:cMAW+w==,iv:hkDM7uGIccG90eJ7uuYjNqmxlvYL2L9nn6QQF0ySAxQ=,tag:ghDFYzeFYHJA1qicJn1k9w==,type:str]
+kind: Secret
+metadata:
+    name: transmission-rpc
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBpaytrbHVIQXI3SVVRNmo2
+            VzBVNDFiQjhyaFhqcW4yYWE5YmljRG1HK2kwCnE5aFlrRHlZVWpFVE44aUVLeEhW
+            YnZZSUQyT0lSSmE4NmhXM1dlTG5ucmcKLS0tIGs2eHNuWnp4d3E5ekpxb3FHNStp
+            OEpEYUF1ZkkzZ0R6Sk92VmR3ZkNqZVkKWRez70qMqPiAx/n37u2bdXJGc/a/DkM/
+            Xu+Zy17QZp7e/LwlFSJd+LkWLoYnRFl+CAshoyTOQIX+llDHY9ZotA==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-12T09:59:40Z"
+    mac: ENC[AES256_GCM,data:WHGiYldLIvMZH8ijGRxuQPhznJ3yE++ElXa3GOTP2BJ5tqREsXpmX8KdtDqWCp34wHYGSVFevTrUPzeeFMvKvwfG4Cf/GonP/4DnkLu91w5D3SaIeiSGrgi0zFN/sM2Ssn6wUR/44XwrCrT0oJ7hW/COcnmP5Wdctz9BpuyyqpY=,iv:AS0gcaqbjqRGEPw5Xe3NN933So0C0i07F5r9g62ZBw8=,tag:z8fQX005S+xmta3XnhGyeA==,type:str]
+    version: 3.13.3

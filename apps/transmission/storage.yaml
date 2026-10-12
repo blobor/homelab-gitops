@@ -1,0 +1,42 @@
+# Share "bucket" on Loki; downloads go to bucket/downloads.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: transmission-bucket
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes: [ReadWriteMany]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions: [nfsvers=4.1, hard, noatime]
+  nfs:
+    server: 10.20.30.200
+    path: /volume1/bucket
+  claimRef:
+    namespace: transmission
+    name: bucket
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bucket
+spec:
+  accessModes: [ReadWriteMany]
+  storageClassName: ""
+  volumeName: transmission-bucket
+  resources:
+    requests:
+      storage: 1Ti
+---
+# settings.json, resume files and torrent metadata.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: transmission-config
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: synology-iscsi
+  resources:
+    requests:
+      storage: 1Gi

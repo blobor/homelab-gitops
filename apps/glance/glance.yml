@@ -67,6 +67,11 @@ pages:
                 url: https://ha.private.home.lobor.dev
                 check-url: http://home-assistant.tailnet-backends.svc.cluster.local:8123
                 icon: si:homeassistant
+              - title: Transmission
+                url: https://dl.private.home.lobor.dev
+                check-url: http://transmission-web.transmission.svc.cluster.local:9091/transmission/web/
+                alt-status-codes: [401]
+                icon: si:transmission
               - title: Syncthing
                 url: https://sync.private.home.lobor.dev
                 check-url: http://syncthing-gui.syncthing.svc.cluster.local:8384/rest/noauth/health

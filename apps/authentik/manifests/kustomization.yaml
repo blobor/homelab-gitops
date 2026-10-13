@@ -6,5 +6,6 @@ resources:
   - ingress-public.yaml
   - backup.yaml
   - blueprint-immich.yaml
+  - blueprint-ghostfolio.yaml
 generators:
   - secret-generator.yaml

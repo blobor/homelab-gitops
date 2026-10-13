@@ -15,7 +15,7 @@ spec:
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1000                         # "node" in the image
+        runAsUser: 1000
         runAsGroup: 1000
         seccompProfile: {type: RuntimeDefault}
       containers:
@@ -36,7 +36,7 @@ spec:
             - name: JWT_SECRET_KEY
               valueFrom: {secretKeyRef: {name: ghostfolio, key: JWT_SECRET_KEY}}
             - {name: ENABLE_FEATURE_AUTH_OIDC, value: "true"}
-            - {name: OIDC_ISSUER, value: "https://auth.home.lobor.dev/application/o/ghostfolio/"}   # private.* does not resolve in-cluster
+            - {name: OIDC_ISSUER, value: "https://auth.home.lobor.dev/application/o/ghostfolio/"}
             - {name: OIDC_CLIENT_ID, value: ghostfolio}
             - name: OIDC_CLIENT_SECRET
               valueFrom: {secretKeyRef: {name: ghostfolio, key: OIDC_CLIENT_SECRET}}
@@ -45,7 +45,7 @@ spec:
             - {name: ENABLE_FEATURE_MCP, value: "false"}
           ports:
             - {name: web, containerPort: 3333}
-          startupProbe:                         # migrations run before the server starts
+          startupProbe:
             httpGet: {path: /api/v1/health/liveness, port: web}
             periodSeconds: 10
             failureThreshold: 30

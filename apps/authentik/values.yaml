@@ -12,7 +12,7 @@ global:
       valueFrom: {secretKeyRef: {name: authentik-secrets, key: bootstrap-email}}
     - name: IMMICH_OAUTH_CLIENT_SECRET       # read by blueprints/immich.yaml
       valueFrom: {secretKeyRef: {name: authentik-secrets, key: immich-client-secret}}
-    - name: GHOSTFOLIO_OAUTH_CLIENT_SECRET   # read by blueprints/ghostfolio.yaml
+    - name: GHOSTFOLIO_OAUTH_CLIENT_SECRET
       valueFrom: {secretKeyRef: {name: authentik-secrets, key: ghostfolio-client-secret}}
 
 blueprints:

@@ -76,6 +76,10 @@ pages:
                 url: https://sync.private.home.lobor.dev
                 check-url: http://syncthing-gui.syncthing.svc.cluster.local:8384/rest/noauth/health
                 icon: si:syncthing
+              - title: Ghostfolio
+                url: https://money.private.home.lobor.dev
+                check-url: http://ghostfolio.ghostfolio.svc.cluster.local:3333/api/v1/health/liveness
+                icon: si:ghostfolio
               - title: Proxmox
                 url: https://bender.private.home.lobor.dev
                 check-url: https://proxmox.tailnet-backends.svc.cluster.local:8006

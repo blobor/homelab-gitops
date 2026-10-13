@@ -42,7 +42,7 @@ spec:
               valueFrom: {secretKeyRef: {name: ghostfolio, key: OIDC_CLIENT_SECRET}}
             - {name: OIDC_SCOPE, value: '["openid","email","profile"]'}
             - {name: ENABLE_FEATURE_AUTH_TOKEN, value: "true"}
-            - {name: ENABLE_FEATURE_MCP, value: "false"}
+            - {name: ENABLE_FEATURE_MCP, value: "true"}
           ports:
             - {name: web, containerPort: 3333}
           startupProbe:

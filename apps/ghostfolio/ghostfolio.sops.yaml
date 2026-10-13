@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: ghostfolio
+    namespace: ghostfolio
+type: Opaque
+stringData:
+    ACCESS_TOKEN_SALT: ENC[AES256_GCM,data:oPMoZDzr8IIjB1blI4l6RJpdgBDfszLrIoqWUzhvvAE7JK34BJCOhy8CBOpELVVNm8lTFUWpz4u5hAq0jWDSzA==,iv:xHI3X3ZmQZ7LErABEc4ewEK3gVVlw38sS8eUnsGpPsM=,tag:vEfJDP7j3zx1dg6QoEQglg==,type:str]
+    JWT_SECRET_KEY: ENC[AES256_GCM,data:SauSYQMz8Cl5ySpdc/3K0A5ClkY6qdKD5DJaqcvtI+SpmkkVrr4tKbqxWjqw6y+iD/TV1/KdzDlSGLp5pSzKQw==,iv:Ej2KYK2uvQvLOGxJFHp2u8MxJpDbyAxL2ucf8sU/LNQ=,tag:8w8iSUmhPR/EHO5Q9FlzHA==,type:str]
+    REDIS_PASSWORD: ENC[AES256_GCM,data:qgJU7v9yNnjVvGicHQ1qfMTIp/PSFmePAyaSg/eFqTDSd2UYmlOhaapp9yr8kNKN,iv:ThWNDEHDh0Gg2yOTNAQ0qUhaZK+5ZSnDYAlZdNaA4QQ=,tag:NiVlHGFUt0ASufjbN77unA==,type:str]
+    OIDC_CLIENT_SECRET: ENC[AES256_GCM,data:pUYOYMyhamK3pZ9D6q0K/epO/471iGuZMfN5+0zjNy6VwWOK80pHAW05tt1Xh9kdLWYLSYcSs/Vvt8TsAMffOg==,iv:vd4cRfyvU7kDiafjKp3OO2LbHVlF+8BFmLLLYOINOIY=,tag:uw7/mHLAPLoPCgpimEnzkg==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBqandpeDNWU2hnRzB4TGFK
+            ZnRWcjBVeDBsNVRkNFFGUDVlNGxyd1NLK2hZClFLYzZUS3gvUXhEdVdKNC96MVZn
+            eFBqRXdocml0UVJXOFBORXlLNEhKU3cKLS0tIGlaM0F2RDUrUDlKb2FqQzlycTV3
+            SkR1ZWEvNzFzNXYwc1Ftc215TFpkK0EK4RwcUTPmCxA4um+5c57cCOOfb5CJfZXF
+            rfR3iBkeb6LWErd0cCGZlbs7D2UVPtcsaO4xPoJSClXeH3GlxrJXHg==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-13T08:44:11Z"
+    mac: ENC[AES256_GCM,data:vZoQG16C46P3feloAihWyFo+w9Ty4gn8EHXLHLFbig61QlNOB97kNCVJXIqm4WXn+w0nq+qB9F094Z5mNpMKh5Z4DD4tuEPb2ZPIkucknykGB54eBkQv8RnzkexohiHNsX+kwY1Xb3l97lCafBnSap1x4j8Fxm4Ema3ab3zKwkA=,iv:UF88mJTI7REHJrL4do0fSoR8gzatE/PxRtOIBqNP9hI=,tag:LkHZBA00YaV+1YZYZcVedw==,type:str]
+    version: 3.13.3

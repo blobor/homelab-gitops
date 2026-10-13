@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ghostfolio
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: {app: ghostfolio}
+  template:
+    metadata:
+      labels: {app: ghostfolio}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000                         # "node" in the image
+        runAsGroup: 1000
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: ghostfolio
+          image: ghostfolio/ghostfolio:3.85.0
+          env:
+            - {name: TZ, value: Europe/Kyiv}
+            - {name: ROOT_URL, value: "https://money.private.home.lobor.dev"}
+            - {name: TRUST_PROXY, value: "1"}
+            - name: DATABASE_URL
+              valueFrom: {secretKeyRef: {name: ghostfolio-db-app, key: uri}}
+            - {name: REDIS_HOST, value: valkey}
+            - {name: REDIS_PORT, value: "6379"}
+            - name: REDIS_PASSWORD
+              valueFrom: {secretKeyRef: {name: ghostfolio, key: REDIS_PASSWORD}}
+            - name: ACCESS_TOKEN_SALT
+              valueFrom: {secretKeyRef: {name: ghostfolio, key: ACCESS_TOKEN_SALT}}
+            - name: JWT_SECRET_KEY
+              valueFrom: {secretKeyRef: {name: ghostfolio, key: JWT_SECRET_KEY}}
+            - {name: ENABLE_FEATURE_AUTH_OIDC, value: "true"}
+            - {name: OIDC_ISSUER, value: "https://auth.private.home.lobor.dev/application/o/ghostfolio/"}
+            - {name: OIDC_CLIENT_ID, value: ghostfolio}
+            - name: OIDC_CLIENT_SECRET
+              valueFrom: {secretKeyRef: {name: ghostfolio, key: OIDC_CLIENT_SECRET}}
+            - {name: OIDC_SCOPE, value: '["openid","email","profile"]'}
+            - {name: ENABLE_FEATURE_AUTH_TOKEN, value: "true"}
+            - {name: ENABLE_FEATURE_MCP, value: "false"}
+          ports:
+            - {name: web, containerPort: 3333}
+          startupProbe:                         # migrations run before the server starts
+            httpGet: {path: /api/v1/health/liveness, port: web}
+            periodSeconds: 10
+            failureThreshold: 30
+          livenessProbe:
+            httpGet: {path: /api/v1/health/liveness, port: web}
+            periodSeconds: 30
+          readinessProbe:
+            httpGet: {path: /api/v1/health, port: web}
+            periodSeconds: 15
+            timeoutSeconds: 5
+          resources:
+            requests: {cpu: 100m, memory: 256Mi}
+            limits: {memory: 1Gi}
+          securityContext: {allowPrivilegeEscalation: false, capabilities: {drop: [ALL]}}

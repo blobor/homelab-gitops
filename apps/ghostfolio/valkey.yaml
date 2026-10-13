@@ -1,0 +1,56 @@
+# Cache only: no persistence.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: valkey
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: {app: valkey}
+  template:
+    metadata:
+      labels: {app: valkey}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: valkey
+          image: valkey/valkey:9.0.6-alpine
+          command: [sh, -c, 'exec valkey-server --requirepass "$REDIS_PASSWORD" --save "" --appendonly no']
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom: {secretKeyRef: {name: ghostfolio, key: REDIS_PASSWORD}}
+          ports:
+            - {name: valkey, containerPort: 6379}
+          readinessProbe:
+            tcpSocket: {port: valkey}
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket: {port: valkey}
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          resources:
+            requests: {cpu: 20m, memory: 32Mi}
+            limits: {memory: 256Mi}
+          securityContext: {allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: {drop: [ALL]}}
+          volumeMounts:
+            - {name: data, mountPath: /data}
+      volumes:
+        - name: data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: valkey
+spec:
+  selector: {app: valkey}
+  ports:
+    - {name: valkey, port: 6379, targetPort: valkey}

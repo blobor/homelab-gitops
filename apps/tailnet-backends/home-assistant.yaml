@@ -1,4 +1,4 @@
-# ha.private.home.lobor.dev → Traefik internal → Tailscale egress proxy → kahovka-ha:8123 (tailnet device outside the cluster).
+# ha.private.home.lobor.dev (traefik-internal) and ha.home.lobor.dev (traefik-public) → Tailscale egress proxy → kahovka-ha:8123 (tailnet device outside the cluster).
 apiVersion: v1
 kind: Service
 metadata:
@@ -22,6 +22,20 @@ spec:
     - hosts: [ha.private.home.lobor.dev]
   rules:
     - host: ha.private.home.lobor.dev
+      http:
+        paths:
+          - {path: /, pathType: Prefix, backend: {service: {name: home-assistant, port: {name: web}}}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: home-assistant-public
+spec:
+  ingressClassName: traefik-public
+  tls:
+    - hosts: [ha.home.lobor.dev]
+  rules:
+    - host: ha.home.lobor.dev
       http:
         paths:
           - {path: /, pathType: Prefix, backend: {service: {name: home-assistant, port: {name: web}}}}

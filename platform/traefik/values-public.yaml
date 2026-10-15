@@ -12,6 +12,7 @@ providers:
     defaultTLSResourcesNamespace: traefik   # TLSStore "default" with the wildcard certs
   kubernetesIngress:
     ingressClass: traefik-public
+    allowExternalNameServices: true         # Tailscale egress proxies are ExternalName Services
 
 core:
   strictTLSOptions: true

@@ -10,7 +10,7 @@ controllers:
     containers:
       main:
         image:
-          tag: v3.3.1
+          tag: v3.3.3
         env:
           TZ: Europe/Kyiv
 
@@ -75,7 +75,7 @@ machine-learning:
       containers:
         main:
           image:
-            tag: v3.3.1-openvino
+            tag: v3.3.3-openvino
           probes:
             liveness:
               spec:

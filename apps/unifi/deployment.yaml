@@ -18,7 +18,7 @@ spec:
         seccompProfile: {type: RuntimeDefault}
       containers:
         - name: mongo
-          image: mongo:7.0.43
+          image: mongo:7.0.45
           args: [--bind_ip, 127.0.0.1, --auth]
           resources:
             requests: {cpu: 50m, memory: 256Mi}

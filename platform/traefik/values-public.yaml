@@ -17,11 +17,18 @@ providers:
 core:
   strictTLSOptions: true
 
+additionalArguments:
+  - --providers.kubernetescrd.safeNaming=false   # keep router names; the chart sets the flag only when true
+
 ports:
   web:
     expose:
       default: false                        # port 80 closed — Cloudflare redirects to HTTPS
+    http:
+      aliasHeadersStrategy: delete          # drop X_Foo / X.Foo aliases of the headers Traefik manages
   websecure:
+    http:
+      aliasHeadersStrategy: delete
     forwardedHeaders:
       trustedIPs:                           # Cloudflare IPv4 ranges (same list as MikroTik address-list cloudflare)
         - 173.245.48.0/20

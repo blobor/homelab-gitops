@@ -17,12 +17,16 @@ providers:
 core:
   strictTLSOptions: true
 
+additionalArguments:
+  - --providers.kubernetescrd.safeNaming=false   # keep router names; the chart sets the flag only when true
+
 ports:
   web:
     expose:
       default: true
       tailnet: false
     http:
+      aliasHeadersStrategy: delete          # drop X_Foo / X.Foo aliases of the headers Traefik manages
       redirections:
         entryPoint:
           to: websecure
@@ -32,6 +36,8 @@ ports:
     expose:
       default: true
       tailnet: true
+    http:
+      aliasHeadersStrategy: delete
     transport:
       respondingTimeouts:
         readTimeout: 0

@@ -27,6 +27,14 @@ alertmanager:
   spec:
     secrets:
       - alertmanager-secrets   # mounted at /etc/vm/secrets/alertmanager-secrets/
+    storage:                   # silences and nflog survive pod restarts
+      volumeClaimTemplate:
+        spec:
+          storageClassName: synology-iscsi
+          accessModes: [ReadWriteOnce]
+          resources:
+            requests:
+              storage: 1Gi
   config:
     route:
       receiver: blackhole

@@ -13,9 +13,8 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: tv
-  annotations:
-    kubernetes.io/ingress.class: traefik-public
 spec:
+  ingressClassName: traefik-public
   entryPoints: [websecure]
   routes:
     - match: Host(`tv.home.lobor.dev`)

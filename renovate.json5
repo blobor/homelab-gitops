@@ -1,0 +1,130 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:recommended", ":semanticCommitTypeAll(chore)"],
+  timezone: "Europe/Kyiv",
+  schedule: ["* 0-6 * * 6"],
+  minimumReleaseAge: "3 days",
+  internalChecksFilter: "strict",
+  dependencyDashboardTitle: "Dependency Dashboard",
+  prConcurrentLimit: 10,
+  labels: ["renovate"],
+
+  argocd: {
+    managerFilePatterns: ["/^clusters/.+\\.ya?ml$/"],
+  },
+  kubernetes: {
+    managerFilePatterns: ["/^(apps|platform)/.+\\.ya?ml$/"],
+  },
+
+  customManagers: [
+    {
+      // "# renovate: datasource=... depName=..." on the line above "key: value" or "KEY=value"
+      customType: "regex",
+      managerFilePatterns: ["/\\.(ya?ml|sh)$/"],
+      matchStrings: [
+        "#\\s*renovate:\\s*datasource=(?<datasource>\\S+)\\s+depName=(?<depName>\\S+)(\\s+versioning=(?<versioning>\\S+))?\\s*\\n\\s*[\\w.-]+\\s*[:=]\\s*\"?(?<currentValue>[^\\s\"]+)",
+      ],
+    },
+    {
+      customType: "regex",
+      managerFilePatterns: ["/^apps/.+\\.ya?ml$/"],
+      matchStrings: ["imageName:\\s*(?<depName>[^:\\s]+):(?<currentValue>\\S+)"],
+      datasourceTemplate: "docker",
+    },
+  ],
+
+  packageRules: [
+    {
+      matchUpdateTypes: ["major"],
+      dependencyDashboardApproval: true,
+    },
+    {
+      matchDatasources: ["kubernetes-api"],
+      enabled: false,
+    },
+    {
+      matchPackageNames: ["https://github.com/blobor/homelab-gitops.git"],
+      enabled: false,
+    },
+
+    // Grouping
+    {
+      groupName: "talos",
+      matchPackageNames: ["ghcr.io/siderolabs/talosctl"],
+    },
+    {
+      groupName: "immich",
+      matchPackageNames: ["ghcr.io/immich-app/**"],
+    },
+    {
+      groupName: "traefik",
+      matchPackageNames: ["traefik"],
+    },
+    {
+      groupName: "cnpg postgres",
+      matchPackageNames: ["ghcr.io/cloudnative-pg/postgresql"],
+      versioning: "regex:^(?<major>\\d+)\\.(?<minor>\\d+)-(?<patch>\\d+)-(?<compatibility>standard-\\w+)$",
+    },
+
+    // Versioning for non-semver tags
+    {
+      matchPackageNames: ["plexinc/pms-docker"],
+      versioning: "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<build>\\d+)-[0-9a-f]+$",
+    },
+    {
+      matchPackageNames: ["lscr.io/linuxserver/transmission"],
+      versioning: "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-r(?<build>\\d+)-ls(?<revision>\\d+)$",
+    },
+
+    // Holds and limits
+    {
+      // v1.4.0 image is not published; node plugin lacks /host mount propagation
+      matchPackageNames: ["https://github.com/SynologyOpenSource/synology-csi.git"],
+      dependencyDashboardApproval: true,
+    },
+    {
+      // VectorChord changes need an extension upgrade that Immich supports
+      matchPackageNames: ["ghcr.io/tensorchord/cloudnative-vectorchord"],
+      dependencyDashboardApproval: true,
+    },
+    {
+      // Talos needs a manual talosctl upgrade; Kubernetes must stay in the Talos support range
+      matchPackageNames: ["ghcr.io/siderolabs/kubelet"],
+      matchUpdateTypes: ["major", "minor"],
+      dependencyDashboardApproval: true,
+    },
+
+    // Release notes where the image source is a packaging repo or missing
+    {
+      matchPackageNames: ["ghcr.io/siderolabs/kubelet"],
+      sourceUrl: "https://github.com/kubernetes/kubernetes",
+    },
+    {
+      matchPackageNames: ["glanceapp/glance"],
+      sourceUrl: "https://github.com/glanceapp/glance",
+    },
+    {
+      matchPackageNames: ["ghcr.io/cloudnative-pg/postgresql"],
+      changelogUrl: "https://www.postgresql.org/docs/release/",
+    },
+    {
+      matchPackageNames: ["plexinc/pms-docker"],
+      changelogUrl: "https://forums.plex.tv/t/plex-media-server/30447",
+    },
+    {
+      matchPackageNames: ["mongo"],
+      changelogUrl: "https://www.mongodb.com/docs/manual/release-notes/",
+    },
+    {
+      matchPackageNames: ["tailscale-operator"],
+      changelogUrl: "https://tailscale.com/changelog",
+    },
+
+    // Internet-facing
+    {
+      matchPackageNames: ["authentik", "ghcr.io/immich-app/**", "plexinc/pms-docker", "traefik"],
+      labels: ["renovate", "public"],
+      prPriority: 5,
+    },
+  ],
+}

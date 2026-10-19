@@ -3,7 +3,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 # renovate: datasource=docker depName=ghcr.io/siderolabs/talosctl
-VERSION=v1.14.3
+VERSION=v1.14.4
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
 K8S_VERSION=v1.37.1
 SCHEMATIC=2e3e6a52fd648d18a71f4b42f6997850ed04048d9e71986c08b927808bcfc4eb

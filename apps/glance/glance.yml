@@ -110,9 +110,10 @@ pages:
             parameters:
               query: >-
                 sort_by_label(union(
-                  label_set(round(100 * (1 - raidFreeSize{job="synology",raidName="Volume 1"} / raidTotalSize{job="synology",raidName="Volume 1"})), "n", "1", "item", "Зайнято", "unit", "%"),
-                  label_set(round(raidFreeSize{job="synology",raidName="Volume 1"} / 1e12, 0.1), "n", "2", "item", "Вільно", "unit", " TB"),
-                  label_set(round(raidTotalSize{job="synology",raidName="Volume 1"} / 1e12, 0.1), "n", "3", "item", "Всього", "unit", " TB"),
+                  label_set(round(100 * (1 - raidFreeSize{job="synology",raidName="Volume 1"} / raidTotalSize{job="synology",raidName="Volume 1"})) > 80, "n", "1", "item", "Зайнято", "unit", "%", "class", "color-negative"),
+                  label_set(round(100 * (1 - raidFreeSize{job="synology",raidName="Volume 1"} / raidTotalSize{job="synology",raidName="Volume 1"})) <= 80, "n", "1", "item", "Зайнято", "unit", "%"),
+                  label_set(round(raidFreeSize{job="synology",raidName="Volume 1"} / 2^40, 0.1), "n", "2", "item", "Вільно", "unit", " TiB"),
+                  label_set(round(raidTotalSize{job="synology",raidName="Volume 1"} / 2^40, 0.1), "n", "3", "item", "Всього", "unit", " TiB"),
                   label_set(max(diskTemperature{job="synology"}), "n", "4", "item", "Темп. дисків (макс.)", "unit", " °C"),
                   label_set(temperature{job="synology"}, "n", "5", "item", "Темп. системи", "unit", " °C"),
                   label_set(max({__name__=~"systemStatus|powerStatus|systemFanStatus|cpuFanStatus", job="synology"}) == 1, "n", "6", "item", "Система", "text", "OK"),

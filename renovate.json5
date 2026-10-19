@@ -51,6 +51,9 @@
     {
       groupName: "talos",
       matchPackageNames: ["ghcr.io/siderolabs/talosctl"],
+      prBodyNotes: [
+        "Merging does not upgrade the nodes. Upgrade `talosctl` on the laptop, then `talosctl upgrade` the control plane, then cordon the worker and upgrade it with `--drain=false`. Merge after both nodes run the new version.",
+      ],
     },
     {
       groupName: "immich",
@@ -64,6 +67,7 @@
       groupName: "cnpg postgres",
       matchPackageNames: ["ghcr.io/cloudnative-pg/postgresql"],
       versioning: "regex:^(?<major>\\d+)\\.(?<minor>\\d+)-(?<patch>\\d+)-(?<compatibility>standard-\\w+)$",
+      prBodyNotes: ["Each CNPG cluster restarts. Authentik login and Ghostfolio are down for about a minute."],
     },
 
     // Versioning for non-semver tags
@@ -78,9 +82,24 @@
 
     // Holds and limits
     {
-      // v1.4.0 image is not published; node plugin lacks /host mount propagation
+      // tracked through the image below; the tag is useless without a published image
       matchPackageNames: ["https://github.com/SynologyOpenSource/synology-csi.git"],
+      enabled: false,
+    },
+    {
+      matchPackageNames: ["synology/synology-csi"],
       dependencyDashboardApproval: true,
+      prBodyNotes: [
+        "Also bump `targetRevision` in `clusters/springfield/synology-csi.yaml`. Fix the node plugin `/host` mount propagation first. Reboot the worker after the node plugin restarts.",
+      ],
+    },
+    {
+      // UniFi Network Application supports MongoDB up to 8.0
+      matchPackageNames: ["mongo"],
+      allowedVersions: "<9",
+      prBodyNotes: [
+        "One major at a time. Before: UniFi backup and check `featureCompatibilityVersion`. After: set it to the new major.",
+      ],
     },
     {
       // VectorChord changes need an extension upgrade that Immich supports
@@ -92,6 +111,14 @@
       matchPackageNames: ["ghcr.io/siderolabs/kubelet"],
       matchUpdateTypes: ["major", "minor"],
       dependencyDashboardApproval: true,
+    },
+
+    // Steps that a merge does not do
+    {
+      matchPackageNames: ["ghcr.io/siderolabs/kubelet"],
+      prBodyNotes: [
+        "Run `talosctl upgrade-k8s --to <version>` first. The version must be in the support matrix of the running Talos.",
+      ],
     },
 
     // Release notes where the image source is a packaging repo or missing

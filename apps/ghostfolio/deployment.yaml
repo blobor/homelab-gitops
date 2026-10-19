@@ -20,7 +20,7 @@ spec:
         seccompProfile: {type: RuntimeDefault}
       containers:
         - name: ghostfolio
-          image: ghostfolio/ghostfolio:3.86.0
+          image: ghostfolio/ghostfolio:3.88.0
           env:
             - {name: TZ, value: Europe/Kyiv}
             - {name: ROOT_URL, value: "https://money.private.home.lobor.dev"}

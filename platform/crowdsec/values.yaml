@@ -10,6 +10,7 @@ agent:
     - namespace: traefik
       podName: traefik-public-*
       program: traefik
+      poll_without_inotify: true            # /var/log/containers are symlinks; inotify misses log rotation
   env:
     - name: COLLECTIONS
       value: crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios

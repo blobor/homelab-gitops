@@ -20,6 +20,13 @@ core:
 additionalArguments:
   - --providers.kubernetescrd.safeNaming=false   # keep router names; the chart sets the flag only when true
 
+accessLog:                                  # read by the CrowdSec agent from the container log
+  enabled: true
+  format: json
+  fields:
+    headers:
+      defaultMode: drop                     # no cookies or tokens in the log
+
 ports:
   web:
     expose:

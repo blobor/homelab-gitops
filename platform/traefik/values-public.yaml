@@ -27,6 +27,24 @@ accessLog:                                  # read by the CrowdSec agent from th
     headers:
       defaultMode: drop                     # no cookies or tokens in the log
 
+experimental:
+  plugins:
+    crowdsec-bouncer:                       # used by the Middleware traefik/crowdsec-bouncer
+      moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
+      # renovate: datasource=github-releases depName=maxlerebourg/crowdsec-bouncer-traefik-plugin
+      version: v1.8.1
+
+deployment:
+  additionalVolumes:
+    - name: crowdsec-bouncer
+      secret:
+        secretName: crowdsec-bouncer
+
+additionalVolumeMounts:
+  - name: crowdsec-bouncer
+    mountPath: /etc/traefik/crowdsec        # LAPI key for the bouncer plugin
+    readOnly: true
+
 ports:
   web:
     expose:

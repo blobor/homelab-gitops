@@ -5,7 +5,8 @@ metadata:
     namespace: unifi
 type: Opaque
 stringData:
-    password: ENC[AES256_GCM,data:68ZEteBbYmARtAm41g==,iv:iThquHn+qO8PJYLG+ufklnNoypdlMpNgY1UUhankGHQ=,tag:+Xz2cxKIFxDaJgx5GTx4ig==,type:str]
+    password: ENC[AES256_GCM,data:3UgTlairG0fqS04vK1G+JVGPS8anjzbuZ9Ms1CXZVgDeh8HhQcydTenCjkAomuZV,iv:RhQ3ibYCY93POZPGt0rkjfr6JscM9gSfNbXZifI+pHo=,tag:V5nhVReojOwctqoyK5Rrxw==,type:str]
+    admin-password: ENC[AES256_GCM,data:Mala9iQc4Iis1/x7se2iTyzCqRVSwSY5n4p8TKSWpwndSuwsCCEObjmY5dr7UWnw,iv:ij11uKOsFbjk1N0Zj4avja89DCg1VRw6DT+tQLVkr8A=,tag:90sLkRAFOdL1Mtz99r585g==,type:str]
 sops:
     age:
         - enc: |
@@ -18,6 +19,6 @@ sops:
             -----END AGE ENCRYPTED FILE-----
           recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
     encrypted_regex: ^(data|stringData)$
-    lastmodified: "2026-10-08T08:40:03Z"
-    mac: ENC[AES256_GCM,data:wfFHbFYdhFZFMwaUS9IawyS3Zu2xg1VTmOQzLU3D8cZONCZ6VAqs38mLhEKR7cyeTvv1L2w0iNV1IToOrwZXyi5io4MziHLD9x/hntglNhYZNYYC/jXxtqoOB4CahozGzZudBgnxLUmMXX1Uo/iN17QYrNqScePKyS+Hj6uG3rY=,iv:tHwsuxf4+/+ql3Yy2YDkOubEvR0O4Qr5/xy8EfZ3LsY=,tag:16NW+omLawcJwe4cCPxvUg==,type:str]
+    lastmodified: "2026-10-20T12:14:43Z"
+    mac: ENC[AES256_GCM,data:J1THektiMNXT/QJ51HtYANvpwNA+2hgnVUNrPpBZwku4/6jfGWr5quF5tSDLuYnk2MWdTknga6PsgBeWMSsyEOvIMq7pGA92wdMEEZ0kX885wZwmFVOgCv0+YyAbDG2BKHay1Zk9JBo1rBVs0zQmxOPnRxqs5nLAaRZ6MdO72cA=,iv:N1HQ2csKkUPz/gHdtUEpcAD9fu3G47vVAuHr8BABt80=,tag:pFZW7Mp5BIIjHb5M/+F4hA==,type:str]
     version: 3.13.3

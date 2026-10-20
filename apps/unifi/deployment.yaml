@@ -19,7 +19,7 @@ spec:
       containers:
         - name: mongo
           image: mongo:8.0.34
-          args: [--bind_ip, 127.0.0.1]
+          args: [--bind_ip, 127.0.0.1, --auth]
           resources:
             requests: {cpu: 50m, memory: 256Mi}
             limits: {memory: 1Gi}

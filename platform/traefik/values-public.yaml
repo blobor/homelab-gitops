@@ -54,6 +54,8 @@ ports:
   websecure:
     http:
       aliasHeadersStrategy: delete
+      middlewares:
+        - traefik-crowdsec-bouncer@kubernetescrd   # every public route; namespace-name@provider
     forwardedHeaders:
       trustedIPs:                           # Cloudflare IPv4 ranges (same list as MikroTik address-list cloudflare)
         - 173.245.48.0/20

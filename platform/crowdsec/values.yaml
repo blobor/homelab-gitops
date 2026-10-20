@@ -30,6 +30,7 @@ lapi:
       storageClassName: synology-iscsi
     config:
       storageClassName: synology-iscsi
+      size: 1Gi                             # synology-csi minimum
 
 config:
   parsers:

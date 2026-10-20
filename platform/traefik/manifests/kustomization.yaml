@@ -4,6 +4,5 @@ namespace: traefik
 resources:
   - certificates.yaml
   - tlsstore.yaml
-  - crowdsec-bouncer.yaml
 generators:
   - secret-generator.yaml

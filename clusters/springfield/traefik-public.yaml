@@ -13,6 +13,7 @@ spec:
         releaseName: traefik-public
         valueFiles:
           - $values/platform/traefik/values-public.yaml
+          - $values/platform/traefik/values-cloudflare.yaml
     - repoURL: https://github.com/blobor/homelab-gitops.git
       targetRevision: main
       ref: values

@@ -1,0 +1,43 @@
+# LAPI (decisions, community blocklist) + agent that reads the traefik-public access log.
+container_runtime: containerd
+
+secrets:
+  externalSecret:
+    name: crowdsec-lapi                     # SOPS; the chart default is random per render, which Argo cannot keep
+
+agent:
+  acquisition:
+    - namespace: traefik
+      podName: traefik-public-*
+      program: traefik
+  env:
+    - name: COLLECTIONS
+      value: crowdsecurity/traefik crowdsecurity/http-cve crowdsecurity/base-http-scenarios
+  resources:
+    requests: {cpu: 100m, memory: 128Mi}
+    limits: {memory: 256Mi}
+
+lapi:
+  env:
+    - name: BOUNCER_KEY_traefik             # registers the traefik-public bouncer plugin
+      valueFrom:
+        secretKeyRef: {name: crowdsec-bouncer, key: key}
+  resources:
+    requests: {cpu: 50m, memory: 128Mi}
+    limits: {memory: 256Mi}
+  persistentVolume:
+    data:
+      storageClassName: synology-iscsi
+    config:
+      storageClassName: synology-iscsi
+
+config:
+  parsers:
+    s02-enrich:
+      home-whitelist.yaml: |
+        name: homelab/home-whitelist
+        description: "Home WAN address"
+        whitelist:
+          reason: "home WAN"
+          ip:
+            - "95.164.40.82"

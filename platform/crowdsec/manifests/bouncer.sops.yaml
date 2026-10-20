@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: crowdsec-bouncer
+    namespace: crowdsec
+type: Opaque
+stringData:
+    key: ENC[AES256_GCM,data:uiF9DOGF+R0qMlp23c6QfwwglxYsbT/gWGUKqvr2O3FWTCsb1Ye+MlmCe4f79bCuJ90qiCnI3OwfTKOnGH8cRA==,iv:encJAIT+DXRJ3+BRL6T4SYkHwxaP3O0ojXMJEV96R30=,tag:NdiuZ7q0bRVCK7Cr/hdNjA==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBwN05qSGZMZjRibjlpWG1T
+            M0RUTjlWdmtLL3VyQjEvZ2MrTFhiZ21qUjE0CkpiM3JDWk1FM2UrcjNCeWp0VllP
+            b2tUdGlPNTdiZ0Y1TjNwY2I1eHArNXcKLS0tIG5zeExZWjdCdEZsQWY0ZnZEK2Fj
+            YkVQNkd5Y2NJSG52NUJieTQwa2tlajgK6Sp+JifGr2UZGGXSqNITP2fxohNX5s08
+            etWVCYFxcnJ2C9FlxX4eLusMQMBng08s5e5RbMJExlQ85vR8cMFj5g==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-20T13:15:05Z"
+    mac: ENC[AES256_GCM,data:F4z64g0IVpY4LhU+TxIQjwmJekshgZf9QTWC6mdK50T7EHFbzZyiEmEvOxsMVbOUNYJch4MgNriIrnJBEKg2H2NbFXze9IfYxRF/f8Y3Dci2q0pwocgY2He9XryxiWLAuEWGmOSVhkePISik15NV73QSZHTtXrbpV2p/5ESrTtw=,iv:EsL7ZDYfe73/OvEvD3hZLC/4V0AJOpj0Z0Jggv5IVqg=,tag:3gksYJPXsncsJBH7HMxTuw==,type:str]
+    version: 3.13.3

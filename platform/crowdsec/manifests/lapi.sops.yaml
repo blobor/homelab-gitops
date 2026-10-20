@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: crowdsec-lapi
+    namespace: crowdsec
+type: Opaque
+stringData:
+    csLapiSecret: ENC[AES256_GCM,data:t8GK6gWDD/yXCrMpfk1D1M1hNleniHrrtPvMBD4lq8psDNwZ/J1mOrkDNJzfgC6ckotNyDGWdyeYXQTu62E57A==,iv:DV/nj/3A8LNo5zdrsUixalX21MhdCN7ToP7EsQpQeCc=,tag:CnAIRACbVqaztn4FmT3QDw==,type:str]
+    registrationToken: ENC[AES256_GCM,data:mYp5qKVw4cbm4G4+dwHBmEwrpBnHDHUZrFs+I3ETdWTU/b+JnLlnMrNvQsOGTDMymGtZgDb9RvoYxolCLFsyIg==,iv:WAb8pvE92G1BR1or07q+Duyh+MxnvK2WKXaEBW6o1gA=,tag:Q3IKlX8XB3v0wCCGBjUOKQ==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBGRnFuaGdQT3ZUQ1o0V3Jq
+            d2hKSldLcUgwa1Z0NEhCOVMzc1JUOUQ3OHlBCjNEbUhtRXZIT3NxOWU4K25xRGlI
+            ZWxWY2Y4UVZpTXYxSUpXdmFRUGdTSjgKLS0tIDkvK2wybyt5NTNJQ2QxMFRqN05G
+            aFJjSC85dXk5S1RUdjZydGVUOXpJMDQKR/st9tlja9aXyyv9UusjBCfXeYx1XY+t
+            7/WWNoHYmgajCRL7K0aOf3UKMEJWMLJPfV7awDzfCCSGRrZJzRKCaQ==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-20T13:15:05Z"
+    mac: ENC[AES256_GCM,data:j9JgcPm6AZiRdNrBYKWVXGKndYROnHU4BblGFLcMXLvtkQPES61ic30L3mkkOovhvWkFX9znSR9/0eWhF7CL3IAhvlsaWEarlFzRlRYWy7qjk2FUlSHHCT0DSqt+9jlsNl/IeJlh2/+Nd1uIqwFFjKvmbJIXtmHzU9FgbKWf8Do=,iv:en2nVLEBoDheGs4UkkbCTm5xbikp0ZU4VZcLgWZlIUs=,tag:8Cdflpqj9jif/cvKXM7xZw==,type:str]
+    version: 3.13.3

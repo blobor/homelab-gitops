@@ -11,7 +11,7 @@ controllers:
       main:
         image:
           # renovate: datasource=docker depName=ghcr.io/immich-app/immich-server
-          tag: v3.3.3
+          tag: v3.3.4
         env:
           TZ: Europe/Kyiv
 
@@ -77,7 +77,7 @@ machine-learning:
         main:
           image:
             # renovate: datasource=docker depName=ghcr.io/immich-app/immich-machine-learning
-            tag: v3.3.3-openvino
+            tag: v3.3.4-openvino
           probes:
             liveness:
               spec:

@@ -22,7 +22,7 @@ spec:
         seccompProfile: {type: RuntimeDefault}
       containers:
         - name: syncthing
-          image: syncthing/syncthing:2.1.6
+          image: syncthing/syncthing:2.1.7
           env:
             - {name: TZ, value: Europe/Kyiv}
             - {name: STNOUPGRADE, value: "1"}

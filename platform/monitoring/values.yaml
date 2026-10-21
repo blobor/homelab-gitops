@@ -65,7 +65,7 @@ alertmanager:
           - url_file: /etc/vm/secrets/alertmanager-secrets/healthchecks-url
             send_resolved: false
             payload:                       # short body: healthchecks.io shows it in Telegram as «Last Ping Body»
-              message: 'Watchdog {{ .Status }}: alerting pipeline OK'
+              message: 'Watchdog {{ .Status }}, alerting pipeline OK'   # no ": " — the rendered value is parsed as YAML
   templateFiles:
     telegram.tmpl: |-
       {{/* One line per notification: rule annotations "summary" (firing) and "resolved". */}}

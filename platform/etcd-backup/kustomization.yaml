@@ -5,3 +5,5 @@ resources:
   - talos-serviceaccount.yaml
   - storage.yaml
   - cronjob.yaml
+generators:
+  - secret-generator.yaml

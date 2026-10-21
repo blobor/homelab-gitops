@@ -27,7 +27,6 @@ spec:
               volumeMounts:
                 - {name: talos-secrets, mountPath: /var/run/secrets/talos.dev}
                 - {name: work, mountPath: /work}
-          containers:
             - name: store
               image: busybox:1.38
               command:
@@ -43,7 +42,15 @@ spec:
               volumeMounts:
                 - {name: work, mountPath: /work}
                 - {name: backup, mountPath: /backup}
+          containers:
+            - name: ping                    # runs only after both init containers succeed; no ping => healthchecks DOWN
+              image: curlimages/curl:8.23.0
+              command: [sh, -c, 'curl -fsS -m 10 --retry 5 -o /dev/null "$(cat /hc/url)"']
+              securityContext: {allowPrivilegeEscalation: false, readOnlyRootFilesystem: true, capabilities: {drop: [ALL]}}
+              volumeMounts:
+                - {name: healthchecks, mountPath: /hc, readOnly: true}
           volumes:
             - {name: talos-secrets, secret: {secretName: etcd-backup-talos}}
+            - {name: healthchecks, secret: {secretName: etcd-backup-healthchecks}}
             - {name: work, emptyDir: {}}
             - {name: backup, persistentVolumeClaim: {claimName: k8s-backups}}

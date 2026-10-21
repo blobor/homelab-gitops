@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: etcd-backup-healthchecks
+stringData:
+    url: ENC[AES256_GCM,data:B3yRCt+36/tSV2t2w3g/FV6hiBYqWiQ7+wmqTD5Lqm+JKWZAjADqb3ahYsVQx39GsK5eDMD922o=,iv:d6wrjHdon5ftn12rZnKPd5lieW847kzG67ptFdBnKlQ=,tag:Rw+6VyohNxpjhbjpch+73A==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBhT2NoTlFGNnhSRGMrVVM5
+            R01waDlJaVFQZm1kK3A0WG04dlJyOGptcW1BCkkxQjg3SXdtOXFhTm13S3VnQXVO
+            cmhuWkc3RFJaNlNEZEJQV2ZiVVdlMFUKLS0tIDRzbmdWT2J0dTB0b1o4OFN0SytU
+            dUZnUmtmMENiV3I3NEFEMDhEVWwwV00KiRR2axwV0+npd9vMaCAH2ZhzqWWAsNms
+            4KUsjWXUoHVlfOuUvFxeHbXt6SzZWwXWLcrVK2hYCFHjDK4v2nh4og==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-21T06:51:27Z"
+    mac: ENC[AES256_GCM,data:+XmhF/mWu6hPZJT5kCO/EtkWy/mh9jup3A4OoUoOT0MGQWA9MkKKqPaXrIwy0LRO+zOsngqg1uk5gq8e9WX3ao08YqyNrqmnnWCkF6Z1H9YuTC+ENlq9483DM6puIzsqmLj/cuIGddJ1giR7GYZdkMlxj+EyEGSHw1MHl/reBsM=,iv:FaUP7jjPew7aVsbpsF5P509Iu4cx8+TFJA7RyQfp9zk=,tag:TSNiNVyemtRzaxPZmeSsHA==,type:str]
+    version: 3.13.3

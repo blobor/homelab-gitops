@@ -60,7 +60,7 @@ pages:
                 allow-insecure: true
                 icon: si:plex
               - title: Immich
-                url: https://photos.home.lobor.dev
+                url: https://photos.private.home.lobor.dev
                 check-url: http://immich-server.immich.svc.cluster.local:2283/api/server/ping
                 icon: si:immich
               - title: Home Assistant

@@ -3,19 +3,19 @@ kind: Secret
 metadata:
     name: tailscale-relay
 stringData:
-    config.json: ENC[AES256_GCM,data:0pq60bsG+KatS0fdbYNKQi+H3+Df0i/7k2COLzjbNtdsJghk1/0TTdd3Xg4OK2/lQ+fJ9jGGlo/QgY5F+BHkjj7MvDchSs8CCX6VJXvBeO8f/VfHDfs7O+iXNcyo2i+3oHAtoxfViqeRQk43wnYb7May7LtbuME0R7pauLa0loOL67FwqDZbQXeV5fZm4YmJ6TGbFtX6kPX2zhccXnZ0XifWCm8GzNZun6b4Dvwj/eImEhTyckhRChoqaFBjH6LWcX7pF09aphMNLtl9zw9b8+Z1OEPRkAj1lwYoH/UTpc2whPVjypfKPRXLdYGkoOvRoTM0WyXoLzoxyi21pZzthkdueQELB+C11AYR0I/Amo+SY0eBmJM=,iv:+AaRFDVm3jevIm4HDoi2fEN/TPfhCVSIN82OcJWW3tc=,tag:bg90iHMrwOWD2LJw7KiDVQ==,type:str]
+    config.json: ENC[AES256_GCM,data:3eE1CLII+ESd8TQvy14/IzbRlDwfSzcgROytvnPYwGMkd7TkV2o8vULyS1cbZdkLLvAhzPkiuPKta7rAUcPBsRaivtum4YRMHSFBhCy2hEYlx+FlDsYP+kRljwgILg4LpPsqwtkWL4isQwZ0JJQDv+kO6Ekg4kA3x47B66BgBRVE/JYqFRwNWxjQZnJJehuSMGljs4051LOL+0yUni0n/Pfm/DNFpUcQoyc5OTqpGuzU30LAesGTvTAEqYqcXjyFboW3ylaYl4j9iS4G6T+Y8bCSNXdvK4rWLMKjVIL3z6WDKHy+5pxr3jR3btmbPxs+t1zQOiFVVOs8PBKYKTG8mFJQNfzLqTlsKA6yq61b0RvzdPU=,iv:lxD/sO04y6J4K/CGVIH9r2+ZpXeIDM3tJJb3n1Jjl9k=,tag:BrU4EI+ggwZ6PRgGC+2/XQ==,type:str]
 sops:
     age:
         - enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBtQ09UNmE5MUJZQXFpQ0d5
-            VWRJWGtqSEV3aHlvbW9ZQTVxTzRlUFdlMmdnCktjTEx6eHhZUXJaRGVDVkV3cGFD
-            R2p4ZXJSOU02MFlJeGZZMkdLMGVsVVkKLS0tIEowMXhKRkR1YTA5Qjk3eTF2bGNh
-            aEZlY29abVNiTG1FQnVaUlZKZVJMcGsKzG6FrzOD5d3KhHy09sIQuLahurB0rebt
-            GoRQ6ird7A/o/4ES3t+zM1F69cxgYcaOZig8E4D27QD3kD5cXW36og==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBEdTM0aUU5ZUJtYXFsdDdn
+            VDN4ejRKdWlnZnpLTjBYb2QrRXl0L3VvVUIwCnRQRzJaeEgvVU8zN0plc3p0VWsw
+            cWlsdGN6K0dqQ2ZqMnVYUFNHd0FDaVUKLS0tIERWVjVtL3FLaU9hZ1dQeTRndVpt
+            L1ptTkF2T0tteGFnM0ZldUpmVFl6MVUKgp60gnd+89oCC9GllUrr6O4NSnsnUPOL
+            oeUI5AlUAVNybV0OqlJ+RmMTPOo7QHDClSmZ2tVZFGJYdjJpdzIDLQ==
             -----END AGE ENCRYPTED FILE-----
           recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
     encrypted_regex: ^(data|stringData)$
-    lastmodified: "2026-10-22T08:02:02Z"
-    mac: ENC[AES256_GCM,data:xJmNSr7TLFDDIdFAiw3HSPtj/bO22mgNETL8FUb8TCSXmnwK6wU5PcQLYz2MoJpSPR9BI4EiCqLEfiv+VTAYsaWF4hMYb17G5cX7vx134eymXiBXmFRZdefY1zDPTt8MtSmM6LEOkN2BDcYkcVE4Dy09Ryf17lC565O/GA+EQJ0=,iv:l189RByIBnDpslzpQOcpKih6jOMgBtG28seDRUZ/pwU=,tag:30XQAgtGuIoq/ZM5ZmpnaQ==,type:str]
+    lastmodified: "2026-10-22T08:14:44Z"
+    mac: ENC[AES256_GCM,data:A3RNXDgFx4nVkj6DLwVTrxHsRpFSGq4oHn6K3kN+Lis0m/xD0I7+seFoaaqd2SxYyQNpHqgxgE9GKukYAGNyRnJOPxyFYNPb3Pc+6KagRQWsk0/a6AdUQlrQyDQcvtASDbGlYGIUOdkLTZJkvv+OR5x1eklGi2TO39IbqiVusrA=,iv:x9dLrQbUgIQ3iro7CTzzFdebjV0Uher+zYIudDcXhsA=,tag:5RlpuVeXjYScJWWXh/hUZQ==,type:str]
     version: 3.13.3

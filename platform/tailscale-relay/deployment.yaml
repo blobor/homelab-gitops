@@ -26,7 +26,7 @@ spec:
           command: [/usr/local/bin/tailscaled]
           args:
             - --tun=userspace-networking        # no /dev/net/tun, no NET_ADMIN
-            - --statedir=/var/lib/tailscale
+            - --statedir=/var/lib/tailscale/state   # subdir: tailscaled must own (chmod) it; the volume root is root-owned
             - --socket=/tmp/tailscaled.sock
             - --config=/etc/tailscale/config.json
           ports:

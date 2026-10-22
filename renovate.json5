@@ -143,13 +143,13 @@
       changelogUrl: "https://www.mongodb.com/docs/manual/release-notes/",
     },
     {
-      matchPackageNames: ["tailscale-operator"],
+      matchPackageNames: ["tailscale-operator", "tailscale/tailscale"],
       changelogUrl: "https://tailscale.com/changelog",
     },
 
     // Internet-facing
     {
-      matchPackageNames: ["authentik", "ghcr.io/immich-app/**", "plexinc/pms-docker", "traefik"],
+      matchPackageNames: ["authentik", "ghcr.io/immich-app/**", "plexinc/pms-docker", "traefik", "tailscale/tailscale"],
       labels: ["renovate", "public"],
       prPriority: 5,
     },

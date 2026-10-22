@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tailscale-relay
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: {app: tailscale-relay}
+  template:
+    metadata:
+      labels: {app: tailscale-relay}
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: tailscaled
+          image: tailscale/tailscale:v1.104.2
+          command: [/usr/local/bin/tailscaled]
+          args:
+            - --tun=userspace-networking        # no /dev/net/tun, no NET_ADMIN
+            - --statedir=/var/lib/tailscale
+            - --socket=/tmp/tailscaled.sock
+            - --config=/etc/tailscale/config.json
+          ports:
+            - {name: relay, containerPort: 40000, protocol: UDP}
+          resources:
+            requests: {cpu: 50m, memory: 64Mi}
+            limits: {memory: 256Mi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities: {drop: [ALL]}
+          volumeMounts:
+            - {name: config, mountPath: /etc/tailscale, readOnly: true}
+            - {name: state, mountPath: /var/lib/tailscale}
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - name: config
+          secret: {secretName: tailscale-relay}
+        - name: state
+          persistentVolumeClaim: {claimName: tailscale-relay-state}
+        - name: tmp
+          emptyDir: {medium: Memory, sizeLimit: 16Mi}

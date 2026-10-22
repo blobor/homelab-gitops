@@ -1,0 +1,10 @@
+# tailscaled state (node identity); keeps the device after the single-use auth key is spent.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tailscale-relay-state
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: synology-iscsi
+  resources:
+    requests: {storage: 1Gi}               # synology-csi minimum

@@ -1,0 +1,25 @@
+# In: only the relay port. Out: DNS + Tailscale control/DERP/STUN on public addresses. Relayed packets are replies to inbound flows.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: tailscale-relay
+spec:
+  endpointSelector:
+    matchLabels: {app: tailscale-relay}
+  ingress:
+    - fromEntities: [world, cluster]
+      toPorts:
+        - ports: [{port: "40000", protocol: UDP}]
+  egress:
+    - toEndpoints:
+        - matchLabels: {k8s:io.kubernetes.pod.namespace: kube-system, k8s-app: kube-dns}
+      toPorts:
+        - ports: [{port: "53", protocol: ANY}]
+    - toCIDRSet:
+        - cidr: 0.0.0.0/0
+          except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 100.64.0.0/10]
+      toPorts:
+        - ports:
+            - {port: "443", protocol: TCP}
+            - {port: "80", protocol: TCP}
+            - {port: "3478", protocol: UDP}

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: tailscale-relay
+stringData:
+    config.json: ENC[AES256_GCM,data:tpg4JdRiK54+Q9qLiGFJ2od7nLlmtIzOiHtI6W+qtSjthfA4WHEyXL7fvWJzXzF/S3HiP1KamDheVee/VlQZTFv4fCxjniYR/4EsbXdZ4WmmAw5SaSFdyYEO1eDOGibEU2vnnZ51ckxd11bLfLDBRteZja0zxJlLnFCKOVppWgioEpF4HNorB8HKLaOiHstRLRZHW/j9malR3SbAr4UO2mTYhHpsDC5VKOnC/DusUbruoVVNHWLXmWe0cS+U3ecGioijYeZnu2DZX5FX9DL0xCXyie5cavv566bPn7JxN1+3/Algs+qpRr6BVkTQb84ZeMetsAHX641Bv54SpOyhrCgOP5FFr/lm1+HK6e2db4LVtlxlV1w=,iv:BQMYYNivQZo4yHlJFj+P8fhZ/MZKR6jIbBvKgtBD9j0=,tag:+LYLABb0ghpjJGTOtqFOUw==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBIMGZJUUNHMUFvMVdRSjdj
+            YVk3cllPUXpyd1ZyWVp1TmpLbndvWGxoeGxFClpnYlI2b2hINHBWU2pRTXFoUU5a
+            YkVKTzRlZWhGYnpDSi90YUE4eGdXY28KLS0tIDBuQi9jd0g2K2NlL202TU52UVA5
+            Qm5vbkkxSjgwMnV0OUdwQ1JkSFRBcmMKO1viRIyrJGISiouvBakkDWcB2ksfloHS
+            fXdeWcOcgLP2Mm0I+lgfFoj51FfgFQ4C062FzpkTRs3NyYgM/8xRHA==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-10-22T07:54:46Z"
+    mac: ENC[AES256_GCM,data:lOW86b3pbr84pc3LTvnNTalD/GvC2jAZADndtkiu60aaz9AmtNTSZ/if1vdne6f79zbNRD6wYnmLRjdQIjxYuiqJYRu4F2WZ8vIMP/7m1hq9cbO39u0AzsN84m1xsea3g7H3dYStBZ3gDnDs6pLvrES2so9EceBlmGmtPpJDHak=,iv:r1HljIQOIQJp2dMY5HzHc2i+qZAZeqpErbclQn7/Kvk=,tag:w4lJU+41en5zKSxEb6Ms4g==,type:str]
+    version: 3.13.3

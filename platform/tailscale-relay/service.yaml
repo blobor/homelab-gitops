@@ -1,0 +1,13 @@
+# WAN udp/40000 is forwarded to this address. Local keeps client source addresses; the relay identifies clients by them.
+apiVersion: v1
+kind: Service
+metadata:
+  name: tailscale-relay
+  annotations:
+    lbipam.cilium.io/ips: 10.20.8.246
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  selector: {app: tailscale-relay}
+  ports:
+    - {name: relay, port: 40000, targetPort: relay, protocol: UDP}

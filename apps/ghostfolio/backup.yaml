@@ -51,7 +51,7 @@ spec:
             seccompProfile: {type: RuntimeDefault}
           initContainers:
             - name: dump
-              image: ghcr.io/cloudnative-pg/postgresql:18.6-202610190957-standard-trixie
+              image: ghcr.io/cloudnative-pg/postgresql:18.6-202610260820-standard-trixie
               command: [sh, -c, 'pg_dump -Fc -f /work/ghostfolio.dump']
               env:
                 - {name: PGHOST, value: ghostfolio-db-rw}

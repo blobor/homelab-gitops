@@ -21,7 +21,7 @@ spec:
         seccompProfile: {type: RuntimeDefault}
       containers:
         - name: valkey
-          image: valkey/valkey:9.1.2-alpine
+          image: valkey/valkey:9.1.3-alpine
           command: [sh, -c, 'exec valkey-server --requirepass "$REDIS_PASSWORD" --save "" --appendonly no']
           env:
             - name: REDIS_PASSWORD

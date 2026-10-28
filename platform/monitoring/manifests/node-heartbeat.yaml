@@ -18,7 +18,7 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                  - {key: kubernetes.io/hostname, operator: In, values: [talos-worker-1, lenny]}
+                  - {key: kubernetes.io/hostname, operator: In, values: [homer, lenny]}
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true

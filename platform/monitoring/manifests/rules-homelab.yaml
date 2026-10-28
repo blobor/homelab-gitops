@@ -23,5 +23,5 @@ spec:
           labels:
             severity: critical
           annotations:
-            summary: Kubernetes API (talos-cp-1) is down for 5 min. Plex keeps running.
+            summary: Kubernetes API (burns) is down for 5 min. Plex keeps running.
             resolved: Kubernetes API is up again

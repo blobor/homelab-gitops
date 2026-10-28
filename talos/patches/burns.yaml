@@ -1,4 +1,4 @@
 apiVersion: v1alpha1
 kind: HostnameConfig
-hostname: talos-cp-1
+hostname: burns
 auto: off

@@ -26,7 +26,7 @@ node() { # $1 = base config (controlplane|worker), $2 = node name
   talosctl machineconfig patch "$out/$1.yaml" "${args[@]}" -o "$out/$2.yaml"
   rm -f "$out/$2.tailscale.yaml"
 }
-node controlplane talos-cp-1
-node worker talos-worker-1
+node controlplane burns
+node worker homer
 node worker lenny
-for n in talos-cp-1 talos-worker-1 lenny; do talosctl validate --mode metal --config "$out/$n.yaml"; done
+for n in burns homer lenny; do talosctl validate --mode metal --config "$out/$n.yaml"; done

@@ -1,4 +1,4 @@
 apiVersion: v1alpha1
 kind: HostnameConfig
-hostname: talos-worker-1
+hostname: homer
 auto: off

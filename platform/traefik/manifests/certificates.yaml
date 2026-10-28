@@ -23,3 +23,4 @@ spec:
     name: letsencrypt-prod
   dnsNames:
     - "*.private.home.lobor.dev"
+    - "*.pve.private.home.lobor.dev"       # per-node Proxmox UI; a wildcard covers one label only

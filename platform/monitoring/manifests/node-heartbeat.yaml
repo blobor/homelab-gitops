@@ -1,5 +1,5 @@
 # Pings a per-node healthchecks.io check every minute. No ping for 5 min => HealthchecksBot reports the node DOWN.
-# URL per node: Secret node-heartbeat, key = node name. Add a node: new check + key + node in the selector.
+# URL per node: Secret node-heartbeat, key = node name. Add a node: new check + key + node in the affinity.
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -13,8 +13,12 @@ spec:
       labels:
         app: node-heartbeat
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: talos-worker-1
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - {key: kubernetes.io/hostname, operator: In, values: [talos-worker-1, lenny]}
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true

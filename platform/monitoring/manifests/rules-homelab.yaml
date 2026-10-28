@@ -13,7 +13,6 @@ spec:
             severity: critical
           annotations:
             summary: "Plex is down: no ready pod for 5 min"
-            resolved: Plex is up again
     - name: homelab.control-plane
       rules:
         # The default KubeAPIDown uses absent(up) and never fires while the target exists with up=0.
@@ -24,4 +23,3 @@ spec:
             severity: critical
           annotations:
             summary: Kubernetes API (burns) is down for 5 min. Plex keeps running.
-            resolved: Kubernetes API is up again

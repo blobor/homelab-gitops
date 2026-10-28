@@ -22,7 +22,7 @@ vmagent:
     externalLabels:
       cluster: springfield
 
-# Only listed alerts reach Telegram; everything else stays in Grafana / vmalert UI.
+# Only the Watchdog leaves the cluster (healthchecks.io dead-man switch); every other alert stays in Grafana / vmalert UI.
 alertmanager:
   spec:
     secrets:
@@ -48,31 +48,14 @@ alertmanager:
           group_wait: 0s
           group_interval: 1m
           repeat_interval: 1m
-        - receiver: telegram-critical
-          matchers: [alertname=~"PlexDown|ControlPlaneDown", severity="critical"]
-          repeat_interval: 4h
     receivers:
       - name: blackhole
-      - name: telegram-critical
-        telegram_configs:
-          - bot_token_file: /etc/vm/secrets/alertmanager-secrets/telegram-token
-            chat_id: -5389980149
-            parse_mode: HTML
-            send_resolved: true
-            message: '{{ template "telegram.homelab.message" . }}'
       - name: healthchecks
         webhook_configs:
           - url_file: /etc/vm/secrets/alertmanager-secrets/healthchecks-url
             send_resolved: false
             payload:                       # short body: healthchecks.io shows it in Telegram as «Last Ping Body»
               message: 'Watchdog {{ .Status }}, alerting pipeline OK'   # no ": " — the rendered value is parsed as YAML
-  templateFiles:
-    telegram.tmpl: |-
-      {{/* One line per notification: rule annotations "summary" (firing) and "resolved". */}}
-      {{ define "telegram.homelab.message" -}}
-      {{ if eq .Status "firing" }}🔴 {{ or .CommonAnnotations.summary .CommonLabels.alertname | html }}
-      {{- else }}✅ {{ or .CommonAnnotations.resolved .CommonAnnotations.summary .CommonLabels.alertname | html }}{{ end }}
-      {{- end }}
 
 grafana:
   testFramework:

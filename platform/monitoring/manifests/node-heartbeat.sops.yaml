@@ -6,6 +6,7 @@ metadata:
 type: Opaque
 stringData:
     talos-worker-1: ENC[AES256_GCM,data:gb4nyOKcXMo8+16XiJO1ElJILImq1hkNBLgkR1aWYe+9PRqVjn76LvSaqRaNVaZG/Nv4I80qFcI=,iv:B/z2Q90xAXYiDRG7z7CNPm9l42CTcbwe+NBNMAMR5Go=,tag:uoXKbpV8tVuMsG+xgeLeeA==,type:str]
+    lenny: ENC[AES256_GCM,data:rS82i2XeOquI/xZJzxZrEgdG4ibjt7czQAu5ICWJVuYWkFsjztkgIvDGcnatwaiZ7WlbYDOmwCw=,iv:f8tU0OanmQXjLZNpCpt7SSiVzqs0LnrT4/PoSP9BCDY=,tag:dLrQjNk5iIczuYavkALSyw==,type:str]
 sops:
     age:
         - enc: |
@@ -18,6 +19,6 @@ sops:
             -----END AGE ENCRYPTED FILE-----
           recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
     encrypted_regex: ^(data|stringData)$
-    lastmodified: "2026-10-07T08:23:59Z"
-    mac: ENC[AES256_GCM,data:Qy0MMkaGpd8H2C3hz3EJDadlzLLKsk5fgQ1cgGkZ6DSFxGHn+7nksAXnTrBwdtIdvrsYBJAuDQ2TtZJ5Qx0L9c6hcj/8RK38bRmtLDGxseU28VSFsUrut7eBDDxLb7GXNQA6xUANVm83zg2CdULmr3m+0yvrInJTSGAQTTlk/8U=,iv:H4C35w8WafgHKByfe4gTAmJks1JzxVNJUEmn1ZjpVow=,tag:sV79lUVckKy/pVkVZ1F4ug==,type:str]
+    lastmodified: "2026-10-28T10:27:01Z"
+    mac: ENC[AES256_GCM,data:zAIFBXGvM7cAvBO/Sx9RUXUpSBi92QLNRq9vzT+SqnRQUYlJ3wwJAUsy9XzwUXEoc9/22o3KUeDWbvIYGiHXEj7S4bLiEpG09k4t9S2xXCm0Ct/DlYz0wz/rcI2fGmkaCw0lvCOc9RCibLsl8Za8r4rd+4Zmxomk2Wb6gwilyIM=,iv:b9mKxMaEqRKHfe3yNwiTaYm2b+aN0HBz91sKmff1Tdc=,tag:Pcnv8hu32YJ249MDIBC8HQ==,type:str]
     version: 3.13.3

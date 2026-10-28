@@ -3,7 +3,10 @@ kind: Cluster
 metadata:
   name: immich-db
 spec:
-  instances: 1
+  instances: 2
+  affinity:
+    enablePodAntiAffinity: true
+    podAntiAffinityType: required
   smartShutdownTimeout: 15        # clients with connection pools never disconnect; then fast shutdown
   imageName: ghcr.io/tensorchord/cloudnative-vectorchord:18.6-1.1.1
   postgresql:

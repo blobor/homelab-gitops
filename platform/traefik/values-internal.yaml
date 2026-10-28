@@ -42,6 +42,24 @@ ports:
       respondingTimeouts:
         readTimeout: 0
 
+deployment:
+  replicas: 2
+
+# Honor taints: else the control plane counts as an empty domain and the rollout surge pod never schedules.
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: DoNotSchedule
+    nodeTaintsPolicy: Honor
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: traefik
+        app.kubernetes.io/instance: traefik-internal-traefik
+
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 1
+
 service:
   annotations:
     lbipam.cilium.io/ips: 10.20.8.241

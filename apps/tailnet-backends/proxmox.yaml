@@ -1,8 +1,9 @@
-# bender.private.home.lobor.dev → Traefik internal → Tailscale egress proxy → pve-bender:8006 (tailnet device outside the cluster).
+# <node>.pve.private.home.lobor.dev → Traefik internal → Tailscale egress proxy → pve-<node>:8006 (tailnet devices outside the cluster).
+# One Service + Ingress per node of the PVE cluster `planet-express`: bender, zoidberg.
 apiVersion: v1
 kind: Service
 metadata:
-  name: proxmox
+  name: proxmox-bender
   annotations:
     tailscale.com/tailnet-fqdn: pve-bender.hippo-lake.ts.net
     tailscale.com/tags: tag:springfield-egress
@@ -17,16 +18,45 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: proxmox
+  name: proxmox-bender
 spec:
   ingressClassName: traefik-internal
   tls:
-    - hosts: [bender.private.home.lobor.dev]
+    - hosts: [bender.pve.private.home.lobor.dev]
   rules:
-    - host: bender.private.home.lobor.dev
+    - host: bender.pve.private.home.lobor.dev
       http:
         paths:
-          - {path: /, pathType: Prefix, backend: {service: {name: proxmox, port: {name: web}}}}
+          - {path: /, pathType: Prefix, backend: {service: {name: proxmox-bender, port: {name: web}}}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxmox-zoidberg
+  annotations:
+    tailscale.com/tailnet-fqdn: pve-zoidberg.hippo-lake.ts.net
+    tailscale.com/tags: tag:springfield-egress
+    traefik.ingress.kubernetes.io/service.serversscheme: https
+    traefik.ingress.kubernetes.io/service.serverstransport: tailnet-backends-proxmox-insecure@kubernetescrd
+spec:
+  type: ExternalName
+  externalName: placeholder              # rewritten by the Tailscale operator to its egress proxy
+  ports:
+    - {name: web, port: 8006, protocol: TCP}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: proxmox-zoidberg
+spec:
+  ingressClassName: traefik-internal
+  tls:
+    - hosts: [zoidberg.pve.private.home.lobor.dev]
+  rules:
+    - host: zoidberg.pve.private.home.lobor.dev
+      http:
+        paths:
+          - {path: /, pathType: Prefix, backend: {service: {name: proxmox-zoidberg, port: {name: web}}}}
 ---
 # Proxmox serves a self-signed certificate.
 apiVersion: traefik.io/v1alpha1

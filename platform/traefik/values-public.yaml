@@ -78,11 +78,13 @@ extraObjects:
           forwardedHeadersTrustedIPs: {{ .Values.ports.websecure.forwardedHeaders.trustedIPs | toJson }}   # values-cloudflare.yaml
 
 # Honor taints: else the control plane counts as an empty domain and the rollout surge pod never schedules.
+# pod-template-hash: spread only the pods of the new ReplicaSet, else they balance against the old ones.
 topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: kubernetes.io/hostname
     whenUnsatisfiable: DoNotSchedule
     nodeTaintsPolicy: Honor
+    matchLabelKeys: [pod-template-hash]
     labelSelector:
       matchLabels:
         app.kubernetes.io/name: traefik

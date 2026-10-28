@@ -5,8 +5,8 @@ metadata:
     namespace: monitoring
 type: Opaque
 stringData:
-    talos-worker-1: ENC[AES256_GCM,data:gb4nyOKcXMo8+16XiJO1ElJILImq1hkNBLgkR1aWYe+9PRqVjn76LvSaqRaNVaZG/Nv4I80qFcI=,iv:B/z2Q90xAXYiDRG7z7CNPm9l42CTcbwe+NBNMAMR5Go=,tag:uoXKbpV8tVuMsG+xgeLeeA==,type:str]
     lenny: ENC[AES256_GCM,data:rS82i2XeOquI/xZJzxZrEgdG4ibjt7czQAu5ICWJVuYWkFsjztkgIvDGcnatwaiZ7WlbYDOmwCw=,iv:f8tU0OanmQXjLZNpCpt7SSiVzqs0LnrT4/PoSP9BCDY=,tag:dLrQjNk5iIczuYavkALSyw==,type:str]
+    homer: ENC[AES256_GCM,data:RiwlCLWO3L5tG2D5UbY28yN3MrdNJnOjeR7rtKtjrCSlosKTxtFPuwtLqQRV9v4NrcCDfYE3rsE=,iv:8IsFjd6jZulxMJOMZqC1ZR7kDo2TSD4INTNnDrN8Mis=,tag:FlFgKj4jT8R2/pePRTqY4A==,type:str]
 sops:
     age:
         - enc: |
@@ -19,6 +19,6 @@ sops:
             -----END AGE ENCRYPTED FILE-----
           recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
     encrypted_regex: ^(data|stringData)$
-    lastmodified: "2026-10-28T10:27:01Z"
-    mac: ENC[AES256_GCM,data:zAIFBXGvM7cAvBO/Sx9RUXUpSBi92QLNRq9vzT+SqnRQUYlJ3wwJAUsy9XzwUXEoc9/22o3KUeDWbvIYGiHXEj7S4bLiEpG09k4t9S2xXCm0Ct/DlYz0wz/rcI2fGmkaCw0lvCOc9RCibLsl8Za8r4rd+4Zmxomk2Wb6gwilyIM=,iv:b9mKxMaEqRKHfe3yNwiTaYm2b+aN0HBz91sKmff1Tdc=,tag:Pcnv8hu32YJ249MDIBC8HQ==,type:str]
+    lastmodified: "2026-10-28T13:24:39Z"
+    mac: ENC[AES256_GCM,data:zyj/7ZWTNVqq4ogdF+mWDNP+E7T6NLIvHylDG/sjz0CQhMr7P3HJgfycm3dtckkj8JFMZ8iyqK5TrShWmRYWpvwooyvsaqMHskflDXGSMjnV8JjwilS8lRyrVdVm0pewvheclAlyxhUWkl1bMp/ctbEAFIqxmxxgkidyMewXOE8=,iv:7vABsKI7FgfPUssi1adBLiALbgfs6LWy1A4WNkfIvxs=,tag:wmdxC6DUYwaEyaqPy+hu7w==,type:str]
     version: 3.13.3

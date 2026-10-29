@@ -27,7 +27,7 @@
     },
     {
       customType: "regex",
-      managerFilePatterns: ["/^apps/.+\\.ya?ml$/"],
+      managerFilePatterns: ["/^(apps|platform)/.+\\.ya?ml$/"],
       matchStrings: ["imageName:\\s*(?<depName>[^:\\s]+):(?<currentValue>\\S+)"],
       datasourceTemplate: "docker",
     },

@@ -15,6 +15,7 @@ talosctl gen config homelab https://10.20.8.100:6443 \
   --kubernetes-version "${K8S_VERSION#v}" \
   --config-patch @patches/cluster.yaml \
   --config-patch-control-plane @patches/controlplane-common.yaml \
+  --config-patch-worker @patches/worker-common.yaml \
   -o "$out" --force
 # Per-node: hostname + Tailscale extension config (SOPS-encrypted auth key, unique UDP port).
 node() { # $1 = base config (controlplane|worker), $2 = node name

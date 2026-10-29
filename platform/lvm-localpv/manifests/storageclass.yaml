@@ -1,0 +1,13 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local
+provisioner: local.csi.openebs.io
+parameters:
+  storage: lvm
+  volgroup: vg-local
+  fsType: xfs
+  thinProvision: "no"
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer

@@ -1,0 +1,5 @@
+# lvm-localpv (openebs.github.io/lvm-localpv)
+analytics:
+  enabled: false
+# The VolumeSnapshot CRDs and snapshot-controller stay on (chart defaults):
+# without the CRDs the controller pod crash-loops.

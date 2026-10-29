@@ -13,7 +13,15 @@ spec:
     initdb:
       database: authentik
       owner: authentik
+  postgresql:
+    parameters:
+      max_slot_wal_keep_size: 2GB   # a replica that is down cannot fill the primary's volume
+    synchronous:
+      method: any
+      number: 1
+      dataDurability: preferred     # with one instance down, writes go on without a sync standby
   storage:
+    storageClass: local
     size: 5Gi
   resources:
     requests: {cpu: 50m, memory: 256Mi}

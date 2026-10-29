@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: lvm-localpv
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://openebs.github.io/lvm-localpv
+      chart: lvm-localpv
+      targetRevision: 1.10.1
+      helm:
+        releaseName: lvm-localpv
+        valueFiles:
+          - $values/platform/lvm-localpv/values.yaml
+    - repoURL: https://github.com/blobor/homelab-gitops.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://github.com/blobor/homelab-gitops.git
+      targetRevision: main
+      path: platform/lvm-localpv/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openebs
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    managedNamespaceMetadata:
+      labels:
+        pod-security.kubernetes.io/enforce: privileged   # node plugin: privileged, hostPath /dev and kubelet dir

@@ -23,3 +23,41 @@ spec:
             severity: critical
           annotations:
             summary: Kubernetes API (burns) is down for 5 min. Plex keeps running.
+    - name: homelab.storage
+      rules:
+        # storageclass!="" drops the static NFS PVs: the shares are big and mostly full by design.
+        - alert: PVCAlmostFull
+          expr: |
+            kubelet_volume_stats_used_bytes / kubelet_volume_stats_capacity_bytes > 0.8
+            and on (namespace, persistentvolumeclaim) kube_persistentvolumeclaim_info{storageclass!=""}
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "PVC {{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is {{ $value | humanizePercentage }} full"
+        - alert: PVCFull
+          expr: |
+            kubelet_volume_stats_used_bytes / kubelet_volume_stats_capacity_bytes > 0.9
+            and on (namespace, persistentvolumeclaim) kube_persistentvolumeclaim_info{storageclass!=""}
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: "PVC {{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is {{ $value | humanizePercentage }} full"
+        - alert: PVCFullIn24h
+          expr: |
+            predict_linear(kubelet_volume_stats_available_bytes[6h], 24 * 3600) < 0
+            and kubelet_volume_stats_used_bytes / kubelet_volume_stats_capacity_bytes > 0.5
+            and on (namespace, persistentvolumeclaim) kube_persistentvolumeclaim_info{storageclass!=""}
+          for: 1h
+          labels:
+            severity: warning
+          annotations:
+            summary: "PVC {{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} fills up within 24 h at the current rate"
+        - alert: PVReleased
+          expr: kube_persistentvolume_status_phase{phase="Released"} == 1
+          for: 1h
+          labels:
+            severity: info
+          annotations:
+            summary: "PV {{ $labels.persistentvolume }} is Released. Class local: deleted after 14 days. Other classes: delete by hand."

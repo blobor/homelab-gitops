@@ -1,0 +1,7 @@
+# Second VM disk (scsi1) for StorageClass `local` (OpenEBS LVM LocalPV).
+apiVersion: v1alpha1
+kind: LVMVolumeGroupConfig
+name: vg-local
+provisioning:
+  volumeSelector:
+    match: "'/dev/disk/by-id/scsi-0QEMU_QEMU_HARDDISK_drive-scsi1' in disk.symlinks"

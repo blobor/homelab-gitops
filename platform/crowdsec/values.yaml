@@ -1,6 +1,11 @@
 # LAPI (decisions, community blocklist) + agent that reads the traefik-public access log.
 container_runtime: containerd
 
+image:
+  kubectl:                                  # CAPI register job; the chart default is "latest"
+    # renovate: datasource=docker depName=alpine/kubectl
+    tag: 1.37.1
+
 secrets:
   externalSecret:
     name: crowdsec-lapi                     # SOPS; the chart default is random per render, which Argo cannot keep
@@ -19,22 +24,37 @@ agent:
     limits: {memory: 256Mi}
 
 lapi:
+  replicas: 2                               # state is in Postgres (crowdsec-db); one per worker
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: {maxSurge: 0, maxUnavailable: 1}   # required anti-affinity leaves no node for a surge pod
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: kubernetes.io/hostname
+          labelSelector:
+            matchLabels:
+              k8s-app: crowdsec
+              type: lapi
   env:
     - name: BOUNCER_KEY_traefik             # registers the traefik-public bouncer plugin
       valueFrom:
         secretKeyRef: {name: crowdsec-bouncer, key: key}
+    - name: DB_PASSWORD
+      valueFrom:
+        secretKeyRef: {name: crowdsec-db-app, key: password}
   resources:
     requests: {cpu: 50m, memory: 128Mi}
     limits: {memory: 256Mi}
+  # No volumes: the CAPI credentials go to a Secret (chart register job).
   persistentVolume:
     data:
-      storageClassName: synology-iscsi
+      enabled: false
     config:
-      storageClassName: synology-iscsi
-      size: 1Gi                             # synology-csi minimum
+      enabled: false
 
 config:
-  config.yaml.local: |                      # chart default (agent auto-registration) + WAL
+  config.yaml.local: |                      # chart default (agent auto-registration) + Postgres
     api:
       server:
         auto_registration:
@@ -46,7 +66,13 @@ config:
             - "10.0.0.0/8"
             - "172.16.0.0/12"
     db_config:
-      use_wal: true                         # the blocklist import (every 2 h) does not block reads
+      type: postgresql
+      host: crowdsec-db-rw
+      port: 5432
+      db_name: crowdsec
+      user: crowdsec
+      password: ${DB_PASSWORD}
+      sslmode: require
   parsers:
     s02-enrich:
       home-whitelist.yaml: |

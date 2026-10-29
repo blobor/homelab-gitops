@@ -61,3 +61,12 @@ spec:
             severity: info
           annotations:
             summary: "PV {{ $labels.persistentvolume }} is Released. Class local: deleted after 14 days. Other classes: delete by hand."
+        # Class local: a Pending PVC with "not enough free storage" can be stale CSIStorageCapacity objects
+        # after a controller rollout (owner is the old ReplicaSet). Fix: kubectl -n openebs delete csistoragecapacities --all
+        - alert: PVCPending
+          expr: kube_persistentvolumeclaim_status_phase{phase="Pending"} == 1
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "PVC {{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is Pending for 15 min"

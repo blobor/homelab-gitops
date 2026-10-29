@@ -52,4 +52,4 @@ spec:
   ports:
     - name: http
       port: 8428
-      targetPort: 8428
+      targetPort: http   # the pods listen on 8429

@@ -1,0 +1,41 @@
+# Queue I/O for 10 min (default 2 min) when the NAS reboots, instead of failing it up to the filesystem.
+# Talos has a read-only /etc/iscsi and the CSI plugin runs iscsiadm in the host, so iscsid.conf is not an option.
+# The value resets on every new session, so the loop sets it again.
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: iscsi-recovery-tmo
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: iscsi-recovery-tmo
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: iscsi-recovery-tmo
+    spec:
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 1
+      containers:
+        - name: set
+          image: busybox:1.38
+          env:
+            - {name: RECOVERY_TMO, value: "600"}
+          command:
+            - sh
+            - -c
+            - |
+              while true; do
+                for f in /sys/class/iscsi_session/session*/recovery_tmo; do
+                  [ -e "$f" ] || continue
+                  if [ "$(cat "$f")" != "$RECOVERY_TMO" ]; then
+                    echo "$RECOVERY_TMO" > "$f" && echo "$f: $RECOVERY_TMO"
+                  fi
+                done
+                sleep 30
+              done
+          securityContext:
+            privileged: true   # write to host sysfs
+          resources:
+            requests: {cpu: 1m, memory: 4Mi}
+            limits: {memory: 16Mi}

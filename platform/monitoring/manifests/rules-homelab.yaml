@@ -70,3 +70,12 @@ spec:
             severity: warning
           annotations:
             summary: "PVC {{ $labels.namespace }}/{{ $labels.persistentvolumeclaim }} is Pending for 15 min"
+    - name: homelab.monitoring
+      rules:
+        - alert: VMSingleCrashLooping
+          expr: max by (pod) (kube_pod_container_status_waiting_reason{namespace="monitoring", container="vmsingle", reason="CrashLoopBackOff"}) == 1
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: "{{ $labels.pod }} is crash-looping. The other VMSingle still has the data; a corrupt volume needs its PVC deleted."

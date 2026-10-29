@@ -8,29 +8,57 @@ victoria-metrics-operator:
   admissionWebhooks:
     enabled: false
 
+# Two VMSingle (a, b) on local storage, one per worker: manifests/vmsingle.yaml.
+# vmagent writes to both; Grafana and vmalert read through the Service vmsingle (either pod).
 vmsingle:
-  spec:
-    retentionPeriod: 30d
-    storage:
-      storageClassName: synology-iscsi
-      resources:
-        requests:
-          storage: 20Gi
+  enabled: false
+
+external:
+  vm:
+    read:
+      url: http://vmsingle.monitoring.svc:8428
+    write:
+      url: http://vmsingle-a.monitoring.svc:8428/api/v1/write
 
 vmagent:
+  additionalRemoteWrites:
+    - url: http://vmsingle-b.monitoring.svc:8428/api/v1/write
   spec:
     externalLabels:
       cluster: springfield
 
+vmalert:
+  remoteWriteVMAgent: true   # recording rules reach both VMSingle
+
+# These default to vmsingle.enabled.
+defaultRules:
+  sources:
+    vmhealth:
+      enabled: true
+    vmsingle:
+      enabled: true
+defaultDashboards:
+  sources:
+    victoriametrics-single-node:
+      enabled: true
+
 # Only the Watchdog leaves the cluster (healthchecks.io dead-man switch); every other alert stays in Grafana / vmalert UI.
 alertmanager:
   spec:
+    replicaCount: 2            # gossip: silences and nflog are shared
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - topologyKey: kubernetes.io/hostname
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: vmalertmanager
     secrets:
       - alertmanager-secrets   # mounted at /etc/vm/secrets/alertmanager-secrets/
     storage:                   # silences and nflog survive pod restarts
       volumeClaimTemplate:
         spec:
-          storageClassName: synology-iscsi
+          storageClassName: local
           accessModes: [ReadWriteOnce]
           resources:
             requests:

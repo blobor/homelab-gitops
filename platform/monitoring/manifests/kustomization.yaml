@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - etcd-scrape.yaml
   - rules-homelab.yaml
+  - vmsingle.yaml
   - node-heartbeat.yaml
 generators:
   - secret-generator.yaml

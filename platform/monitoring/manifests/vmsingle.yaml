@@ -1,0 +1,55 @@
+# Two independent copies, one per worker (local volumes). vmagent writes to both.
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMSingle
+metadata:
+  name: a
+spec:
+  retentionPeriod: 30d
+  extraArgs:
+    vmalert.proxyURL: http://vmalert-vm.monitoring.svc.cluster.local.:8080   # Grafana alerting view
+  storage:
+    storageClassName: local
+    resources:
+      requests:
+        storage: 20Gi
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: kubernetes.io/hostname
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: vmsingle
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMSingle
+metadata:
+  name: b
+spec:
+  retentionPeriod: 30d
+  extraArgs:
+    vmalert.proxyURL: http://vmalert-vm.monitoring.svc.cluster.local.:8080   # Grafana alerting view
+  storage:
+    storageClassName: local
+    resources:
+      requests:
+        storage: 20Gi
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: kubernetes.io/hostname
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: vmsingle
+---
+# Read path for Grafana and vmalert: any VMSingle that is up.
+apiVersion: v1
+kind: Service
+metadata:
+  name: vmsingle
+spec:
+  selector:
+    app.kubernetes.io/name: vmsingle
+  ports:
+    - name: http
+      port: 8428
+      targetPort: 8428

@@ -1,0 +1,96 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: k8s-backups-transmission
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes: [ReadWriteOnce]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions: [nfsvers=4.1, hard, noatime]
+  nfs:
+    server: 10.20.30.200
+    path: /volume1/k8s-backups
+  claimRef:
+    namespace: transmission
+    name: k8s-backups
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: k8s-backups
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: ""
+  volumeName: k8s-backups-transmission
+  resources:
+    requests:
+      storage: 20Gi
+---
+# The config volume is ReadWriteOnce on iSCSI: run next to the app pod to mount it.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: config-backup
+spec:
+  schedule: "30 4 * * *"
+  timeZone: Europe/Kyiv
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            seccompProfile: {type: RuntimeDefault}
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - topologyKey: kubernetes.io/hostname
+                  labelSelector:
+                    matchLabels:
+                      app: transmission
+          initContainers:
+            - name: snapshot
+              image: busybox:1.38
+              command:
+                - sh
+                - -c
+                - |
+                  set -eu
+                  tar -czf /work/transmission.tar.gz -C /src --exclude=./lost+found --exclude=./lock .
+              securityContext:            # root + DAC_OVERRIDE: the files belong to the app user
+                allowPrivilegeEscalation: false
+                capabilities: {drop: [ALL], add: [DAC_OVERRIDE]}
+              volumeMounts:
+                - {name: config, mountPath: /src, readOnly: true}
+                - {name: work, mountPath: /work}
+          containers:
+            - name: store
+              image: busybox:1.38
+              command:
+                - sh
+                - -c
+                - |
+                  set -eu
+                  mkdir -p /backup/transmission
+                  cp /work/transmission.tar.gz "/backup/transmission/transmission-$(date +%F-%H%M).tar.gz"
+                  ls -1t /backup/transmission/transmission-*.tar.gz | tail -n +15 | xargs -r rm -f
+                  ls -lh /backup/transmission
+              securityContext:
+                runAsNonRoot: true
+                runAsUser: 65534
+                runAsGroup: 65534
+                allowPrivilegeEscalation: false
+                capabilities: {drop: [ALL]}
+              volumeMounts:
+                - {name: work, mountPath: /work}
+                - {name: backup, mountPath: /backup}
+          volumes:
+            - {name: config, persistentVolumeClaim: {claimName: transmission-config, readOnly: true}}
+            - {name: work, emptyDir: {}}
+            - {name: backup, persistentVolumeClaim: {claimName: k8s-backups}}

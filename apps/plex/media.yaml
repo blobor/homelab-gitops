@@ -1,5 +1,5 @@
 # Media share on Loki, read-only. Each library folder is mounted with subPath
-# at the same path as in the old LXC (/mnt/<folder>).
+# at /mnt/<folder>: the folder paths of the Plex libraries.
 apiVersion: v1
 kind: PersistentVolume
 metadata:

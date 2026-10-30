@@ -14,7 +14,7 @@ spec:
     spec:
       hostname: syncthing
       automountServiceAccountToken: false
-      securityContext:                      # uid 100000 owns the vault files (root of the former unprivileged LXC)
+      securityContext:                      # uid 100000 owns the vault files
         runAsNonRoot: true
         runAsUser: 100000
         runAsGroup: 100000

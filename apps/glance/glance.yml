@@ -111,7 +111,7 @@ pages:
           - type: custom-api
             title: NAS · Loki
             cache: 5m
-            url: http://vmsingle-vm.monitoring.svc.cluster.local:8428/api/v1/query
+            url: http://vmsingle.monitoring.svc.cluster.local:8428/api/v1/query
             parameters:
               query: >-
                 sort_by_label(union(

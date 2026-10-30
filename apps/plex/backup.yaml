@@ -1,0 +1,105 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: k8s-backups-plex
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes: [ReadWriteOnce]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions: [nfsvers=4.1, hard, noatime]
+  nfs:
+    server: 10.20.30.200
+    path: /volume1/k8s-backups
+  claimRef:
+    namespace: plex
+    name: k8s-backups
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: k8s-backups
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: ""
+  volumeName: k8s-backups-plex
+  resources:
+    requests:
+      storage: 20Gi
+---
+# The config volume is ReadWriteOnce on iSCSI: run next to the app pod to mount it.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: config-backup
+spec:
+  schedule: "20 4 * * *"
+  timeZone: Europe/Kyiv
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            seccompProfile: {type: RuntimeDefault}
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - topologyKey: kubernetes.io/hostname
+                  labelSelector:
+                    matchLabels:
+                      app: plex
+          initContainers:
+            - name: snapshot
+              image: plexinc/pms-docker:1.43.5.11079-b3b13e506
+              command:
+                - sh
+                - -c
+                - |
+                  set -eu
+                  d="/src/Library/Application Support/Plex Media Server"
+                  mkdir /work/plex
+                  for db in com.plexapp.plugins.library.db com.plexapp.plugins.library.blobs.db; do
+                    "/usr/lib/plexmediaserver/Plex SQLite" "$d/Plug-in Support/Databases/$db" ".backup /work/plex/$db"
+                  done
+                  cp "$d/Preferences.xml" /work/plex/
+                  tar -czf /work/plex.tar.gz -C /work plex
+              securityContext:            # as the plex user: files that SQLite creates (-shm) must stay Plex-owned
+                runAsUser: 999
+                runAsGroup: 990
+                allowPrivilegeEscalation: false
+                capabilities: {drop: [ALL]}
+              volumeMounts:
+                - {name: config, mountPath: /src}
+                - {name: work, mountPath: /work}
+          containers:
+            - name: store
+              image: busybox:1.38
+              command:
+                - sh
+                - -c
+                - |
+                  set -eu
+                  mkdir -p /backup/plex
+                  cp /work/plex.tar.gz "/backup/plex/plex-$(date +%F-%H%M).tar.gz"
+                  ls -1t /backup/plex/plex-*.tar.gz | tail -n +15 | xargs -r rm -f
+                  ls -lh /backup/plex
+              securityContext:
+                runAsNonRoot: true
+                runAsUser: 65534
+                runAsGroup: 65534
+                allowPrivilegeEscalation: false
+                capabilities: {drop: [ALL]}
+              volumeMounts:
+                - {name: work, mountPath: /work}
+                - {name: backup, mountPath: /backup}
+          volumes:
+            # Not read-only: Plex SQLite writes to the -shm file of the live database.
+            - {name: config, persistentVolumeClaim: {claimName: plex-config}}
+            - {name: work, emptyDir: {}}
+            - {name: backup, persistentVolumeClaim: {claimName: k8s-backups}}

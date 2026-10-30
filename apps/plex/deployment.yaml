@@ -18,8 +18,8 @@ spec:
           image: plexinc/pms-docker:1.43.5.11079-b3b13e506
           env:
             - {name: TZ, value: Europe/Kyiv}
-            - {name: PLEX_UID, value: "999"}     # owner of the config copied from the LXC
-            - {name: PLEX_GID, value: "990"}
+            - {name: PLEX_UID, value: "999"}     # owner of the config files
+            - {name: PLEX_GID, value: "65537"}   # group media-ro on Loki: read access to the media share
             - {name: ADVERTISE_IP, value: "https://10.20.8.242:32400/"}
           ports:
             - {name: pms, containerPort: 32400, protocol: TCP}

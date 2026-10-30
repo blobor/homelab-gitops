@@ -71,7 +71,7 @@ spec:
                   tar -czf /work/plex.tar.gz -C /work plex
               securityContext:            # as the plex user: files that SQLite creates (-shm) must stay Plex-owned
                 runAsUser: 999
-                runAsGroup: 990
+                runAsGroup: 65537
                 allowPrivilegeEscalation: false
                 capabilities: {drop: [ALL]}
               volumeMounts:

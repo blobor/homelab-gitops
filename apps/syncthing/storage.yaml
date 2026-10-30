@@ -1,4 +1,4 @@
-# Vault data on Loki (same mount path as the old LXC, so config.xml folder paths stay valid).
+# Vault data on Loki. The mount path must match the folder paths in config.xml.
 apiVersion: v1
 kind: PersistentVolume
 metadata:

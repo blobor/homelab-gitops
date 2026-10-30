@@ -36,14 +36,11 @@ spec:
           volumeMounts:
             - {name: config, mountPath: /config}
             - {name: transcode, mountPath: /transcode}
-            - {name: movies, mountPath: /mnt/movies, readOnly: true}
-            - {name: tv-shows, mountPath: /mnt/tv_shows, readOnly: true}
-            - {name: music, mountPath: /mnt/music, readOnly: true}
-            - {name: music-video, mountPath: /mnt/music_video, readOnly: true}
+            - {name: media, mountPath: /mnt/movies, subPath: movies, readOnly: true}
+            - {name: media, mountPath: /mnt/tv_shows, subPath: tv_shows, readOnly: true}
+            - {name: media, mountPath: /mnt/music, subPath: music, readOnly: true}
+            - {name: media, mountPath: /mnt/music_video, subPath: music_video, readOnly: true}
       volumes:
         - {name: config, persistentVolumeClaim: {claimName: plex-config}}
         - {name: transcode, emptyDir: {sizeLimit: 30Gi}}
-        - {name: movies, persistentVolumeClaim: {claimName: media-movies, readOnly: true}}
-        - {name: tv-shows, persistentVolumeClaim: {claimName: media-tv-shows, readOnly: true}}
-        - {name: music, persistentVolumeClaim: {claimName: media-music, readOnly: true}}
-        - {name: music-video, persistentVolumeClaim: {claimName: media-music-video, readOnly: true}}
+        - {name: media, persistentVolumeClaim: {claimName: media, readOnly: true}}

@@ -4,7 +4,7 @@ container_runtime: containerd
 image:
   kubectl:                                  # CAPI register job; the chart default is "latest"
     # renovate: datasource=docker depName=alpine/kubectl
-    tag: 1.37.1
+    tag: 1.37.2
 
 secrets:
   externalSecret:

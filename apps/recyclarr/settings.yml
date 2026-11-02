@@ -1,0 +1,9 @@
+resource_providers:
+  - name: homelab-radarr
+    type: custom-formats
+    service: radarr
+    path: /config/custom-formats/radarr
+  - name: homelab-sonarr
+    type: custom-formats
+    service: sonarr
+    path: /config/custom-formats/sonarr

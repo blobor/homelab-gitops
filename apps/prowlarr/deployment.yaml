@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prowlarr
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: {app: prowlarr}
+  template:
+    metadata:
+      labels: {app: prowlarr}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: prowlarr
+          image: lscr.io/linuxserver/prowlarr:2.7.0.5723-ls166
+          env:
+            - {name: TZ, value: Europe/Kyiv}
+            - {name: PUID, value: "1031"}           # user arr on Loki, as in the other download apps
+            - {name: PGID, value: "65538"}
+            - {name: PROWLARR__AUTH__METHOD, value: Forms}
+            - {name: PROWLARR__AUTH__REQUIRED, value: Enabled}   # requests come from Traefik, a local address
+          ports:
+            - {name: web, containerPort: 9696}
+          readinessProbe:
+            httpGet: {path: /ping, port: web}
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /ping, port: web}
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            requests: {cpu: 50m, memory: 192Mi}
+            limits: {memory: 1Gi}
+          volumeMounts:
+            - {name: config, mountPath: /config}
+      volumes:
+        - name: config
+          persistentVolumeClaim: {claimName: prowlarr-config}

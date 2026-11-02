@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radarr
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: {app: radarr}
+  template:
+    metadata:
+      labels: {app: radarr}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: radarr
+          image: lscr.io/linuxserver/radarr:6.4.4.10685-ls325
+          env:
+            - {name: TZ, value: Europe/Kyiv}
+            - {name: PUID, value: "1031"}           # user arr on Loki, as in Transmission
+            - {name: PGID, value: "65538"}          # group media-rw on Loki: write access to media
+            - {name: RADARR__AUTH__METHOD, value: Forms}
+            - {name: RADARR__AUTH__REQUIRED, value: Enabled}   # requests come from Traefik, a local address
+          ports:
+            - {name: web, containerPort: 7878}
+          readinessProbe:
+            httpGet: {path: /ping, port: web}
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /ping, port: web}
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            requests: {cpu: 50m, memory: 256Mi}
+            limits: {memory: 1Gi}
+          volumeMounts:
+            - {name: config, mountPath: /config}
+            - {name: media, mountPath: /data}
+      volumes:
+        - name: config
+          persistentVolumeClaim: {claimName: radarr-config}
+        - name: media
+          persistentVolumeClaim: {claimName: media}

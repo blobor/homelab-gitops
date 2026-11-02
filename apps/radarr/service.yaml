@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: radarr
+spec:
+  selector: {app: radarr}
+  ports:
+    - {name: web, port: 7878, targetPort: web}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: radarr
+spec:
+  ingressClassName: traefik-internal
+  tls:
+    - hosts: [radarr.private.home.lobor.dev]
+  rules:
+    - host: radarr.private.home.lobor.dev
+      http:
+        paths:
+          - {path: /, pathType: Prefix, backend: {service: {name: radarr, port: {name: web}}}}

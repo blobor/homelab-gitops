@@ -1,0 +1,111 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: k8s-backups-prowlarr
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes: [ReadWriteOnce]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions: [nfsvers=4.1, hard, noatime]
+  nfs:
+    server: 10.20.30.200
+    path: /volume1/k8s-backups
+  claimRef:
+    namespace: prowlarr
+    name: k8s-backups
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: k8s-backups
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: ""
+  volumeName: k8s-backups-prowlarr
+  resources:
+    requests:
+      storage: 20Gi
+---
+# The config volume is ReadWriteOnce on iSCSI: run next to the app pod to mount it.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: config-backup
+spec:
+  schedule: "40 4 * * *"
+  timeZone: Europe/Kyiv
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            seccompProfile: {type: RuntimeDefault}
+          affinity:
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - topologyKey: kubernetes.io/hostname
+                  labelSelector:
+                    matchLabels:
+                      app: prowlarr
+          initContainers:
+            - name: snapshot
+              image: python:3.14.10-alpine3.24
+              command:
+                - python3
+                - -c
+                - |
+                  import os, sqlite3, tarfile
+                  # SQLite online backup: a consistent copy of the live database
+                  src = sqlite3.connect("file:/src/prowlarr.db?mode=ro", uri=True)
+                  dst = sqlite3.connect("/work/prowlarr.db")
+                  src.backup(dst)
+                  dst.close()
+                  src.close()
+                  skip = {"Backups", "logs", "lost+found", "prowlarr.pid"}
+                  with tarfile.open("/work/prowlarr.tar.gz", "w:gz") as tar:
+                      tar.add("/work/prowlarr.db", "prowlarr/prowlarr.db")
+                      for name in sorted(os.listdir("/src")):
+                          if name in skip or name.startswith(("prowlarr.db", "logs.db")):
+                              continue
+                          tar.add(f"/src/{name}", f"prowlarr/{name}")
+              securityContext:            # as the app user: files that SQLite creates (-shm) must stay app-owned
+                runAsUser: 1031
+                runAsGroup: 65538
+                allowPrivilegeEscalation: false
+                capabilities: {drop: [ALL]}
+              volumeMounts:
+                - {name: config, mountPath: /src}
+                - {name: work, mountPath: /work}
+          containers:
+            - name: store
+              image: busybox:1.38
+              command:
+                - sh
+                - -c
+                - |
+                  set -eu
+                  mkdir -p /backup/prowlarr
+                  cp /work/prowlarr.tar.gz "/backup/prowlarr/prowlarr-$(date +%F-%H%M).tar.gz"
+                  ls -1t /backup/prowlarr/prowlarr-*.tar.gz | tail -n +15 | xargs -r rm -f
+                  ls -lh /backup/prowlarr
+              securityContext:
+                runAsNonRoot: true
+                runAsUser: 65534
+                runAsGroup: 65534
+                allowPrivilegeEscalation: false
+                capabilities: {drop: [ALL]}
+              volumeMounts:
+                - {name: work, mountPath: /work}
+                - {name: backup, mountPath: /backup}
+          volumes:
+            # Not read-only: SQLite writes to the -shm file of the live database.
+            - {name: config, persistentVolumeClaim: {claimName: prowlarr-config}}
+            - {name: work, emptyDir: {}}
+            - {name: backup, persistentVolumeClaim: {claimName: k8s-backups}}

@@ -1,0 +1,7 @@
+[extend]
+useDefault = true
+
+# SOPS files hold only ciphertext; the sops-encrypted pre-commit hook checks that.
+[[allowlists]]
+description = "SOPS-encrypted files"
+paths = ['''\.sops\.ya?ml$''']

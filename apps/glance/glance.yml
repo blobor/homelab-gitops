@@ -84,6 +84,10 @@ pages:
                 url: https://radarr.private.home.lobor.dev
                 check-url: http://radarr.radarr.svc.cluster.local:7878/ping
                 icon: di:radarr
+              - title: Seerr
+                url: https://seerr.private.home.lobor.dev
+                check-url: http://seerr.seerr.svc.cluster.local:5055/api/v1/status
+                icon: di:seerr
               - title: Syncthing
                 url: https://sync.private.home.lobor.dev
                 check-url: http://syncthing-gui.syncthing.svc.cluster.local:8384/rest/noauth/health

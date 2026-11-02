@@ -1,0 +1,19 @@
+{
+  "trash_id": "262b39edfaf4683c6bd160d522df8952",
+  "trash_scores": {
+    "default": 20000
+  },
+  "name": "2160p",
+  "includeCustomFormatWhenRenaming": false,
+  "specifications": [
+    {
+      "name": "2160p",
+      "implementation": "ResolutionSpecification",
+      "negate": false,
+      "required": true,
+      "fields": {
+        "value": 2160
+      }
+    }
+  ]
+}

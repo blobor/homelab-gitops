@@ -1,0 +1,30 @@
+{
+  "trash_id": "67abec53e8ae8394db986280babc8f15",
+  "trash_scores": {
+    "default": 100000
+  },
+  "name": "Original (no Ukrainian)",
+  "includeCustomFormatWhenRenaming": false,
+  "specifications": [
+    {
+      "name": "Original",
+      "implementation": "LanguageSpecification",
+      "negate": false,
+      "required": true,
+      "fields": {
+        "value": -2,
+        "exceptLanguage": false
+      }
+    },
+    {
+      "name": "Not Ukrainian",
+      "implementation": "LanguageSpecification",
+      "negate": true,
+      "required": true,
+      "fields": {
+        "value": 30,
+        "exceptLanguage": false
+      }
+    }
+  ]
+}

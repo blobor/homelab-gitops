@@ -1,0 +1,19 @@
+{
+  "trash_id": "2d0b7dfabd8f3ae3a776d66b106bf4dc",
+  "trash_scores": {
+    "default": 5000
+  },
+  "name": "Remux",
+  "includeCustomFormatWhenRenaming": false,
+  "specifications": [
+    {
+      "name": "Remux",
+      "implementation": "SourceSpecification",
+      "negate": false,
+      "required": true,
+      "fields": {
+        "value": 7
+      }
+    }
+  ]
+}

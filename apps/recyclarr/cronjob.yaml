@@ -1,0 +1,50 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: recyclarr
+spec:
+  schedule: "0 6 * * *"
+  timeZone: Europe/Kyiv
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            seccompProfile: {type: RuntimeDefault}
+          containers:
+            - name: recyclarr
+              image: ghcr.io/recyclarr/recyclarr:8.8.1
+              args: [sync]
+              envFrom:
+                - secretRef: {name: recyclarr}
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities: {drop: [ALL]}
+              resources:
+                requests: {cpu: 50m, memory: 128Mi}
+                limits: {memory: 512Mi}
+              volumeMounts:
+                - {name: config, mountPath: /config}
+                - {name: data, mountPath: /data}
+                - {name: settings, mountPath: /config/recyclarr.yml, subPath: recyclarr.yml}
+                - {name: settings, mountPath: /config/settings.yml, subPath: settings.yml}
+                - {name: cf-radarr, mountPath: /config/custom-formats/radarr}
+                - {name: cf-sonarr, mountPath: /config/custom-formats/sonarr}
+          volumes:
+            # State and the guide clone are made again on each run; existing custom formats
+            # and profiles are matched by name.
+            - {name: config, emptyDir: {}}
+            - {name: data, emptyDir: {}}
+            - {name: settings, configMap: {name: recyclarr-config}}
+            - {name: cf-radarr, configMap: {name: recyclarr-cf-radarr}}
+            - {name: cf-sonarr, configMap: {name: recyclarr-cf-sonarr}}

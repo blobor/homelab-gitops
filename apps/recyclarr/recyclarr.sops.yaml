@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: recyclarr
+data:
+    RADARR_API_KEY: ENC[AES256_GCM,data:XSg9MU4fOYZ3vPuAPEa1Z4bh3woc96BvwFR792y7GF0HbV3rUajcTRENmyE=,iv:2cP6SdiYhd5iqz1rNTZBljUwR6NuGZkY1/ELkZaP+m0=,tag:0M16GR4wIkIrFaq1GxYVQQ==,type:str]
+    SONARR_API_KEY: ENC[AES256_GCM,data:7RC5MS4o02lF8ULzsVuy/lhFQkIEMjdGvf1KYM15ERuXkbDFrbXWuFUzrmA=,iv:VUcKsUMeV7aTQ7HvKwWuHVLiHD81aAvJcWs4wtGUxp4=,tag:v826Wh26JIGl5ERxeri/lQ==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSAraFlrUUI4NWlzQzBlaWN6
+            M09BaS9jcmJ6N01xcTVKaW5MVTVkMERaNVY0Ci96d1NtMVY4QVZycWg0bVFDVklj
+            bjcxbmxWc2FmSkFFTWlpYVBreTZZTWsKLS0tIHB4Yzd3ZXEwRks0NmJYTmg5SFRi
+            SndTWFlKdXl3bi9YMCthYnhjdVNrb2cKar6tcAuaBtHj8Pc38eNpAjDjQ9/edm7c
+            XwkYyJT9mmcMIgGxTvP6P2kqcy9Hjb7ZSa/S144Lrkzf/6tZ3osF2g==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-11-02T11:44:08Z"
+    mac: ENC[AES256_GCM,data:C/YwphJpX0/YFyA06Z0uAhByZPyqQDtxKK0fxzZuoFZWYZzbkYG7bOLG1BF73s7OBBn2hGQ+apRWuPzbxqV98AU3e71SLvK/Kj6AKvaJ5mHTGoS7rl6JtfzuLvJPZFEFC8CTtTnNjdDcbSvgUnmAzPapO94cSqfQ7k0tDtShI5k=,iv:A0HAe/5O8Y0KbaP+CuzghAWI7vLpe5uBTEM3OBr4yq0=,tag:6XF7Xrztv4Wz3787kKXR2w==,type:str]
+    version: 3.13.3

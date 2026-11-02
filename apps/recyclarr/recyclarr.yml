@@ -1,0 +1,130 @@
+# Quality profile "UHD Ukr": the language decides first, then resolution, Remux, DV/HDR.
+# All qualities are in one group, so the custom format scores rank the releases.
+# Each score level is larger than the sum of all lower levels.
+
+radarr:
+  movies:
+    base_url: http://radarr.radarr.svc.cluster.local:7878
+    api_key: !env_var RADARR_API_KEY
+    delete_old_custom_formats: true
+
+    media_management:
+      propers_and_repacks: do_not_prefer
+
+    quality_definition:
+      type: movie
+
+    quality_profiles:
+      # Recyclarr does not set the profile language. Set it to "Any" in Radarr once,
+      # or Radarr rejects releases without the original language (for example UTOPIA "UKR").
+      - name: UHD Ukr
+        reset_unmatched_scores:
+          enabled: true
+        upgrade:
+          allowed: true
+          until_quality: Accepted
+          until_score: 227800
+        min_format_score: 0
+        min_upgrade_format_score: 1000   # the Ukrainian + Original bonus alone does not start an upgrade
+        quality_sort: top
+        qualities:
+          - name: Accepted
+            qualities:
+              - Remux-2160p
+              - Bluray-2160p
+              - WEBDL-2160p
+              - WEBRip-2160p
+              - Remux-1080p
+              - Bluray-1080p
+              - WEBDL-1080p
+              - WEBRip-1080p
+              - Bluray-720p
+              - WEBDL-720p
+              - WEBRip-720p
+
+    custom_formats:
+      - trash_ids:
+          - 590773679d7c91764714e30464372aaa  # Ukrainian: 200000
+          - 1eed3ec78ae7ec997589ffacc2d5edd0  # Original (no Ukrainian): 100000
+          - ffd550008f57eab12e33fbbd3fc47edc  # English (no Ukrainian, not Original): 50000
+          - 262b39edfaf4683c6bd160d522df8952  # 2160p: 20000
+          - 8bc9739f952e7d97c0e3b195f221fe97  # 1080p: 10000
+          - cbf5b5d418371946678c74809b69959c  # Remux: 5000
+          - 76ae619d747f67c71aff452215e23eda  # Dolby Vision: 1500
+          - 39372029222eafffcd8fb84f715adf9d  # HDR: 1000
+          - 2e00178730cc978276f78c1e1401e9ff  # Ukrainian + Original: 300
+          - 791f76b6247500015ab0657c7d22ae05  # Russian (no Ukrainian): -1000000
+        assign_scores_to:
+          - name: UHD Ukr
+      - trash_ids:
+          - ed38b889b31be83fda192888e2286d83  # BR-DISK
+          - 90a6f9a284dff5103f6346090e6280c8  # LQ
+          - e204b80c87be9497a8a6eaff48f72905  # LQ (Release Title)
+          - b8cd450cbfa689c0259a01d9e29ba3d6  # 3D
+          - 0a3f082873eb454bde444150b70253cc  # Extras
+          - bfd8eb01832d646a0a89c4deb46f8564  # Upscaled
+        assign_scores_to:
+          - name: UHD Ukr
+            score: -1000000
+
+sonarr:
+  series:
+    base_url: http://sonarr.sonarr.svc.cluster.local:8989
+    api_key: !env_var SONARR_API_KEY
+    delete_old_custom_formats: true
+
+    media_management:
+      propers_and_repacks: do_not_prefer
+
+    quality_definition:
+      type: series
+
+    quality_profiles:
+      - name: UHD Ukr
+        reset_unmatched_scores:
+          enabled: true
+        upgrade:
+          allowed: true
+          until_quality: Accepted
+          until_score: 227800
+        min_format_score: 0
+        min_upgrade_format_score: 1000   # the Ukrainian + Original bonus alone does not start an upgrade
+        quality_sort: top
+        qualities:
+          - name: Accepted
+            qualities:
+              - Bluray-2160p Remux
+              - Bluray-2160p
+              - WEBDL-2160p
+              - WEBRip-2160p
+              - Bluray-1080p Remux
+              - Bluray-1080p
+              - WEBDL-1080p
+              - WEBRip-1080p
+              - Bluray-720p
+              - WEBDL-720p
+              - WEBRip-720p
+
+    custom_formats:
+      - trash_ids:
+          - 150b19a57cef1a6208e59bf709e84442  # Ukrainian: 200000
+          - 67abec53e8ae8394db986280babc8f15  # Original (no Ukrainian): 100000
+          - c1b0c3314add059d68b3af142242127f  # English (no Ukrainian, not Original): 50000
+          - 5b9bc34f78b2fe593d90a82ae20c70ca  # 2160p: 20000
+          - 26279e02a100d08681e7977fb7bf7ec1  # 1080p: 10000
+          - 2d0b7dfabd8f3ae3a776d66b106bf4dc  # Remux: 5000
+          - d2f2ebaf270074490618d1d8c665396d  # Dolby Vision: 1500
+          - a3c3fa8a5e145396a1b2f7f70b829cb0  # HDR: 1000
+          - e6d6c9c996e90faf3770a7a3d898c42e  # Ukrainian + Original: 300
+          - 6971011e87b2c9acd24fb1272764a917  # Russian (no Ukrainian): -1000000
+        assign_scores_to:
+          - name: UHD Ukr
+      - trash_ids:
+          - 85c61753df5da1fb2aab6f2a47426b09  # BR-DISK
+          - 9c11cd3f07101cdba90a2d81cf0e56b4  # LQ
+          - e2315f990da2e2cbfc9fa5b7a6fcfe48  # LQ (Release Title)
+          - fbcb31d8dabd2a319072b84fc0b7249c  # Extras
+          - 23297a736ca77c0fc8e70f8edd7ee56c  # Upscaled
+        assign_scores_to:
+          - name: UHD Ukr
+            score: -1000000

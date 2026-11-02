@@ -1,0 +1,36 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: recyclarr
+resources:
+  - cronjob.yaml
+generators:
+  - secret-generator.yaml
+configMapGenerator:
+  - name: recyclarr-config
+    files:
+      - recyclarr.yml
+      - settings.yml
+  - name: recyclarr-cf-radarr
+    files:
+      - custom-formats/radarr/1080p.json
+      - custom-formats/radarr/2160p.json
+      - custom-formats/radarr/dolby-vision.json
+      - custom-formats/radarr/english-only.json
+      - custom-formats/radarr/hdr.json
+      - custom-formats/radarr/original-no-ukrainian.json
+      - custom-formats/radarr/remux.json
+      - custom-formats/radarr/russian-no-ukrainian.json
+      - custom-formats/radarr/ukrainian.json
+      - custom-formats/radarr/ukrainian-original.json
+  - name: recyclarr-cf-sonarr
+    files:
+      - custom-formats/sonarr/1080p.json
+      - custom-formats/sonarr/2160p.json
+      - custom-formats/sonarr/dolby-vision.json
+      - custom-formats/sonarr/english-only.json
+      - custom-formats/sonarr/hdr.json
+      - custom-formats/sonarr/original-no-ukrainian.json
+      - custom-formats/sonarr/remux.json
+      - custom-formats/sonarr/russian-no-ukrainian.json
+      - custom-formats/sonarr/ukrainian.json
+      - custom-formats/sonarr/ukrainian-original.json

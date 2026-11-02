@@ -1,0 +1,43 @@
+# Share "media" on Loki, mounted at /data. Downloads (/data/downloads) and the
+# libraries are on the same filesystem, so an import is a hardlink and not a copy.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: radarr-media
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes: [ReadWriteMany]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions: [nfsvers=4.1, hard, noatime]
+  nfs:
+    server: 10.20.30.200
+    path: /volume1/media
+  claimRef:
+    namespace: radarr
+    name: media
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media
+spec:
+  accessModes: [ReadWriteMany]
+  storageClassName: ""
+  volumeName: radarr-media
+  resources:
+    requests:
+      storage: 1Ti
+---
+# config.xml, the SQLite databases and the poster cache.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: radarr-config
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: synology-iscsi
+  resources:
+    requests:
+      storage: 5Gi

@@ -76,6 +76,14 @@ pages:
                 url: https://prowlarr.private.home.lobor.dev
                 check-url: http://prowlarr.prowlarr.svc.cluster.local:9696/ping
                 icon: di:prowlarr
+              - title: Sonarr
+                url: https://sonarr.private.home.lobor.dev
+                check-url: http://sonarr.sonarr.svc.cluster.local:8989/ping
+                icon: di:sonarr
+              - title: Radarr
+                url: https://radarr.private.home.lobor.dev
+                check-url: http://radarr.radarr.svc.cluster.local:7878/ping
+                icon: di:radarr
               - title: Syncthing
                 url: https://sync.private.home.lobor.dev
                 check-url: http://syncthing-gui.syncthing.svc.cluster.local:8384/rest/noauth/health

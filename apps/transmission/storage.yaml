@@ -29,6 +29,38 @@ spec:
     requests:
       storage: 1Ti
 ---
+# Share "media" on Loki. Sonarr and Radarr download to media/downloads: the same
+# filesystem as the libraries, so an import is a hardlink and not a copy.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: transmission-media
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes: [ReadWriteMany]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions: [nfsvers=4.1, hard, noatime]
+  nfs:
+    server: 10.20.30.200
+    path: /volume1/media
+  claimRef:
+    namespace: transmission
+    name: media
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media
+spec:
+  accessModes: [ReadWriteMany]
+  storageClassName: ""
+  volumeName: transmission-media
+  resources:
+    requests:
+      storage: 1Ti
+---
 # settings.json, resume files and torrent metadata.
 apiVersion: v1
 kind: PersistentVolumeClaim

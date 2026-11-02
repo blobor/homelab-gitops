@@ -20,8 +20,8 @@ spec:
           image: lscr.io/linuxserver/transmission:4.1.4-r0-ls367
           env:
             - {name: TZ, value: Europe/Kyiv}
-            - {name: PUID, value: "1026"}           # owner of the bucket share
-            - {name: PGID, value: "100"}
+            - {name: PUID, value: "1031"}           # user arr on Loki: write access to bucket
+            - {name: PGID, value: "65538"}          # group media-rw on Loki: write access to media
             - {name: PEERPORT, value: "51413"}
             - {name: HOST_WHITELIST, value: dl.private.home.lobor.dev}
             - name: USER
@@ -46,8 +46,11 @@ spec:
             - {name: config, mountPath: /config}
             - {name: bucket, mountPath: /downloads, subPath: downloads}
             - {name: bucket, mountPath: /watch, subPath: downloads/watch}
+            - {name: media, mountPath: /data/downloads, subPath: downloads}
       volumes:
         - name: config
           persistentVolumeClaim: {claimName: transmission-config}
         - name: bucket
           persistentVolumeClaim: {claimName: bucket}
+        - name: media
+          persistentVolumeClaim: {claimName: media}

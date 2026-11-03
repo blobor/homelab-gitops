@@ -13,8 +13,6 @@ spec:
       labels: {app: ovms}
     spec:
       automountServiceAccountToken: false
-      nodeSelector:
-        kubernetes.io/hostname: lenny
       securityContext:
         runAsNonRoot: true
         runAsUser: 5000             # the image sets a user name, runAsNonRoot needs a number

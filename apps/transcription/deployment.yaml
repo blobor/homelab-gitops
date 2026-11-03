@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ovms
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate                  # RWO model volume
+  selector:
+    matchLabels: {app: ovms}
+  template:
+    metadata:
+      labels: {app: ovms}
+    spec:
+      automountServiceAccountToken: false
+      nodeSelector:
+        kubernetes.io/hostname: lenny
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 5000             # the image sets a user name, runAsNonRoot needs a number
+        runAsGroup: 5000
+        fsGroup: 5000
+        seccompProfile: {type: RuntimeDefault}
+      containers:
+        - name: ovms
+          image: openvino/model_server:2026.4.1-gpu
+          args:
+            - --rest_port
+            - "8000"
+            - --source_model
+            - OpenVINO/whisper-large-v3-turbo-fp16-ov
+            - --model_name
+            - whisper-large-v3-turbo-fp16-ov
+            - --model_repository_path
+            - /models
+            - --target_device       # explicit: auto-detection falls back to CPU without a GPU
+            - GPU
+          env:
+            - name: API_KEY
+              valueFrom: {secretKeyRef: {name: ovms-api-key, key: api-key}}
+          ports:
+            - {name: http, containerPort: 8000}
+          # No liveness probe: a long transcription must not restart the pod.
+          readinessProbe:
+            httpGet: {path: /v2/health/ready, port: http}
+            periodSeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+          resources:
+            requests: {cpu: "1", memory: 4Gi}
+            limits: {memory: 16Gi, gpu.intel.com/i915: "1"}
+          volumeMounts:
+            - {name: models, mountPath: /models}
+      volumes:
+        - name: models
+          persistentVolumeClaim: {claimName: ovms-models}

@@ -1,0 +1,11 @@
+# Whisper models that OVMS downloads from Hugging Face at startup.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ovms-models
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: synology-iscsi
+  resources:
+    requests:
+      storage: 10Gi

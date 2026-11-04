@@ -128,6 +128,12 @@
         "Run `talosctl upgrade-k8s --to <version>` first. The version must be in the support matrix of the running Talos.",
       ],
     },
+    {
+      matchPackageNames: ["plexinc/pms-docker"],
+      prBodyNotes: [
+        "Plex also publishes test builds with version tags. Merge only if this tag and `latest` have the same digest.",
+      ],
+    },
 
     // Release notes where the image source is a packaging repo or missing
     {

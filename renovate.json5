@@ -46,6 +46,12 @@
       matchPackageNames: ["https://github.com/blobor/homelab-gitops.git"],
       enabled: false,
     },
+    {
+      // Only Docker Hub gives release timestamps. Without this, these updates stay pending forever.
+      matchDatasources: ["docker"],
+      matchPackageNames: ["ghcr.io/**", "lscr.io/**"],
+      minimumReleaseAgeBehaviour: "timestamp-optional",
+    },
 
     // Grouping
     {

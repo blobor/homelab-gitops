@@ -26,9 +26,9 @@ spec:
             - --rest_port
             - "8000"
             - --source_model
-            - OpenVINO/whisper-large-v3-turbo-fp16-ov
+            - OpenVINO/whisper-large-v3-fp16-ov   # full model: turbo mixed up single Ukrainian words
             - --model_name
-            - whisper-large-v3-turbo-fp16-ov
+            - whisper                             # generic: clients do not change when the model changes
             - --model_repository_path
             - /models
             - --target_device       # explicit: auto-detection falls back to CPU without a GPU

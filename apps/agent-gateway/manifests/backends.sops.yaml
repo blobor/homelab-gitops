@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: agent-gateway-backends
+type: Opaque
+data:
+    ovms-api-key: ENC[AES256_GCM,data:KKMyXonDxi9fDYu3PaRfiOh2amlKaBONS6xFFMPiF/bGb97MzzgaidmcFY+pcOQn0vzGPmDluxWwRmkKBjso0bdG8eZYYcqdY0BksNdcAO3HKObI1usfBw==,iv:FgRPoknj2wVp4LtGu0kYKX62OC0yOqoJ+WYG4RZ8AEg=,tag:STXpotpZS7NTzdgBXV8gkg==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBJYXpta1hxeVBZL0ZlZ1Q1
+            NFlNQ2dxUS91Y1RMdlpIVlJScTVsb1NSdTNrCjNkWThxeGltT2NhVCtVajN6WXVt
+            YVJvL0kzMjVjSStVREt0VHdtcTVhSW8KLS0tIHpXZS9FY2k2akFuSHNHMzd2SkdE
+            bUZ1bDZ5WlkyQWZQY29rUnIwNGFSVlEKgnOR4U61tyGRLONMi0AL3ACDHtvsn9Q+
+            7jzS9Zq9cwP1vSSEAx6p//eSOeOV0gkhD+4UGb9X34mfFaGyxquY2A==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-11-06T14:01:42Z"
+    mac: ENC[AES256_GCM,data:+bqOfos8cCrA2eEFLre5XqaFkCz8LfZKwnFJBJUW29D985A4bQtmooN4KFTEPEJ7pvdaY5Q0j9ijrT3whixiBsVG6l9ekGK0y+sgOznl93xkcXGTqT7HIPk1q/bSpdbIOa11ogqTeVO5DjWzvGxo5Y/t24bHGk1c4mFl5MUkfYo=,iv:BIE1mSVGE9IhqIKUl65HBrLWLm/fyI4EihbjZ/WtlLU=,tag:G/ZP08NbljoCI3SCmzPCuQ==,type:str]
+    version: 3.13.3

@@ -1,0 +1,32 @@
+# The gateway holds backend credentials, so it talks only to what the routes need:
+# in from its Tailscale proxy, out to DNS and the allowed backends. Add a backend here with each new route.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: agent-gateway
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: agentgateway-standalone
+      app.kubernetes.io/instance: agent-gateway
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: tailscale
+            tailscale.com/parent-resource: agent-gateway
+            tailscale.com/parent-resource-ns: agent-gateway
+      toPorts:
+        - ports: [{port: "4000", protocol: TCP}]
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports: [{port: "53", protocol: UDP}, {port: "53", protocol: TCP}]
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: transcription
+            app: ovms
+      toPorts:
+        - ports: [{port: "8000", protocol: TCP}]

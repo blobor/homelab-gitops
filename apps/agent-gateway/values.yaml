@@ -1,0 +1,79 @@
+# The only path from AI agents to cluster services. Default deny: a request passes only when
+# a route matches, the API key is valid and the route's CEL rules allow that agent, method and path.
+# Agents reach it through the tailnet (grant tag:agent → tag:springfield-agent-proxy:80), never through Traefik.
+# Backend credentials stay here (manifests/backends.sops.yaml); the agent token is removed before the backend.
+fullnameOverride: agent-gateway
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  fsGroup: 65532
+  seccompProfile: {type: RuntimeDefault}
+
+resources:
+  requests: {cpu: 100m, memory: 128Mi}
+  limits: {memory: 256Mi}
+
+gateway:
+  service:
+    type: LoadBalancer
+    loadBalancerClass: tailscale
+    annotations:
+      tailscale.com/hostname: springfield-agent-ingress
+      tailscale.com/tags: tag:springfield-agent-proxy
+    ports:
+      - {name: http, port: 80, targetPort: 4000, protocol: TCP}
+
+extraVolumes:
+  - name: backends
+    secret:
+      secretName: agent-gateway-backends
+extraVolumeMounts:
+  - {name: backends, mountPath: /secrets, readOnly: true}
+
+config:
+  frontendPolicies:
+    accessLog:
+      add:
+        agent: apiKey.agent
+  binds:
+    - port: 4000
+      listeners:
+        - name: agents
+          protocol: HTTP
+          policies:
+            # One key per agent. Only the SHA-256 is here; the token itself lives on the agent.
+            apiKey:
+              mode: strict
+              keys:
+                - keyHash: sha256:6e84265fe165998dee04fc03eabb6d794d02d3841584ccfc851adcf9c30f4b26
+                  metadata: {agent: hermes}
+          routes:
+            # Each service gets its own path prefix, removed before the backend.
+            - name: whisper
+              matches:
+                - path: {pathPrefix: /whisper/}
+              policies:
+                authorization:
+                  rules:
+                    - require: apiKey.agent == "hermes"
+                    - require: >-
+                        (request.method == "POST" && request.path == "/whisper/v1/audio/transcriptions") ||
+                        (request.method == "GET" && request.path in ["/whisper/v1/models", "/whisper/v2/health/ready"])
+                    # 25 MB, the OpenAI upload limit that Hermes splits long audio to. No Content-Length → denied.
+                    - require: request.method != "POST" || int(request.headers["content-length"]) <= 26214400
+                urlRewrite:
+                  path: {prefix: /}
+                requestHeaderModifier:
+                  remove: [x-http-method-override, x-method-override, x-http-method]
+                localRateLimit:
+                  - {maxTokens: 10, tokensPerFill: 10, fillInterval: 60s}
+                timeout:
+                  requestTimeout: 300s
+                backendAuth:
+                  key:
+                    value: {file: /secrets/ovms-api-key}
+                    location: {header: {name: authorization, prefix: "Bearer "}}
+              backends:
+                - host: ovms.transcription.svc.cluster.local:8000

@@ -20,6 +20,11 @@ configs:
       name: immich-charts
       url: ghcr.io/immich-app/immich-charts
       enableOCI: "true"
+    agentgateway-charts:
+      type: helm
+      name: agentgateway-charts
+      url: cr.agentgateway.dev/charts
+      enableOCI: "true"
   params:
     server.insecure: true            # TLS terminates at traefik-internal
 repoServer:

@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: authentik-blueprint-kite
+data:
+  kite.yaml: |
+    version: 1
+    metadata:
+      name: kite
+    entries:
+      # Members get the read-only role in Kite. Add users in the Authentik UI.
+      - model: authentik_core.group
+        id: group
+        identifiers: {name: kubernetes-viewers}
+      - model: authentik_providers_oauth2.oauth2provider
+        id: provider
+        identifiers: {name: kite}
+        attrs:
+          authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+          invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+          client_type: confidential
+          client_id: kite
+          client_secret: !Env KITE_OAUTH_CLIENT_SECRET
+          grant_types: [authorization_code, refresh_token]
+          signing_key: !Find [authentik_crypto.certificatekeypair, [name, authentik Self-signed Certificate]]
+          redirect_uris:
+            - {matching_mode: strict, url: "https://k8s.private.home.lobor.dev/api/auth/callback"}
+          property_mappings:
+            - !Find [authentik_providers_oauth2.scopemapping, [managed, goauthentik.io/providers/oauth2/scope-openid]]
+            - !Find [authentik_providers_oauth2.scopemapping, [managed, goauthentik.io/providers/oauth2/scope-email]]
+            - !Find [authentik_providers_oauth2.scopemapping, [managed, goauthentik.io/providers/oauth2/scope-profile]]
+      - model: authentik_core.application
+        id: application
+        identifiers: {slug: kite}
+        attrs:
+          name: Kite
+          provider: !KeyOf provider
+          meta_launch_url: https://k8s.private.home.lobor.dev
+      # Only group members can log in.
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !KeyOf application
+          group: !KeyOf group
+        attrs:
+          order: 0

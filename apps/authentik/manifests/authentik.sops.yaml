@@ -10,6 +10,7 @@ stringData:
     bootstrap-password: ENC[AES256_GCM,data:91hrldDOTjJUVVrdc1EqBAYmrxuzMSTt40gDWy/eTCE=,iv:RJlyq5aw/vWs+qDq/NnLrOJ5iQdFPNBLy4DgqzUe3OE=,tag:wSa7lbFNR87HNXZ7iL9YmA==,type:str]
     immich-client-secret: ENC[AES256_GCM,data:6yi7DVjup+KoT4Bf7ljwG3A6dSgW6TMyfa7sBoi47bvnBtWaRCi+VjAttB8YYSdiWR3ttHVmuFJL7cIxrjPx/g==,iv:Cef3+R85m/SawbQtzkxEJlE167YG+rLnh3J1wIDC2lU=,tag:oXjIBpnLkoSXiVo5xflVgw==,type:str]
     ghostfolio-client-secret: ENC[AES256_GCM,data:h69fo4RAKLXguFntEbi0ykWsUMD5tGVro6daSr3c8EtJpuFfMvt7c8KAVy0l0CccTovCNRefo1YdA9V/XZoCBw==,iv:aBSo9vdPIFbP4ZD2JNLyoKU5nm9wGIJBOg84Q6nkTYU=,tag:AG/5pWf2NGLa4omAcRw4SQ==,type:str]
+    kite-client-secret: ENC[AES256_GCM,data:dAUtoVcNvwYPxhmvgWi/wpZhP62+YL0TWmhOM6bhGjcjym/ZLHB48XfkVuLvqwn8+KufMSKjauO7fvdopUdt5Q==,iv:cf8iwY/SHH2D9VdhaqqlXllRf51DP0ft1CcwOCoEh2c=,tag:Xh6gJ0yjyN2uAZJkTTBUOA==,type:str]
 sops:
     age:
         - enc: |
@@ -22,6 +23,6 @@ sops:
             -----END AGE ENCRYPTED FILE-----
           recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
     encrypted_regex: ^(data|stringData)$
-    lastmodified: "2026-10-13T08:44:11Z"
-    mac: ENC[AES256_GCM,data:fK2V8kFg7s6jQB67ozVlaBUGQtPkqneSSbJG4RQqfEZpkuAYnlY/xR4pb58sf7KarRpllsxgnpqFMckjHyfV5AlffH32hqtBLb1ugfqjiXJjJvikVUdg8ORKCyUI6ZPOz8u0N1RLzJ9X73mLsaFMdXSyKBFN/hX00DNx2wQ0EbM=,iv:8UADh/1mfqroQ+XOQmACRFNQOOauAcpYvsrRFNlGU9s=,tag:UcfVJcFO7GQw30BNVrGsgA==,type:str]
+    lastmodified: "2026-11-06T10:38:06Z"
+    mac: ENC[AES256_GCM,data:9FynE+smMdmaZ445LNhOHcFYht3O1/hFDSGJ5NtCkzOyMjJ/m94Fvb9hTCMefBjtJXO9+g7FQioYKGAWfTHWTmr8e9l8HhrToljwW6CRZOqeV/l3phc034doZWDP/XVTAF8Qbcy9N875wcJT1dpKwVA1bctbEQK+2knyDy1E3yU=,iv:PtWfQ/avMVWCoN3fKQOdOYw86q8U6oIVBmJ7yTFv0SA=,tag:CZxkgq5tM8xkPYOyc0h38g==,type:str]
     version: 3.13.3

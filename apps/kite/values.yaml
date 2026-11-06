@@ -31,7 +31,9 @@ config:
     - name: springfield
       inCluster: true
       default: true
-      prometheusURL: http://vmsingle.monitoring.svc.cluster.local:8428
+      # Not *.svc.cluster.local: Kite sends such URLs through the API server proxy (services/proxy),
+      # which the read-only ServiceAccount does not have.
+      prometheusURL: http://vmsingle.monitoring:8428
   oauth:
     - name: authentik
       clientId: kite

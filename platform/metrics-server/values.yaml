@@ -1,0 +1,23 @@
+replicas: 2
+
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: DoNotSchedule
+    nodeTaintsPolicy: Honor
+    matchLabelKeys: [pod-template-hash]
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: metrics-server
+        app.kubernetes.io/instance: metrics-server
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+# Serving certificate from cert-manager; cainjector puts the CA into the APIService,
+# so the API server verifies metrics-server (the chart default skips TLS verification).
+tls:
+  type: cert-manager
+apiService:
+  insecureSkipTLSVerify: false

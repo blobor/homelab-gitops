@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: kite-secrets
+    namespace: kite
+type: Opaque
+stringData:
+    JWT_SECRET: ENC[AES256_GCM,data:eC4LcWLNxC/5Q8Y2kqXDKR7f8EZ2XCTApEDjlYGi3NgZN9MrjWRfgP2AGnoHeu8lzY8e2yEyBUwBF9ALN/zDvg==,iv:H4Jkpjr+5oSeaksfvHyjMbvWS01dZ6hBHcp1BnoozKs=,tag:wEaq8uDZTnsf/Uw7zDScMw==,type:str]
+    KITE_ENCRYPT_KEY: ENC[AES256_GCM,data:JxVtVDJju7WgZi3EmOBuzaOIStjLCx/ERrHlgL2a2ICsZW1MATq3L4iu+WUOhRvE4vukz4jhRiwIZnLVF+HGZg==,iv:u5OEgLT+BXhg2i6LxIIWU7KyjjoWEV6i1Nzb8GstJsQ=,tag:kvsQMRa8A4ZdcZWujGlNXA==,type:str]
+    OAUTH_CLIENT_SECRET: ENC[AES256_GCM,data:ByPa+Sfd+5pWnyeFp13dT/OzXiA1Otw/7SzxBvl1qG9I1XHIzOT24LoaOYb/cGBE5HcvR8uR1WAACR13ut10cg==,iv:paY2bpdkZlxEvI5GjU+syHljlPdwznFjoyrwGNqQjJU=,tag:vIPNVeY1qNRWaT/9X9KlzA==,type:str]
+    SUPERUSER_PASSWORD: ENC[AES256_GCM,data:5ZbX1J54W8wcoIL4OvP6iBXORLSs1klvvn5SKNqzxJj/tGUubL9E3jRviir7YRSRzHeBJvuDQv8mlOfpQV/VHA==,iv:rynSvMbXtaI0Z1qixRHkpLldl7L00f6MSVZ15MyMRmc=,tag:8ddL/j8xe4WXO/JmiZaDOQ==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBwY2VVRjZUazZSOGJNNm9O
+            ZGtSNWVDVUJxYmNHWEY5WDlVYnJiTWZJTGk0CmViWDdlU1VuNE9CdUVvUW5BaS93
+            Q3NkZkpCc1JncFZiVXd6WkZBb2c5NVkKLS0tIEdIOTk3NkdFN21wblZXQnpUY0pi
+            ZnlSVUlGMXJNL2kxaXZHNFM2NjlrUTAKj1vYYpZuDAoq5CnkvLPuxwZ4/c8hLfqx
+            ORujc6nmvJmHNRClC9071+/Lw5Vi44QrIEcTul7UTuw1UUJAih2Afw==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-11-06T10:38:06Z"
+    mac: ENC[AES256_GCM,data:uVdqBk51RP2c0UXXmIMCjSkixgSmyml0X1pF1JLb409+Dn0bfbkhE2pJNhjf5UcVEEN5hvCGcuFgKS+XHHOBdHmBankCRNUKqNCSWhVMlDBhrq9gfKtuoAbZOURyPi8R4wPO+cK36j8RnfxgQf68f/w0yzVFBC6JgVd2KiiG1Yk=,iv:q9/EfrN4w4E579ZpS+17lEgfbxgEPbLud5U+XPrZric=,tag:C4x3ZmXlDLRN8m+6dmwOAQ==,type:str]
+    version: 3.13.3

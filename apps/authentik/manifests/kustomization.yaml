@@ -7,5 +7,6 @@ resources:
   - backup.yaml
   - blueprint-immich.yaml
   - blueprint-ghostfolio.yaml
+  - blueprint-kite.yaml
 generators:
   - secret-generator.yaml

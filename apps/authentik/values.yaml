@@ -14,9 +14,11 @@ global:
       valueFrom: {secretKeyRef: {name: authentik-secrets, key: immich-client-secret}}
     - name: GHOSTFOLIO_OAUTH_CLIENT_SECRET
       valueFrom: {secretKeyRef: {name: authentik-secrets, key: ghostfolio-client-secret}}
+    - name: KITE_OAUTH_CLIENT_SECRET
+      valueFrom: {secretKeyRef: {name: authentik-secrets, key: kite-client-secret}}
 
 blueprints:
-  configMaps: [authentik-blueprints, authentik-blueprint-ghostfolio]
+  configMaps: [authentik-blueprints, authentik-blueprint-ghostfolio, authentik-blueprint-kite]
 
 authentik:
   postgresql:

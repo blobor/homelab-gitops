@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kite
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://charts.kitehq.dev
+      chart: kite
+      targetRevision: 0.16.0
+      helm:
+        releaseName: kite
+        valueFiles:
+          - $values/apps/kite/values.yaml
+    - repoURL: https://github.com/blobor/homelab-gitops.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://github.com/blobor/homelab-gitops.git
+      targetRevision: main
+      path: apps/kite/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kite
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

@@ -2,3 +2,11 @@
 apiVersion: v1alpha1
 kind: KubeFlannelCNIConfig
 $patch: delete
+---
+# Kubelet serving certificate from the cluster CA (not self-signed), so metrics-server can verify TLS.
+# The CSRs are approved by kubelet-serving-cert-approver — deploy it before this patch, else
+# kubectl logs/exec fail on the node until the CSR is approved.
+apiVersion: v1alpha1
+kind: KubeletConfig
+config:
+  serverTLSBootstrap: true

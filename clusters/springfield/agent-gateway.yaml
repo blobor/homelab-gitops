@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   sources:
-    - repoURL: cr.agentgateway.dev/charts
+    - repoURL: ghcr.io/agentgateway/charts
       chart: agentgateway-standalone
       targetRevision: 1.7.0
       helm:

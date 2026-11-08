@@ -86,7 +86,7 @@ pages:
                 icon: di:radarr
               - title: Seerr
                 url: https://seerr.private.home.lobor.dev
-                check-url: http://seerr.seerr.svc.cluster.local:5055/api/v1/status
+                check-url: http://seerr.seerr.svc.cluster.local:5055/api/v1/status/appdata
                 icon: di:seerr
               - title: Syncthing
                 url: https://sync.private.home.lobor.dev

@@ -23,7 +23,7 @@ configs:
     agentgateway-charts:
       type: helm
       name: agentgateway-charts
-      url: cr.agentgateway.dev/charts
+      url: ghcr.io/agentgateway/charts
       enableOCI: "true"
   params:
     server.insecure: true            # TLS terminates at traefik-internal

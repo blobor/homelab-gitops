@@ -8,7 +8,7 @@ spec:
   sources:
     - repoURL: https://charts.kitehq.dev
       chart: kite
-      targetRevision: 0.16.0
+      targetRevision: 0.17.0
       helm:
         releaseName: kite
         valueFiles:

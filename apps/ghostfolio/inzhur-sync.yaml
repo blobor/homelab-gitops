@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: inzhur-sync-data
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: synology-iscsi
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: inzhur-sync
+spec:
+  schedule: "17 * * * *"
+  timeZone: Europe/Kyiv
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 300
+      template:
+        metadata:
+          labels: {app: inzhur-sync}
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            fsGroup: 65532
+            seccompProfile: {type: RuntimeDefault}
+          containers:
+            - name: inzhur2gf
+              image: ghcr.io/blobor/ghostfolio-inzhur:edge
+              imagePullPolicy: Always
+              env:
+                - {name: TZ, value: Europe/Kyiv}
+                - {name: GHOSTFOLIO_URL, value: "http://ghostfolio:3333"}
+                - {name: DATA_DIR, value: /data}
+              envFrom:
+                - secretRef: {name: inzhur-sync}
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities: {drop: [ALL]}
+              resources:
+                requests: {cpu: 10m, memory: 16Mi}
+                limits: {memory: 64Mi}
+              volumeMounts:
+                - {name: data, mountPath: /data}
+          volumes:
+            - name: data
+              persistentVolumeClaim: {claimName: inzhur-sync-data}

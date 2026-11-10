@@ -1,0 +1,24 @@
+apiVersion: v1
+data:
+    GHOSTFOLIO_ACCESS_TOKEN: ENC[AES256_GCM,data:PhCHzcHAjIbqCkrTPPhnZMQdG+8rTQVVkdJJK11yRjkHKtjibVTp6izc473yrIBZ8apvU1oErLAe7DsbYw/UQIYgqT1qOnnlWjbIy6fJg2S1c6TvlzBmLyXZ5X0UwxVkjeWOzBJSACIM0Y5btV7js9dLxrGu/wSLZc5JJMZWLB3Fh0XqbxfGP/XiCWPURVZSRBNu7PGrFEWJXkt+HBAnu55FZ/lf8bAO2LOZHw==,iv:Yhc5nUCdbQy1bjDnHQogCYYfdF3i0sJ7TPpmZu9bv5s=,tag:ref2s9J8D4rR4/y9A/KwTw==,type:str]
+    GHOSTFOLIO_ACCOUNT_ID: ENC[AES256_GCM,data:fDmPurJwU5OTa+B3kZh6A2KjE7LA5pIViwVpaurrxiY8bzTsAxIhgjSkxyHZlXwWfParbg==,iv:LaO/AHnehO/1fi4pvR+W4sjkpG5R5sa2WVGkZ46QNN8=,tag:o4OgCLq9VnBDEoK/s2KkBQ==,type:str]
+    INZHUR_REFRESH_TOKEN: ENC[AES256_GCM,data:Jk3dd5dAMeALYCkW52reksnWSreF0BQ5/WP9yCvXHlqeGlYI00WUuhfxPz8w380RVMi69X828W0emo46,iv:PGSofAQiOIWnIB0S0d4vqTIgSVxphIKagEnrQil4Io4=,tag:ZNkY6sHvd06tnJs0s5Uj4Q==,type:str]
+kind: Secret
+metadata:
+    name: inzhur-sync
+    namespace: ghostfolio
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBSR2VDcGlMVU15SnpuT2xs
+            WGEvQXhKc3BqdnBLZmNvRzcxMDYwNGJDdFZrCnJVcUVXZHR3VEJLZFBjSElUcFNC
+            MzhCYjlEbzd2dGUzcEc0ZkRvMFprbmcKLS0tIDZkK1prVTJ3Um9tbnVHT1VHNVlL
+            djcyV0pwbC9aWFl1RzVaOFB6RzVkNncKX2aL5e3SIMxaCwsU0Ty3Pr6jI+m+H5XV
+            hlhTneFczy9cPjXyuUvXDvQ4GJcbED23ix4QrGV+s9J+EseiU7iC4g==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-11-10T15:02:11Z"
+    mac: ENC[AES256_GCM,data:WlxNRGKmuBSoTPouxTffXP+vX/2CWqnPizGpdFMdGf/it3vWyDqm/5jXwIBYFBhd6u9ox4hQAGWV0W6QV9xkpPkaZWozEk7LvnpJ9cWWP4dY1gyNwup13BTb/WmGLcS3GRu9kgM2fqg91QBSOBJEj3ut/QB/CpK7hqc2f/IQW4I=,iv:4h56RQ/eOWnzO2BsoKen4Mb1z7e+eozkp+SG5yQ7lOM=,tag:yY/+5FE/f1zg1pz5XqmbIw==,type:str]
+    version: 3.13.3

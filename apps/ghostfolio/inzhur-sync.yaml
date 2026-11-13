@@ -37,8 +37,8 @@ spec:
             seccompProfile: {type: RuntimeDefault}
           containers:
             - name: inzhur2gf
-              image: ghcr.io/blobor/ghostfolio-inzhur:edge
-              imagePullPolicy: Always
+              image: ghcr.io/blobor/ghostfolio-inzhur:0.1.0
+              imagePullPolicy: IfNotPresent
               env:
                 - {name: TZ, value: Europe/Kyiv}
                 - {name: GHOSTFOLIO_URL, value: "http://ghostfolio:3333"}

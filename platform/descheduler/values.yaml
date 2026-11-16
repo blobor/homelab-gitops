@@ -46,3 +46,22 @@ deschedulerPolicy:
       plugins:
         balance:
           enabled: [RemoveDuplicates, LowNodeUtilization]
+    - name: crowdsec-agent
+      pluginConfig:
+        - name: DefaultEvictor
+          args:
+            podProtections:
+              defaultDisabled: [DaemonSetPods, PodsWithLocalStorage]
+        - name: RemovePodsHavingTooManyRestarts
+          args:
+            # After a node reboot the agent pod keeps its name, and its init container fails to
+            # register again: "user already exist" (crowdsecurity/helm-charts#252).
+            # A new pod gets a new name and registers.
+            podRestartThreshold: 3
+            includingInitContainers: true
+            states: [CrashLoopBackOff]
+            namespaces: {include: [crowdsec]}
+            labelSelector: {matchLabels: {k8s-app: crowdsec, type: agent}}
+      plugins:
+        deschedule:
+          enabled: [RemovePodsHavingTooManyRestarts]

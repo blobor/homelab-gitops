@@ -11,6 +11,7 @@ podSecurityContext:
   seccompProfile: {type: RuntimeDefault}
 
 deschedulerPolicy:
+  maxNoOfPodsToEvictPerNode: 5
   profiles:
     - name: failed-pods
       pluginConfig:
@@ -23,3 +24,25 @@ deschedulerPolicy:
       plugins:
         deschedule:
           enabled: [RemoveFailedPods]
+    - name: balance
+      pluginConfig:
+        - name: DefaultEvictor
+          args:
+            nodeFit: true
+            podProtections:
+              defaultDisabled: [PodsWithLocalStorage]
+              extraEnabled: [PodsWithPVC]
+              config:
+                PodsWithPVC:
+                  # Local LVM volumes are bound to one node, so these pods cannot move.
+                  protectedStorageClasses:
+                    - name: local
+        - name: RemoveDuplicates
+        - name: LowNodeUtilization
+          args:
+            useDeviationThresholds: true
+            thresholds: {cpu: 10, memory: 10, pods: 10}
+            targetThresholds: {cpu: 10, memory: 10, pods: 10}
+      plugins:
+        balance:
+          enabled: [RemoveDuplicates, LowNodeUtilization]

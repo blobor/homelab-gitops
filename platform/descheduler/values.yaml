@@ -1,0 +1,25 @@
+kind: CronJob
+schedule: "*/10 * * * *"
+successfulJobsHistoryLimit: 1
+failedJobsHistoryLimit: 1
+
+resources:
+  requests: {cpu: 10m, memory: 64Mi}
+  limits: {memory: 128Mi}
+
+podSecurityContext:
+  seccompProfile: {type: RuntimeDefault}
+
+deschedulerPolicy:
+  profiles:
+    - name: failed-pods
+      pluginConfig:
+        - name: DefaultEvictor
+        - name: RemoveFailedPods
+          args:
+            # Kubelet fails GPU pods after a node reboot, before the GPU plugin registers.
+            reasons: [UnexpectedAdmissionError]
+            excludeOwnerKinds: [Job]
+      plugins:
+        deschedule:
+          enabled: [RemoveFailedPods]

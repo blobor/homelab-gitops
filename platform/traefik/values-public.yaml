@@ -32,7 +32,7 @@ experimental:
     crowdsec-bouncer:                       # used by the Middleware traefik/crowdsec-bouncer
       moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
       # renovate: datasource=github-releases depName=maxlerebourg/crowdsec-bouncer-traefik-plugin
-      version: v1.8.1
+      version: v1.8.2
 
 deployment:
   replicas: 2

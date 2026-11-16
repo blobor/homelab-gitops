@@ -5,7 +5,6 @@
   schedule: ["* 0-6 * * 6"],
   minimumReleaseAge: "3 days",
   internalChecksFilter: "strict",
-  dependencyDashboardTitle: "Dependency Dashboard",
   prConcurrentLimit: 10,
   labels: ["renovate"],
 

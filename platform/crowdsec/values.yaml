@@ -75,8 +75,8 @@ config:
       sslmode: require
       flush:
         agents_autodelete:
-          # The chart registers an agent with its pod name at each sandbox restart.
-          # After a node reboot the old record blocks this with "user already exist".
+          # Removes records of old agent pods. A record that has alerts stays, so this does not
+          # fix "user already exist" after a node reboot; the descheduler recreates that pod.
           login_password: 30m
   parsers:
     s02-enrich:

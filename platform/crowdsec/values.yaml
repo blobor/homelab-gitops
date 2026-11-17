@@ -24,7 +24,7 @@ agent:
     limits: {memory: 256Mi}
 
 lapi:
-  replicas: 2                               # state is in Postgres (crowdsec-db); one per worker
+  replicas: 1                               # 2 when lenny is back (state is in Postgres; one per worker)
   strategy:
     type: RollingUpdate
     rollingUpdate: {maxSurge: 0, maxUnavailable: 1}   # required anti-affinity leaves no node for a surge pod

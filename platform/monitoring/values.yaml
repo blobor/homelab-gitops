@@ -21,8 +21,9 @@ external:
       url: http://vmsingle-a.monitoring.svc:8428/api/v1/write
 
 vmagent:
-  additionalRemoteWrites:
-    - url: http://vmsingle-b.monitoring.svc:8428/api/v1/write
+  # Restore when lenny is back:
+  #   - url: http://vmsingle-b.monitoring.svc:8428/api/v1/write
+  additionalRemoteWrites: []
   spec:
     externalLabels:
       cluster: springfield
@@ -45,7 +46,7 @@ defaultDashboards:
 # Only the Watchdog leaves the cluster (healthchecks.io dead-man switch); every other alert stays in Grafana / vmalert UI.
 alertmanager:
   spec:
-    replicaCount: 2            # gossip: silences and nflog are shared
+    replicaCount: 1            # 2 when lenny is back (gossip: silences and nflog are shared)
     affinity:
       podAntiAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:

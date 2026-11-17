@@ -25,6 +25,8 @@ kind: VMSingle
 metadata:
   name: b
 spec:
+  replicaCount: 0                  # 1 when lenny is back; the PVC keeps the data
+  disableSelfServiceScrape: true   # remove when lenny is back
   retentionPeriod: 30d
   extraArgs:
     vmalert.proxyURL: http://vmalert-vm.monitoring.svc.cluster.local.:8080   # Grafana alerting view

@@ -3,7 +3,7 @@ kind: Cluster
 metadata:
   name: authentik-db
 spec:
-  instances: 2
+  instances: 1                    # 2 when lenny is back; then add synchronous again
   affinity:
     enablePodAntiAffinity: true
     podAntiAffinityType: required
@@ -16,10 +16,6 @@ spec:
   postgresql:
     parameters:
       max_slot_wal_keep_size: 2GB   # a replica that is down cannot fill the primary's volume
-    synchronous:
-      method: any
-      number: 1
-      dataDurability: preferred     # with one instance down, writes go on without a sync standby
   storage:
     storageClass: local
     size: 5Gi

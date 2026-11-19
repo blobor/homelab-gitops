@@ -96,6 +96,10 @@ pages:
                 url: https://money.private.home.lobor.dev
                 check-url: http://ghostfolio.ghostfolio.svc.cluster.local:3333/api/v1/health/liveness
                 icon: si:ghostfolio
+              - title: Paperless
+                url: https://paper.private.home.lobor.dev
+                check-url: http://paperless.paperless.svc.cluster.local:8000/accounts/login/
+                icon: si:paperlessngx
               - title: Bender
                 url: https://bender.pve.private.home.lobor.dev
                 check-url: https://proxmox-bender.tailnet-backends.svc.cluster.local:8006

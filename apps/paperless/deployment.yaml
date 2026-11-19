@@ -77,6 +77,9 @@ spec:
             - name: PAPERLESS_SOCIALACCOUNT_PROVIDERS
               value: '{"openid_connect":{"OAUTH_PKCE_ENABLED":true,"SCOPE":["openid","profile","email"],"APPS":[{"provider_id":"authentik","name":"Authentik","client_id":"paperless","secret":"$(OIDC_CLIENT_SECRET)","settings":{"server_url":"https://auth.home.lobor.dev/application/o/paperless/.well-known/openid-configuration"}}]}}'
             - {name: PAPERLESS_SOCIALACCOUNT_ALLOW_SIGNUPS, value: "false"}
+            - name: PAPERLESS_DISABLE_REGULAR_LOGIN  # the web form only; the API still takes local credentials
+              value: "true"
+            - {name: PAPERLESS_REDIRECT_LOGIN_TO_SSO, value: "true"}
             - {name: PAPERLESS_ADMIN_USER, value: admin}
             - name: PAPERLESS_ADMIN_PASSWORD         # used only while no superuser exists
               valueFrom: {secretKeyRef: {name: paperless, key: PAPERLESS_ADMIN_PASSWORD}}

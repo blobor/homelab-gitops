@@ -7,5 +7,6 @@ resources:
   - storage.yaml
   - deployment.yaml
   - service.yaml
+  - networkpolicy.yaml
 generators:
   - secret-generator.yaml

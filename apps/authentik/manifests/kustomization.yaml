@@ -8,5 +8,6 @@ resources:
   - blueprint-immich.yaml
   - blueprint-ghostfolio.yaml
   - blueprint-kite.yaml
+  - blueprint-paperless.yaml
 generators:
   - secret-generator.yaml

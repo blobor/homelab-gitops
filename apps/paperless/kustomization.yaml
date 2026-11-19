@@ -8,5 +8,6 @@ resources:
   - deployment.yaml
   - service.yaml
   - networkpolicy.yaml
+  - backup.yaml
 generators:
   - secret-generator.yaml

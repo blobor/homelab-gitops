@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paperless
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: {app: paperless}
+  template:
+    metadata:
+      labels: {app: paperless}
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false   # else the Service injects PAPERLESS_PORT=tcp://..., read as the listen port
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: {type: RuntimeDefault}
+      initContainers:
+        - name: tessdata-ukr       # the image has no Ukrainian model, and installing packages needs root
+          image: ghcr.io/paperless-ngx/paperless-ngx:3.5.1
+          command:
+            - sh
+            - -c
+            - |
+              set -eu
+              url=https://raw.githubusercontent.com/tesseract-ocr/tessdata_fast/65727574dfcd264acbb0c3e07860e4e9e9b22185/ukr.traineddata
+              sha=d59e53e2bded32f4445f124b4b00240fcac7e8044c003ab822ccb94f0b3db59b
+              f=/data/tessdata/ukr.traineddata
+              if [ -f "$f" ] && echo "$sha  $f" | sha256sum -c --status; then
+                exit 0
+              fi
+              mkdir -p /data/tessdata
+              curl -fsSL --proto '=https' --retry 3 -o "$f.tmp" "$url"
+              echo "$sha  $f.tmp" | sha256sum -c
+              mv "$f.tmp" "$f"
+          resources:
+            requests: {cpu: 10m, memory: 32Mi}
+            limits: {memory: 128Mi}
+          securityContext: {allowPrivilegeEscalation: false, capabilities: {drop: [ALL]}}
+          volumeMounts:
+            - {name: data, mountPath: /data}
+      containers:
+        - name: paperless
+          image: ghcr.io/paperless-ngx/paperless-ngx:3.5.1
+          env:
+            - {name: PAPERLESS_URL, value: "https://paper.private.home.lobor.dev"}
+            - name: PAPERLESS_ALLOWED_HOSTS          # with PAPERLESS_URL set, only its host is allowed; this adds the in-cluster name
+              value: paperless.paperless.svc.cluster.local
+            - {name: PAPERLESS_PORT, value: "8000"}
+            - {name: PAPERLESS_TIME_ZONE, value: Europe/Kyiv}
+            - {name: PAPERLESS_PROXY_SSL_HEADER, value: '["HTTP_X_FORWARDED_PROTO","https"]'}
+            - name: PAPERLESS_SECRET_KEY
+              valueFrom: {secretKeyRef: {name: paperless, key: PAPERLESS_SECRET_KEY}}
+            - {name: PAPERLESS_DBENGINE, value: postgresql}
+            - {name: PAPERLESS_DBHOST, value: paperless-db-rw}
+            - {name: PAPERLESS_DBNAME, value: paperless}
+            - name: PAPERLESS_DBUSER
+              valueFrom: {secretKeyRef: {name: paperless-db-app, key: username}}
+            - name: PAPERLESS_DBPASS
+              valueFrom: {secretKeyRef: {name: paperless-db-app, key: password}}
+            - name: REDIS_PASSWORD
+              valueFrom: {secretKeyRef: {name: paperless, key: REDIS_PASSWORD}}
+            - {name: PAPERLESS_REDIS, value: "redis://:$(REDIS_PASSWORD)@valkey:6379"}
+            - {name: PAPERLESS_OCR_LANGUAGE, value: ukr+eng}
+            - name: PAPERLESS_THREADS_PER_WORKER     # the default comes from the node's CPU count, not the pod's
+              value: "2"
+            - {name: PAPERLESS_CONSUMER_DELETE_DUPLICATES, value: "true"}
+            - {name: PAPERLESS_APPS, value: allauth.socialaccount.providers.openid_connect}
+            - name: OIDC_CLIENT_SECRET
+              valueFrom: {secretKeyRef: {name: paperless, key: OIDC_CLIENT_SECRET}}
+            - name: PAPERLESS_SOCIALACCOUNT_PROVIDERS
+              value: '{"openid_connect":{"OAUTH_PKCE_ENABLED":true,"SCOPE":["openid","profile","email"],"APPS":[{"provider_id":"authentik","name":"Authentik","client_id":"paperless","secret":"$(OIDC_CLIENT_SECRET)","settings":{"server_url":"https://auth.home.lobor.dev/application/o/paperless/.well-known/openid-configuration"}}]}}'
+            - {name: PAPERLESS_SOCIALACCOUNT_ALLOW_SIGNUPS, value: "false"}
+            - {name: PAPERLESS_ADMIN_USER, value: admin}
+            - name: PAPERLESS_ADMIN_PASSWORD         # used only while no superuser exists
+              valueFrom: {secretKeyRef: {name: paperless, key: PAPERLESS_ADMIN_PASSWORD}}
+          ports:
+            - {name: web, containerPort: 8000}
+          startupProbe:                   # Host header: the pod IP is rejected with 400; localhost is always allowed
+            httpGet: {path: /accounts/login/, port: web, httpHeaders: [{name: Host, value: localhost}]}
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 60          # the port opens only after DB migrations
+          readinessProbe:
+            httpGet: {path: /accounts/login/, port: web, httpHeaders: [{name: Host, value: localhost}]}
+            periodSeconds: 15
+            timeoutSeconds: 5
+          livenessProbe:                  # no DB query: a database outage does not restart the pod
+            httpGet: {path: /favicon.ico, port: web, httpHeaders: [{name: Host, value: localhost}]}
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 5
+          resources:
+            requests: {cpu: 200m, memory: 1Gi}
+            limits: {memory: 3Gi}
+          securityContext: {allowPrivilegeEscalation: false, capabilities: {drop: [ALL]}}
+          volumeMounts:
+            - {name: data, mountPath: /usr/src/paperless/data}
+            - {name: data, mountPath: /usr/share/tesseract-ocr/5/tessdata/ukr.traineddata, subPath: tessdata/ukr.traineddata, readOnly: true}
+            - {name: library, mountPath: /usr/src/paperless/media, subPath: media}
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - {name: data, persistentVolumeClaim: {claimName: paperless-data}}
+        - {name: library, persistentVolumeClaim: {claimName: paperless-library}}
+        - {name: tmp, emptyDir: {sizeLimit: 5Gi}}   # OCR scratch files

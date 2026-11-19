@@ -1,0 +1,84 @@
+# Proves that the newest dump restores and that every file it lists is in media with the same checksum.
+# Run by hand, right after a fresh dump (a change in Paperless after the dump gives a false failure):
+#   kubectl -n paperless create job --from=cronjob/postgres-dump dump-now
+#   kubectl -n paperless create job --from=cronjob/restore-test restore-test-1
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: restore-test
+spec:
+  suspend: true
+  schedule: "30 5 1 * *"
+  timeZone: Europe/Kyiv
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      activeDeadlineSeconds: 1800
+      template:
+        metadata:
+          labels: {app: paperless-restore-test}
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 26                 # the postgres user of the image: initdb needs a passwd entry
+            runAsGroup: 26
+            supplementalGroups: [1000]    # media belongs to 1000:1000, mode 750
+            seccompProfile: {type: RuntimeDefault}
+          containers:
+            - name: restore
+              image: ghcr.io/cloudnative-pg/postgresql:18.7-202611160820-standard-trixie
+              command:
+                - sh
+                - -c
+                - |
+                  set -eu
+                  fail() { echo "FAILED: $1"; exit 1; }
+                  dump=$(ls -1t /backup/postgres/paperless/paperless-*.dump | head -n 1)
+                  [ -n "$dump" ] || fail "no dump in /backup/postgres/paperless"
+                  echo "restoring $dump"
+                  export PGDATA=/work/pgdata PGHOST=/work PGUSER=postgres PGDATABASE=paperless
+                  initdb --auth=trust --username=postgres --encoding=UTF8 --locale=C >/dev/null
+                  pg_ctl --wait --log=/work/postgres.log --options="-c listen_addresses='' -c unix_socket_directories=/work" start
+                  createdb paperless
+                  pg_restore --exit-on-error --no-owner --no-privileges --dbname=paperless "$dump"
+                  q() { psql --no-psqlrc --tuples-only --no-align --quiet --command="$1"; }
+                  docs=$(q "select count(*) from documents_document")
+                  trashed=$(q "select count(*) from documents_document where deleted_at is not null")
+                  cyrillic=$(q "select count(*) from documents_document where content ~ '[а-яА-ЯіїєґІЇЄҐ]'")
+                  tags=$(q "select count(*) from documents_tag")
+                  correspondents=$(q "select count(*) from documents_correspondent")
+                  types=$(q "select count(*) from documents_documenttype")
+                  notes=$(q "select count(*) from documents_note")
+                  users=$(q "select count(*) from auth_user")
+                  echo "documents=$docs trashed=$trashed with_cyrillic_text=$cyrillic tags=$tags correspondents=$correspondents types=$types notes=$notes users=$users"
+                  [ "$docs" -gt 0 ] || fail "the dump has no documents"
+                  [ "$(q "select count(*) from documents_document where filename is null")" -eq 0 ] || fail "a document has no file name"
+                  [ "$(q "select count(*) from documents_document where archive_filename is not null and archive_checksum is null")" -eq 0 ] || fail "an archive file has no checksum"
+                  q "select checksum || '  originals/' || filename from documents_document
+                     union all
+                     select archive_checksum || '  archive/' || archive_filename from documents_document where archive_filename is not null" >/work/sha256
+                  cd /media/documents
+                  sha256sum --check --quiet --strict /work/sha256 || fail "a file in media is missing, unreadable or does not match the dump"
+                  ids=$(q "select id from documents_document")
+                  for id in $ids; do
+                    [ -f "thumbnails/$(printf %07d "$id").webp" ] || fail "no thumbnail for document $id"
+                  done
+                  echo "checked $(wc -l </work/sha256) files"
+                  echo "restore test passed"
+              resources:
+                requests: {cpu: 50m, memory: 256Mi}
+                limits: {memory: 1Gi}
+              securityContext: {allowPrivilegeEscalation: false, capabilities: {drop: [ALL]}}
+              volumeMounts:
+                - {name: work, mountPath: /work}
+                - {name: backup, mountPath: /backup, readOnly: true}
+                - {name: library, mountPath: /media, subPath: media, readOnly: true}
+          volumes:
+            - {name: work, emptyDir: {sizeLimit: 5Gi}}
+            - {name: backup, persistentVolumeClaim: {claimName: k8s-backups, readOnly: true}}
+            - {name: library, persistentVolumeClaim: {claimName: paperless-library, readOnly: true}}

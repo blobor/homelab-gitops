@@ -9,5 +9,6 @@ resources:
   - service.yaml
   - networkpolicy.yaml
   - backup.yaml
+  - restore-test.yaml
 generators:
   - secret-generator.yaml

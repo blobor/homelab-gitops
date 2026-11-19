@@ -24,6 +24,7 @@ l2announcements:
 k8sClientRateLimit:                 # L2 announcements use leases — raise the API client limits a bit
   qps: 20
   burst: 40
+enableNonDefaultDenyPolicies: true  # chart default, pinned: without it deny-pods-to-nas would drop all pod egress
 hubble:
   relay:
     enabled: true

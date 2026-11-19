@@ -71,6 +71,8 @@ spec:
             - name: PAPERLESS_THREADS_PER_WORKER     # the default comes from the node's CPU count, not the pod's
               value: "2"
             - {name: PAPERLESS_CONSUMER_DELETE_DUPLICATES, value: "true"}
+            - name: PAPERLESS_FILENAME_FORMAT        # the title is cut: a file name has a 255-byte limit and Cyrillic takes 2 bytes per letter
+              value: '{{ document_type | default("Без типу", true) }}/{{ created_year }}/{{ created }} {{ title[:100] }}'
             - {name: PAPERLESS_APPS, value: allauth.socialaccount.providers.openid_connect}
             - name: OIDC_CLIENT_SECRET
               valueFrom: {secretKeyRef: {name: paperless, key: OIDC_CLIENT_SECRET}}

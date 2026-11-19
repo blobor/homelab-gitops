@@ -1,0 +1,18 @@
+# Pod traffic to the NAS leaves with the node IP, which the NFS exports trust. Nodes are not endpoints: their mounts are not affected.
+# enableDefaultDeny must stay false: without it, every selected pod loses all other egress.
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: deny-pods-to-nas
+spec:
+  endpointSelector:
+    matchLabels: {k8s:io.kubernetes.pod.namespace: glance}
+  enableDefaultDeny: {egress: false, ingress: false}
+  egressDeny:
+    - toCIDR: [10.20.30.200/32]
+      toPorts:
+        - ports:
+            - {port: "2049", protocol: ANY}
+            - {port: "111", protocol: ANY}
+            - {port: "3260", protocol: TCP}
+            - {port: "16990", protocol: TCP}   # DSM API (synology-csi)

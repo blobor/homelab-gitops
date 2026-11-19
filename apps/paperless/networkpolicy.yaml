@@ -1,0 +1,31 @@
+# In: only the internal Traefik and the Glance check. Kubelet probes come from the node, which Cilium always allows.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: paperless
+spec:
+  endpointSelector:
+    matchLabels: {app: paperless}
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: traefik
+            app.kubernetes.io/instance: traefik-internal-traefik
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: glance
+            app: glance
+      toPorts:
+        - ports: [{port: "8000", protocol: TCP}]
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: valkey
+spec:
+  endpointSelector:
+    matchLabels: {app: valkey}
+  ingress:
+    - fromEndpoints:
+        - matchLabels: {app: paperless}
+      toPorts:
+        - ports: [{port: "6379", protocol: TCP}]

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: paperless
+    namespace: paperless
+type: Opaque
+stringData:
+    PAPERLESS_SECRET_KEY: ENC[AES256_GCM,data:xN71aZtp0QHVo2s67t28jxQsMx5z5kj7+M7y1HyPMLw+vlAMJ1PUGNqK+qN1ZwCF25JdqfgPn/Wcudwjb0L3aGE13OIHfrTyJjfupGq7vWSUasVbrHKDHmqOXmMLDygf,iv:z+pcoCy92sFxwohrvJLGdfJll8eApZGz6qw63heKz/s=,tag:drWx/TVZ3N8APmVeH7L2WQ==,type:str]
+    REDIS_PASSWORD: ENC[AES256_GCM,data:qUwLL6NJD1rsEhLxOyConRdh9z2Bq1x4yrCKuMfPJJiWlfsMO/44Dcgqs4/VSwv07WfQTFqxKSSuczpHx40B1A==,iv:gefNuFIo9o2S/eejouEFg+bdnJPVk1PJE/jmmROi138=,tag:l4+R239ZyppcPCrnAByXfw==,type:str]
+    OIDC_CLIENT_SECRET: ENC[AES256_GCM,data:rifE027l3Vtl1pSQI++DaLNo+OUlI0u9K/7HZ5gvU28Kb8VVS5Y603pImHNzQCGNZc4hOUNVnWZT+uFM4MRA3w==,iv:tsOhM+M0jWoT5CBRgtOJejXm+Tqw4iMyIaZENuw1VK4=,tag:+MKvD890CEiGC6ftvowovA==,type:str]
+    PAPERLESS_ADMIN_PASSWORD: ENC[AES256_GCM,data:LHJQSutCAjrqRhBAlYPALF2RTynQitMX7Eao7+bYwz8=,iv:MLueRnMc0g05Ve86Fzns8PCtzJoN+uIUkzuPoMrQZ+M=,tag:tKIsh/k7KD5HYxlqsfE/qA==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBHSHBsd1dCL0lHVzhVUEI1
+            MXBJak1NT05UV1NRSWw3RkdBalJmbHV1RnpzCmtyamVFY2pXNTBpUXBXUVV4MHBo
+            cVFvSEU2OG1ldnd3MDEwNW1Id2ZCUTAKLS0tIG9vZ1U3ajNISFBCYW9jQ2lKS09T
+            WHlaK1RUYm9iQTFLa1lIYkxzWkdDOHMKJbpi0JLUx+sCAKrJ/vvkAaahoMjmu3ba
+            mq0QGfkdTASt1J/Nx+inxBgZqeSxqpBx4Tbq+l4OmGzUzW0juvKr7A==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-11-19T08:53:35Z"
+    mac: ENC[AES256_GCM,data:mkywK2MsFcTRMhakbmKM40YEYEYekokWtW62ZzcXhMaZsaPMp6nTyE9qBEim9iVyQqehgkAS5m8zfXJTHkiRWJqpIabgANAStB5KWuRNwnXibFQz41lhjfZjIJurAeA4kMEDUux9HDTtaSDWIewoipJo/fNh8WJnmGY9ClY1bv4=,iv:tc+ndILxglPOB/CaUROd++HaFE7qQqtABcY9wUStm2c=,tag:KWFfwPf3QVQs6dKrphkdAg==,type:str]
+    version: 3.13.3

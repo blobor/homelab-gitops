@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: paperless-library
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes: [ReadWriteMany]
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions: [nfsvers=4.1, hard, noatime]
+  nfs:
+    server: 10.20.30.200
+    path: /volume1/paperless
+  claimRef:
+    namespace: paperless
+    name: paperless-library
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: paperless-library
+spec:
+  accessModes: [ReadWriteMany]
+  storageClassName: ""
+  volumeName: paperless-library
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: paperless-data
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 5Gi

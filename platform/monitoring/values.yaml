@@ -92,6 +92,15 @@ grafana:
   grafana.ini:
     server:
       root_url: https://grafana.private.home.lobor.dev
+    database:
+      type: postgres
+      host: grafana-db-rw:5432
+      name: grafana
+      user: grafana
+      ssl_mode: require
+  envValueFrom:
+    GF_DATABASE_PASSWORD:
+      secretKeyRef: {name: grafana-db-app, key: password}
   ingress:
     enabled: true
     ingressClassName: traefik-internal

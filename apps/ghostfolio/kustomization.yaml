@@ -6,6 +6,7 @@ resources:
   - valkey.yaml
   - deployment.yaml
   - service.yaml
+  - networkpolicy.yaml
   - backup.yaml
   - inzhur-sync.yaml
 generators:

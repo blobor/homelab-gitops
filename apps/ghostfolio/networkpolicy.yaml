@@ -1,0 +1,34 @@
+# The operator needs the status port for updates and failover. Instances of one cluster need each other for replication and the isolation check.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: ghostfolio-db
+spec:
+  endpointSelector:
+    matchLabels: {cnpg.io/cluster: ghostfolio-db}
+  ingress:
+    - fromEndpoints:
+        - matchLabels: {app: ghostfolio}
+        - matchLabels: {app: ghostfolio-backup}
+      toPorts:
+        - ports: [{port: "5432", protocol: TCP}]
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: cnpg-system
+            app.kubernetes.io/name: cloudnative-pg
+        - matchLabels: {cnpg.io/cluster: ghostfolio-db}
+      toPorts:
+        - ports: [{port: "5432", protocol: TCP}, {port: "8000", protocol: TCP}]
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: valkey
+spec:
+  endpointSelector:
+    matchLabels: {app: valkey}
+  ingress:
+    - fromEndpoints:
+        - matchLabels: {app: ghostfolio}
+      toPorts:
+        - ports: [{port: "6379", protocol: TCP}]

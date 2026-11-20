@@ -3,5 +3,6 @@ kind: Kustomization
 namespace: crowdsec
 resources:
   - database.yaml
+  - networkpolicy.yaml
 generators:
   - secret-generator.yaml

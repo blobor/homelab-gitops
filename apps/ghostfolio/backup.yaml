@@ -42,6 +42,8 @@ spec:
     spec:
       backoffLimit: 2
       template:
+        metadata:
+          labels: {app: ghostfolio-backup}
         spec:
           restartPolicy: OnFailure
           securityContext:

@@ -3,7 +3,7 @@ kind: Cluster
 metadata:
   name: paperless-db
 spec:
-  instances: 1                    # 2 when lenny is back; then add synchronous again
+  instances: 1                    # 2 when lenny is back; then add synchronous
   affinity:
     enablePodAntiAffinity: true
     podAntiAffinityType: required

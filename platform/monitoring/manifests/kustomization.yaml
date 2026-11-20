@@ -5,5 +5,7 @@ resources:
   - rules-homelab.yaml
   - vmsingle.yaml
   - node-heartbeat.yaml
+  - grafana-db.yaml
+  - networkpolicy.yaml
 generators:
   - secret-generator.yaml

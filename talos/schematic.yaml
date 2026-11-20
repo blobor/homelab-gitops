@@ -4,6 +4,7 @@ customization:
   extraKernelArgs:
     - console=tty0
     - console=ttyS0
+    - i915.disable_display=1
   systemExtensions:
     officialExtensions:
       - siderolabs/i915

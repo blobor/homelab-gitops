@@ -4,6 +4,7 @@ namespace: authentik
 resources:
   - database.yaml
   - ingress-public.yaml
+  - networkpolicy.yaml
   - backup.yaml
   - blueprint-immich.yaml
   - blueprint-ghostfolio.yaml

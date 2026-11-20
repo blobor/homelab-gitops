@@ -5,6 +5,7 @@ resources:
   - database.yaml
   - storage.yaml
   - ingress-public.yaml
+  - networkpolicy.yaml
   - backup.yaml
 generators:
   - secret-generator.yaml

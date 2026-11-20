@@ -6,7 +6,7 @@ cd "$(dirname "$0")"
 VERSION=v1.14.6
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
 K8S_VERSION=v1.37.2
-SCHEMATIC=2e3e6a52fd648d18a71f4b42f6997850ed04048d9e71986c08b927808bcfc4eb
+SCHEMATIC=ffd4517dc0df0a9c622c37e5b326342173922790f712a01f4437e4df0bb0faf6
 out=_out
 rm -rf "$out"; mkdir -m 700 "$out"
 talosctl gen config homelab https://10.20.8.100:6443 \

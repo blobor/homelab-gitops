@@ -1,0 +1,34 @@
+# The operator needs the status port for updates and failover. Instances of one cluster need each other for replication and the isolation check.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: immich-db
+spec:
+  endpointSelector:
+    matchLabels: {cnpg.io/cluster: immich-db}
+  ingress:
+    - fromEndpoints:
+        - matchLabels: {app.kubernetes.io/name: server, app.kubernetes.io/instance: immich}
+        - matchLabels: {app: immich-backup}
+      toPorts:
+        - ports: [{port: "5432", protocol: TCP}]
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: cnpg-system
+            app.kubernetes.io/name: cloudnative-pg
+        - matchLabels: {cnpg.io/cluster: immich-db}
+      toPorts:
+        - ports: [{port: "5432", protocol: TCP}, {port: "8000", protocol: TCP}]
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: immich-valkey
+spec:
+  endpointSelector:
+    matchLabels: {app.kubernetes.io/name: valkey, app.kubernetes.io/instance: immich}
+  ingress:
+    - fromEndpoints:
+        - matchLabels: {app.kubernetes.io/name: server, app.kubernetes.io/instance: immich}
+      toPorts:
+        - ports: [{port: "6379", protocol: TCP}]

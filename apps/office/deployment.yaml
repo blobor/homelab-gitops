@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: office
+spec:
+  replicas: 1                     # the database and the queue inside the container allow no second replica
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: {app: office}
+  template:
+    metadata:
+      labels: {app: office}
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      terminationGracePeriodSeconds: 300   # the preStop save waits at least 30 s
+      securityContext:
+        seccompProfile: {type: RuntimeDefault}
+        sysctls:
+          - {name: net.ipv4.ip_unprivileged_port_start, value: "0"}
+      containers:
+        - name: office
+          image: ghcr.io/nextcloud-releases/office-documentserver:v9.3.8
+          # No volume on purpose: every start begins with the clean database of the image.
+          env:
+            - name: JWT_SECRET
+              valueFrom: {secretKeyRef: {name: office, key: JWT_SECRET}}
+            # autoAssembly: without it a document goes back to Nextcloud only when the last editor closes it.
+            # maxprocesscount: a share of the CPUs of the node; the default starts one converter for each CPU.
+            - name: NODE_CONFIG
+              value: '{"services":{"CoAuthoring":{"autoAssembly":{"enable":true,"interval":"5m"}}},"FileConverter":{"converter":{"maxprocesscount":0.15}}}'
+          ports:
+            - {name: http, containerPort: 80}
+          startupProbe:                   # /healthcheck answers 200 also when a service is down; only the body tells
+            exec: {command: [sh, -c, 'curl -fsS -m 5 http://127.0.0.1/healthcheck | grep -qx true']}
+            periodSeconds: 10
+            timeoutSeconds: 10
+            failureThreshold: 60
+          readinessProbe:
+            exec: {command: [sh, -c, 'curl -fsS -m 5 http://127.0.0.1/healthcheck | grep -qx true']}
+            periodSeconds: 15
+            timeoutSeconds: 10
+          livenessProbe:
+            exec: {command: [sh, -c, 'curl -fsS -m 5 http://127.0.0.1/healthcheck | grep -qx true']}
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 6
+          lifecycle:
+            preStop:                      # disconnects the editors, and that saves the open documents to Nextcloud
+              exec: {command: [/usr/bin/documentserver-prepare4shutdown.sh]}
+          resources:
+            requests: {cpu: 200m, memory: 1536Mi, ephemeral-storage: 1Gi}
+            limits: {memory: 4Gi}
+          securityContext:
+            # The image starts its services itself and drops to a service user for each, except the nginx master.
+            # The editor and the converter do not run as root.
+            runAsUser: 0
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+              add: [CHOWN, DAC_OVERRIDE, FOWNER, SETUID, SETGID, KILL]

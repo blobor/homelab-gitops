@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: office
+spec:
+  selector: {app: office}
+  ports:
+    - {name: http, port: 80, targetPort: http}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: office
+spec:
+  ingressClassName: traefik-internal
+  tls:
+    - hosts: [office.private.home.lobor.dev]
+  rules:
+    - host: office.private.home.lobor.dev
+      http:
+        paths:
+          - {path: /, pathType: Prefix, backend: {service: {name: office, port: {name: http}}}}

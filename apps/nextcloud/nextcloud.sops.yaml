@@ -8,6 +8,7 @@ stringData:
     NEXTCLOUD_ADMIN_PASSWORD: ENC[AES256_GCM,data:IhILl0v4NuM2O9Z7icY1wZa3204UJXFYX/HHcaGEvRQg0a3Zqa6y4K1dJTEM0xzYNECEXWPeRnUCg6sA4cXpHQ==,iv:u3OmLrDiSgJC2Mxa6GO/Zp/qBXWOTF6WP/1rkil5xVQ=,tag:VYpb+jmNsymBTr18Iom7wg==,type:str]
     VALKEY_PASSWORD: ENC[AES256_GCM,data:7ER1B4cDxKbh/FOzNQ7ZKLwwAO2MS/mUOOBMsRA0gIxVcKysDNgrRd849r8mHmQR2cWwThzxtTX2PTjtcgQUQw==,iv:f4wyY1D7tOytSoGNzAz+A8VgHpPNRF8zmhZs1XL0tcg=,tag:pS3gZtF6YRSkKoFHsOup4Q==,type:str]
     OIDC_CLIENT_SECRET: ENC[AES256_GCM,data:csbTiIG4o6i8tYNk3/ECn0SBdtzv1ucwLhhEbE9Ge00Qtbjnt6SbNeNojTxUFkQ4yM9mZaPp1iAPi14sz2Q7rg==,iv:Od3Bm4/b9CHrl9+azLK/oj9vPpHKWEEwQvsmOqhpLWY=,tag:kA1f2DjgxPBFxhWPJtXbqA==,type:str]
+    EUROOFFICE_JWT_SECRET: ENC[AES256_GCM,data:sF862SUtC+ZQUUukv3TJ8OFRm/0UPOcdbto4XngDevgmxFFYBM7p3ZA1hJBmbi9Y4sM9+E3T+PCIChyRAjfRZQ==,iv:KsChoO5VKX8l/m2b28VABrAXn/PlYCcze9jbKaB9aEQ=,tag:+ByU9hCf8A72UWIDL9/akw==,type:str]
 sops:
     age:
         - enc: |
@@ -20,6 +21,6 @@ sops:
             -----END AGE ENCRYPTED FILE-----
           recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
     encrypted_regex: ^(data|stringData)$
-    lastmodified: "2026-11-23T09:12:37Z"
-    mac: ENC[AES256_GCM,data:NBmJrZ79LktnDYXYZYMFrRxTJ1a5LPaVNIO3EHRnYjJrixb/SsY/kg5lgV0a78Sm1dW0E0c2Q6uuhIP7JrBwgheyKnltg/iKk9sxx4j33cbBjBe8W/JcsIMm9QG6zjdAejQG7onPLVqsHxO0Fv2FHg470BTmUwTsOHZrrKkp+g4=,iv:R5nzD1OoMnW/ZfAQ7SukV1OUL7x3LEaCY0lri6i/hNg=,tag:SnFlA/bH4YjscAgAXO/H7w==,type:str]
+    lastmodified: "2026-11-23T10:46:14Z"
+    mac: ENC[AES256_GCM,data:+RQjxwD9zJE0AR6vmIPh7kX2q1L66G1nICYcihKndSLifPCgpseZbmIWQUpjgyGQGLgFtuXUW37MpH0hmtFwg/lHaPfBUUUac/7jWE5/Lbev5LkSPaL8HSLSTeHB3ZLWi+829VLRHfVdLxhTS1ESWNjda13ea+Fn8hd5/2Mm6Cs=,iv:5I+1iW1ArZ0n1Ief6AsXMCPbATb34O+nUJ3sBo3zMM0=,tag:K2Ic40AxMxWfSZUd32LCJQ==,type:str]
     version: 3.13.3

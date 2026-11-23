@@ -100,6 +100,10 @@ pages:
                 url: https://paper.private.home.lobor.dev
                 check-url: http://paperless.paperless.svc.cluster.local:8000/accounts/login/
                 icon: si:paperlessngx
+              - title: Nextcloud
+                url: https://drive.private.home.lobor.dev
+                check-url: http://nextcloud.nextcloud.svc.cluster.local/status.php
+                icon: si:nextcloud
               - title: Bender
                 url: https://bender.pve.private.home.lobor.dev
                 check-url: https://proxmox-bender.tailnet-backends.svc.cluster.local:8006

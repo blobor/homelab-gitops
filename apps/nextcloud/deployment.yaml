@@ -16,6 +16,8 @@ spec:
     spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
+      hostAliases:                # the public DNS answer works only on tailnet devices, and the setup checks call this name
+        - {ip: 10.20.8.241, hostnames: [drive.private.home.lobor.dev]}
       securityContext:
         runAsNonRoot: true
         runAsUser: 33

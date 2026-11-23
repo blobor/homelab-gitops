@@ -146,6 +146,14 @@
       ],
     },
     {
+      // tags are v9.3.8, and v9.3.7-1 for a rebuild
+      matchPackageNames: ["ghcr.io/nextcloud-releases/office-documentserver"],
+      versioning: "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)(-(?<build>\\d+))?$",
+      prBodyNotes: [
+        "The merge restarts the document server; it saves the open documents first. Wait about ten minutes, then open a document in Nextcloud.",
+      ],
+    },
+    {
       // Nextcloud cannot skip a major version
       matchPackageNames: ["nextcloud"],
       separateMultipleMajor: true,

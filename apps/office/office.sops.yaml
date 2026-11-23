@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: office
+    namespace: office
+type: Opaque
+stringData:
+    JWT_SECRET: ENC[AES256_GCM,data:BgorvZ5uozGAKkrUkO8oQ7HhYP8GNjtYyqR4XHNJoyQwNnFBVNZ9Nl2QIEIJfg1i2XaC2Ic/0vWKPUd6rh2twQ==,iv:MDX0zrS7zA3UVFu6K9nfHuMq+sHtlvFXf3ZetQgW/FE=,tag:blmTWhya7NdXby7lO/+lNA==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA3SU8xQlZ2ZXlwUmFsbmZt
+            UzZ1L01CNmZoOUxlZW9kdEZNL29ZcjNKQ25jCitLZ0Q5U1RJK3hJZDFWRlJXeExm
+            cFBLdU4vYWxLWEN1czc2Mk1uMEVoeU0KLS0tIGVVcTBFTVNhdlVkQWxOT0tqaDlN
+            cEpRT0YzU1ArTHVubkxzMTVUaElnajgKq80887MrEW9GjxzjBS9ALWFQApAmChdQ
+            mYtaKgj/ygpZpthv+oV5aaVkt2J83M7K0yezbwE5LFzKd3SDkAGfuQ==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-11-23T10:46:14Z"
+    mac: ENC[AES256_GCM,data:N2niiMKZO4P1KAhZFXFJw6LdkMJFRHOdeg3bAUE8R3tzCeCjxakXNANJNajSW7urzCk9guwwUofL3HF/EeVhNrFspNvzmnCbhQDs/1qeuVeinFWM45PS7pTj8vxY/PcfCX8TNL0uAvDYrSRX0eiIePSzqR5vjAhJh1BRkaF02nY=,iv:07+r3eo85K/e5EALAaVq7mNlaTZ1ER6xJTxVxmwPXhY=,tag:i3UKeHQauqeeSn8aTWd/lg==,type:str]
+    version: 3.13.3

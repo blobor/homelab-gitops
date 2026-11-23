@@ -1,0 +1,36 @@
+# The container also listens on 8000 (the editor without the access rules of its nginx), 5672, 25672 and 4369: keep them closed.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: office
+spec:
+  endpointSelector:
+    matchLabels: {app: office}
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: traefik
+            app.kubernetes.io/instance: traefik-internal-traefik
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: nextcloud
+            app: nextcloud
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: glance
+            app: glance
+        - matchLabels: {app: office}
+      toPorts:
+        - ports: [{port: "80", protocol: TCP}]
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports: [{port: "53", protocol: UDP}, {port: "53", protocol: TCP}]
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: nextcloud
+            app: nextcloud
+        - matchLabels: {app: office}      # a conversion fetches the file from its own Service
+      toPorts:
+        - ports: [{port: "80", protocol: TCP}]

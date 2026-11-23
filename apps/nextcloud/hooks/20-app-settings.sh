@@ -25,6 +25,13 @@ else
   echo "app settings: user_oidc is not configured or the provider does not answer"
 fi
 
+[ -d /var/www/html/custom_apps/eurooffice ] || occ app:install eurooffice || echo "app settings: the install of eurooffice failed"
+occ app:enable eurooffice || echo "app settings: eurooffice is not enabled"
+# The admin page saves these to the database, where they win over config.php.
+for key in DocumentServerUrl DocumentServerInternalUrl StorageUrl jwt_secret jwt_header verify_peer_off demo; do
+  occ config:app:delete eurooffice "$key" >/dev/null || echo "app settings: eurooffice $key stays in the database"
+done
+
 occ config:app:set --type=boolean --value=false dav enableDefaultContact || echo "app settings: the sample contact stays on"
 occ config:app:set --type=boolean --value=false dav create_example_event || echo "app settings: the sample event stays on"
 exit 0

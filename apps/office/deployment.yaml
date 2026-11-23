@@ -22,7 +22,7 @@ spec:
       containers:
         - name: office
           image: ghcr.io/nextcloud-releases/office-documentserver:v9.3.8
-          # No volume on purpose: every start begins with the clean database of the image.
+          # No volume for its state on purpose: every start begins with the clean database of the image.
           env:
             - name: JWT_SECRET
               valueFrom: {secretKeyRef: {name: office, key: JWT_SECRET}}
@@ -52,6 +52,8 @@ spec:
           resources:
             requests: {cpu: 200m, memory: 1536Mi, ephemeral-storage: 1Gi}
             limits: {memory: 4Gi}
+          volumeMounts:
+            - {name: fonts, mountPath: /var/www/nextcloud-office/Data/custom-fonts, readOnly: true}
           securityContext:
             # The image starts its services itself and drops to a service user for each, except the nginx master.
             # The editor and the converter do not run as root.
@@ -60,3 +62,5 @@ spec:
             capabilities:
               drop: [ALL]
               add: [CHOWN, DAC_OVERRIDE, FOWNER, SETUID, SETGID, KILL]
+      volumes:
+        - {name: fonts, persistentVolumeClaim: {claimName: office-fonts}}

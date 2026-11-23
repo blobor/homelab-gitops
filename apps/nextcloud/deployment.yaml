@@ -32,10 +32,9 @@ spec:
           image: nextcloud:35.0.3-apache
           # Not set on purpose. REDIS_HOST: the entrypoint then writes a PHP ini file, which needs root.
           # APACHE_DISABLE_REWRITE_IP: needs root. OVERWRITEHOST: makes every Host header trusted.
+          # NEXTCLOUD_ADMIN_USER and NEXTCLOUD_ADMIN_PASSWORD: with them an empty html volume starts a new install
+          # over the live database, with new encryption keys. Set them only for the first install.
           env: &env
-            - {name: NEXTCLOUD_ADMIN_USER, value: admin}
-            - name: NEXTCLOUD_ADMIN_PASSWORD         # used only by the first install
-              valueFrom: {secretKeyRef: {name: nextcloud, key: NEXTCLOUD_ADMIN_PASSWORD}}
             - {name: NEXTCLOUD_DATA_DIR, value: /var/www/data}
             - {name: POSTGRES_HOST, value: nextcloud-db-rw}
             - {name: POSTGRES_DB, value: nextcloud}

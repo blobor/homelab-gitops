@@ -14,6 +14,7 @@ configMapGenerator:
   - name: nextcloud-hooks
     files:
       - hooks/10-cluster-config.sh
+      - hooks/20-app-settings.sh
       - hooks/cluster.config.php
   - name: nextcloud-apache
     files:

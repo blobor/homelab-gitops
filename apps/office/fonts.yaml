@@ -1,0 +1,99 @@
+# The image does not ship the Microsoft core fonts (Times New Roman, Arial, Courier New and others), only their installer.
+# The licence lets everyone download them for own use, but not pass them on in a changed form, and the extracted
+# font files are one. So they cannot be in this repository. A run of the job accepts that licence.
+# Run once, then restart the editor:
+#   kubectl -n office create job --from=cronjob/fonts fonts-1
+#   kubectl -n office rollout restart deploy/office
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: office-fonts
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: fonts
+spec:
+  suspend: true
+  schedule: "0 0 1 1 *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      activeDeadlineSeconds: 600
+      template:
+        metadata:
+          labels: {app: office-fonts}
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          enableServiceLinks: false
+          affinity:
+            podAffinity:                  # the volume is ReadWriteOnce: run on the node of the editor
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - topologyKey: kubernetes.io/hostname
+                  labelSelector:
+                    matchLabels: {app: office}
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 105                # ds, the user of the editor in the image
+            runAsGroup: 107
+            fsGroup: 107
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: {type: RuntimeDefault}
+          containers:
+            - name: fonts
+              image: ghcr.io/nextcloud-releases/office-documentserver:v9.3.8   # for its list of the packages with checksums, and cabextract
+              command:
+                - sh
+                - -c
+                - |
+                  set -eu
+                  list=/usr/share/package-data-downloads/ttf-mscorefonts-installer
+                  cd /work
+                  for url in $(sed -n 's/^Url: //p' "$list"); do
+                    file=${url##*/}
+                    sum=$(grep -A1 "^Url: $url\$" "$list" | sed -n 's/^Sha256: //p')
+                    wget -nv --tries=3 --timeout=30 -O "$file" "$url"
+                    echo "$sum  $file" | sha256sum -c -
+                    cabextract -q -L -d ttf "$file"
+                  done
+                  cp ttf/*.ttf /fonts/
+                  echo "$(ls /fonts/*.ttf | wc -l) font files on the volume"
+              resources:
+                requests: {cpu: 10m, memory: 64Mi}
+                limits: {memory: 256Mi}
+              securityContext: {allowPrivilegeEscalation: false, capabilities: {drop: [ALL]}}
+              volumeMounts:
+                - {name: fonts, mountPath: /fonts}
+                - {name: work, mountPath: /work}
+          volumes:
+            - {name: fonts, persistentVolumeClaim: {claimName: office-fonts}}
+            - {name: work, emptyDir: {sizeLimit: 200Mi}}
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: office-fonts
+spec:
+  endpointSelector:
+    matchLabels: {app: office-fonts}
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports: [{port: "53", protocol: UDP}, {port: "53", protocol: TCP}]
+    - toCIDRSet:                          # the internet, but not the LAN and not the tailnet
+        - cidr: 0.0.0.0/0
+          except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 100.64.0.0/10]
+      toPorts:
+        - ports: [{port: "80", protocol: TCP}, {port: "443", protocol: TCP}]

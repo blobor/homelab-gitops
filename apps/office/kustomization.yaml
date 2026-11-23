@@ -6,5 +6,6 @@ resources:
   - service.yaml
   - redirect.yaml
   - networkpolicy.yaml
+  - fonts.yaml
 generators:
   - secret-generator.yaml

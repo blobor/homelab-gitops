@@ -46,6 +46,8 @@ spec:
             - {name: VALKEY_HOST, value: valkey}
             - name: VALKEY_PASSWORD
               valueFrom: {secretKeyRef: {name: nextcloud, key: VALKEY_PASSWORD}}
+            - name: OIDC_CLIENT_SECRET
+              valueFrom: {secretKeyRef: {name: nextcloud, key: OIDC_CLIENT_SECRET}}
             - {name: OVERWRITEPROTOCOL, value: https}
             - {name: OVERWRITECLIURL, value: "https://drive.private.home.lobor.dev"}
             - {name: TRUSTED_PROXIES, value: 10.244.0.0/16}
@@ -58,6 +60,8 @@ spec:
             - name: NC_maintenance_window_start      # hour in UTC
               value: "1"
             - name: NC_skeletondirectory             # no sample files for a new user
+              value: ""
+            - name: NC_templatedirectory             # and no Templates folder
               value: ""
             - {name: NC_log_type, value: errorlog}
           ports:

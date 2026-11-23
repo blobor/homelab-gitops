@@ -10,5 +10,6 @@ resources:
   - blueprint-ghostfolio.yaml
   - blueprint-kite.yaml
   - blueprint-paperless.yaml
+  - blueprint-nextcloud.yaml
 generators:
   - secret-generator.yaml

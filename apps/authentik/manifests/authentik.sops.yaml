@@ -12,6 +12,7 @@ stringData:
     ghostfolio-client-secret: ENC[AES256_GCM,data:h69fo4RAKLXguFntEbi0ykWsUMD5tGVro6daSr3c8EtJpuFfMvt7c8KAVy0l0CccTovCNRefo1YdA9V/XZoCBw==,iv:aBSo9vdPIFbP4ZD2JNLyoKU5nm9wGIJBOg84Q6nkTYU=,tag:AG/5pWf2NGLa4omAcRw4SQ==,type:str]
     kite-client-secret: ENC[AES256_GCM,data:dAUtoVcNvwYPxhmvgWi/wpZhP62+YL0TWmhOM6bhGjcjym/ZLHB48XfkVuLvqwn8+KufMSKjauO7fvdopUdt5Q==,iv:cf8iwY/SHH2D9VdhaqqlXllRf51DP0ft1CcwOCoEh2c=,tag:Xh6gJ0yjyN2uAZJkTTBUOA==,type:str]
     paperless-client-secret: ENC[AES256_GCM,data:h5Al7rAB9E9qqJW7D2vTTa1uh3LBrg8U6U15xcJHx7iMuja2bEnMeSs3i1C/iO1X0b/TCcxqxXfAIyLuFhBxXw==,iv:qpa56pTtMEOlwDnN8CDdZ9Pt/BB1LHfIXbjNYxp7YkA=,tag:OlMlvZaENrU3PPa4k+rcCw==,type:str]
+    nextcloud-client-secret: ENC[AES256_GCM,data:ERGRNRs3IPu0lFXU/nYK0ih1t0GzN9YONkTFa0s1SXB+1niTadZVh+PwpyEi1yObZlnLrYgSNbk1duiUskh4NQ==,iv:W5dEc3hcLOn1IkAEonoBv3FQ3dImr1BxtcvjHtj9iuA=,tag:X/NvodsmRmfavZFrSzRr0Q==,type:str]
 sops:
     age:
         - enc: |
@@ -24,6 +25,6 @@ sops:
             -----END AGE ENCRYPTED FILE-----
           recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
     encrypted_regex: ^(data|stringData)$
-    lastmodified: "2026-11-19T08:53:35Z"
-    mac: ENC[AES256_GCM,data:/EGfY3hQ50uxmLvHVLXHLz9gfFyHMCiGHAy4jeaBGqjcuBK7BFuoRalUkW5mfyQqtyxyxHhGl8m60figqZ1xeimgbJuOooQ3C7gz0H++HId2bKV1d0pthZCnAGazAyHOsYCdtVGe38Ark9/a12c0Ic5OOJGgGGZzmv0hF9mVt5o=,iv:NL8DxL0zq6MfJdTC3McYkdhS8p3Ei1abhJOFJATQ0Mo=,tag:3+U+XcIoTZp1rxL5XroIkg==,type:str]
+    lastmodified: "2026-11-23T09:12:37Z"
+    mac: ENC[AES256_GCM,data:HealJeCqg3f6KsYCu4UoAgF8mMIKm1jZ0l0LOvN/ovCXwHnOG2Dc8PB+C6A/r+PQ6szaB6M4JiVeM0GPR7SzBcIRYfSaU4IAseQsZnYdQuoFqfWlmvg0ukMta2nyfdaNNoRqUs2/+/C7qTTjgDQgLqM4/yeR49L9NeD0uyxwSuA=,iv:r9SdwelYNqUdMmEuyTl7ZYdgb2GmrR0ea59L7oSeyI4=,tag:rqSwn+wx+cycN3BMhV3Oxw==,type:str]
     version: 3.13.3

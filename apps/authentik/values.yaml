@@ -18,9 +18,11 @@ global:
       valueFrom: {secretKeyRef: {name: authentik-secrets, key: kite-client-secret}}
     - name: PAPERLESS_OAUTH_CLIENT_SECRET
       valueFrom: {secretKeyRef: {name: authentik-secrets, key: paperless-client-secret}}
+    - name: NEXTCLOUD_OAUTH_CLIENT_SECRET
+      valueFrom: {secretKeyRef: {name: authentik-secrets, key: nextcloud-client-secret}}
 
 blueprints:
-  configMaps: [authentik-blueprints, authentik-blueprint-ghostfolio, authentik-blueprint-kite, authentik-blueprint-paperless]
+  configMaps: [authentik-blueprints, authentik-blueprint-ghostfolio, authentik-blueprint-kite, authentik-blueprint-paperless, authentik-blueprint-nextcloud]
 
 authentik:
   postgresql:

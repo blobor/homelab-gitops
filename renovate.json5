@@ -157,12 +157,15 @@
       // Nextcloud cannot skip a major version
       matchPackageNames: ["nextcloud"],
       separateMultipleMajor: true,
+      prBodyNotes: [
+        "Every update runs `occ upgrade` at the start of the pod, and it cannot be undone. First run `kubectl -n nextcloud create job --from=cronjob/backup pre-upgrade-<number>` (no dot in the name) and wait until it completes.",
+      ],
     },
     {
       matchPackageNames: ["nextcloud"],
       matchUpdateTypes: ["major"],
       prBodyNotes: [
-        "Merge the majors in order, one at a time. First back up the database and check that the installed apps support the new version. The upgrade runs at the start of the pod and cannot be undone.",
+        "Merge the majors in order, one at a time. Check that the installed apps support the new version.",
       ],
     },
 

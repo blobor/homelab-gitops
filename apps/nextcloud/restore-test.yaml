@@ -1,0 +1,115 @@
+# Proves that the newest backup restores and that every file it lists is in the data share with the same size.
+# Run by hand, right after a fresh backup (a change in Nextcloud after the backup gives a false failure):
+#   kubectl -n nextcloud create job --from=cronjob/backup backup-now
+#   kubectl -n nextcloud create job --from=cronjob/restore-test restore-test-1
+# It does not prove that Nextcloud starts from the backup, and it cannot see a damaged file of the same size.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: restore-test
+spec:
+  suspend: true
+  schedule: "30 5 1 * *"
+  timeZone: Europe/Kyiv
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      activeDeadlineSeconds: 1800
+      template:
+        metadata:
+          labels: {app: nextcloud-restore-test}
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          enableServiceLinks: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 26                 # the postgres user of the image: initdb needs a passwd entry
+            runAsGroup: 26
+            supplementalGroups: [33]      # the data belongs to 33:33, without access for others
+            seccompProfile: {type: RuntimeDefault}
+          containers:
+            - name: restore
+              image: ghcr.io/cloudnative-pg/postgresql:18.7-202611230809-standard-trixie
+              command:
+                - sh
+                - -c
+                - |
+                  set -eu
+                  fail() { echo "FAILED: $1"; exit 1; }
+                  run=$(ls -1d /backup/nextcloud/20* | sort | tail -n 1)
+                  [ -n "$run" ] || fail "no backup in /backup/nextcloud"
+                  echo "testing the backup ${run##*/}"
+                  cd "$run"
+                  sha256sum --check --quiet --strict SHA256SUMS || fail "a file of the backup does not match its checksum"
+
+                  export PGDATA=/work/pgdata PGHOST=/work PGUSER=postgres PGDATABASE=nextcloud
+                  initdb --auth=trust --username=postgres --encoding=UTF8 --locale=C >/dev/null
+                  pg_ctl --wait --log=/work/postgres.log --options="-c listen_addresses='' -c unix_socket_directories=/work" start
+                  createdb nextcloud
+                  # No error text in the log from here on: it can hold a row of the dump or a file name.
+                  pg_restore --exit-on-error --no-owner --no-privileges --dbname=nextcloud nextcloud.dump 2>/dev/null || fail "the dump does not restore"
+                  q() { psql --no-psqlrc --tuples-only --no-align --quiet --command="$1"; }
+                  n() { q "select count(*) from $1"; }
+                  accounts=$(n oc_accounts)
+                  echo "accounts=$accounts storages=$(n oc_storages) file_rows=$(n oc_filecache) shares=$(n oc_share) tokens=$(n oc_authtoken) calendars=$(n oc_calendars) cards=$(n oc_cards) tables=$(n "information_schema.tables where table_schema = 'public'")"
+                  [ "$accounts" -gt 0 ] || fail "the dump has no accounts"
+                  [ "$(n "oc_filecache where encrypted <> 0")" -eq 0 ] || fail "encrypted files: their size on disk is not the size in the dump"
+
+                  # The temporary server is its own superuser, so it can stat the files. No file name goes through the shell.
+                  q "create table chk as
+                     select 'file' as kind, f.size as want, st.size as have, st.isdir
+                     from oc_filecache f
+                     join oc_storages s on s.numeric_id = f.storage
+                     join oc_mimetypes t on t.id = f.mimetype
+                     left join oc_mounts m on m.storage_id = f.storage and m.mount_point = '/' || m.user_id || '/'
+                     left join lateral pg_stat_file('/data/' || coalesce(m.user_id, substr(s.id, 7)) || '/' || f.path, true) st on true
+                     where s.id not like 'local::%' and t.mimetype <> 'httpd/unix-directory'
+                       and split_part(f.path, '/', 1) in ('files', 'files_versions', 'files_trashbin')" 2>/dev/null \
+                    || fail "a path of the dump cannot be read in the data share"
+                  [ "$(n "chk where have is not null")" -gt 0 ] || fail "no file of the dump is in the data share"
+                  # Two false rows, a wrong size and a missing file: the check must find both, else it is blind.
+                  q "insert into chk select 'canary', have + 1, have, isdir from chk where have is not null limit 1"
+                  q "insert into chk select 'canary', 0, null, null"
+                  count="select count(*), count(*) filter (where have is null), count(*) filter (where want >= 0 and have <> want), count(*) filter (where isdir) from chk"
+                  [ "$(q "$count where kind = 'canary'")" = "2|1|1|0" ] || fail "the check did not find its own false rows"
+                  echo "canary detected"
+                  set -- $(q "$count where kind = 'file'" | tr '|' ' ')
+                  echo "files=$1 missing=$2 wrong_size=$3 directories=$4"
+                  [ "$2" -eq 0 ] && [ "$3" -eq 0 ] && [ "$4" -eq 0 ] || fail "a file of the dump is missing in the data share or has another size"
+
+                  mkdir /work/state
+                  tar -xzf nextcloud-state.tar.gz -C /work/state config/config.php version.php custom_apps/user_oidc/appinfo/info.xml custom_apps/eurooffice/appinfo/info.xml \
+                    || fail "the archive has no config.php, no version.php or not both apps"
+                  cfg=/work/state/config/config.php
+                  for key in instanceid passwordsalt secret; do
+                    grep -q "^  '$key' => '..*',\$" "$cfg" || fail "config.php in the archive has no $key"
+                  done
+                  grep -q "^  'installed' => true,\$" "$cfg" || fail "config.php in the archive is not of an installed instance"
+                  ! grep -q "^  'maintenance' => true,\$" "$cfg" || fail "config.php in the archive is in maintenance mode"
+                  id=$(sed -n "s/^  'instanceid' => '\(.*\)',\$/\1/p" "$cfg")
+                  [ -d "/data/appdata_$id" ] || fail "the archive is not of the instance in the data share"
+                  [ "$(n "oc_filecache f join oc_storages s on s.numeric_id = f.storage where s.id like 'local::%' and f.path = 'appdata_$id'")" -eq 1 ] \
+                    || fail "the archive and the dump are not of the same instance"
+                  for app in user_oidc eurooffice; do
+                    version=$(sed -n 's:.*<version>\(.*\)</version>.*:\1:p' "/work/state/custom_apps/$app/appinfo/info.xml" | head -n 1)
+                    [ -n "$version" ] || fail "$app in the archive has no version"
+                    [ "$(q "select configvalue from oc_appconfig where appid = '$app' and configkey = 'installed_version'")" = "$version" ] \
+                      || fail "$app in the archive is not the version in the dump"
+                  done
+                  echo "restore test passed"
+              resources:
+                requests: {cpu: 50m, memory: 256Mi}
+                limits: {memory: 1Gi}
+              securityContext: {allowPrivilegeEscalation: false, capabilities: {drop: [ALL]}}
+              volumeMounts:
+                - {name: work, mountPath: /work}
+                - {name: backup, mountPath: /backup, readOnly: true}
+                - {name: data, mountPath: /data, subPath: data, readOnly: true}
+          volumes:
+            - {name: work, emptyDir: {sizeLimit: 2Gi}}
+            - {name: backup, persistentVolumeClaim: {claimName: k8s-backups}}
+            - {name: data, persistentVolumeClaim: {claimName: nextcloud-data}}

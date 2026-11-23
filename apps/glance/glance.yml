@@ -105,7 +105,7 @@ pages:
                 check-url: http://nextcloud.nextcloud.svc.cluster.local/status.php
                 icon: si:nextcloud
               - title: Nextcloud Office
-                url: https://office.private.home.lobor.dev/healthcheck
+                url: https://drive.private.home.lobor.dev/apps/office/
                 check-url: http://office.office.svc.cluster.local/healthcheck
                 icon: mdi:file-document-edit
               - title: Bender

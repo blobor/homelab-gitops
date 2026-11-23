@@ -48,6 +48,8 @@ spec:
               valueFrom: {secretKeyRef: {name: nextcloud, key: VALKEY_PASSWORD}}
             - name: OIDC_CLIENT_SECRET
               valueFrom: {secretKeyRef: {name: nextcloud, key: OIDC_CLIENT_SECRET}}
+            - name: EUROOFFICE_JWT_SECRET
+              valueFrom: {secretKeyRef: {name: nextcloud, key: EUROOFFICE_JWT_SECRET}}
             - {name: OVERWRITEPROTOCOL, value: https}
             - {name: OVERWRITECLIURL, value: "https://drive.private.home.lobor.dev"}
             - {name: TRUSTED_PROXIES, value: 10.244.0.0/16}

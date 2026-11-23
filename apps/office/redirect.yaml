@@ -1,0 +1,27 @@
+# The document server has no page for a person. Its start, example and admin pages go to the Office page of Nextcloud.
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: to-nextcloud
+spec:
+  redirectRegex:
+    regex: ".*"
+    replacement: https://drive.private.home.lobor.dev/apps/office/
+    permanent: false
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: office-pages
+spec:
+  ingressClassName: traefik-internal
+  entryPoints: [websecure]
+  routes:
+    - match: Host(`office.private.home.lobor.dev`) && (Path(`/`) || PathPrefix(`/welcome`) || PathPrefix(`/example`) || PathPrefix(`/admin`))
+      kind: Rule
+      middlewares:
+        - name: to-nextcloud
+      services:
+        - name: noop@internal
+          kind: TraefikService
+  tls: {}

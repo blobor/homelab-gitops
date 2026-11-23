@@ -4,6 +4,7 @@ namespace: office
 resources:
   - deployment.yaml
   - service.yaml
+  - redirect.yaml
   - networkpolicy.yaml
 generators:
   - secret-generator.yaml

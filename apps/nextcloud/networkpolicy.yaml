@@ -1,0 +1,54 @@
+# The rule for Nextcloud itself: its setup checks call its own Service.
+# Kubelet probes come from the node, which Cilium always allows.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: nextcloud
+spec:
+  endpointSelector:
+    matchLabels: {app: nextcloud}
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: traefik
+            app.kubernetes.io/instance: traefik-internal-traefik
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: glance
+            app: glance
+        - matchLabels: {app: nextcloud}
+      toPorts:
+        - ports: [{port: "80", protocol: TCP}]
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: valkey
+spec:
+  endpointSelector:
+    matchLabels: {app: valkey}
+  ingress:
+    - fromEndpoints:
+        - matchLabels: {app: nextcloud}
+      toPorts:
+        - ports: [{port: "6379", protocol: TCP}]
+---
+# The operator needs the status port for updates and failover. Instances of one cluster need each other for replication and the isolation check.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: nextcloud-db
+spec:
+  endpointSelector:
+    matchLabels: {cnpg.io/cluster: nextcloud-db}
+  ingress:
+    - fromEndpoints:
+        - matchLabels: {app: nextcloud}
+      toPorts:
+        - ports: [{port: "5432", protocol: TCP}]
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: cnpg-system
+            app.kubernetes.io/name: cloudnative-pg
+        - matchLabels: {cnpg.io/cluster: nextcloud-db}
+      toPorts:
+        - ports: [{port: "5432", protocol: TCP}, {port: "8000", protocol: TCP}]

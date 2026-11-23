@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: {app: nextcloud}
+  template:
+    metadata:
+      labels: {app: nextcloud}
+      annotations:
+        kubectl.kubernetes.io/default-container: nextcloud
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 33
+        runAsGroup: 33
+        fsGroup: 33
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: {type: RuntimeDefault}
+        sysctls:
+          - {name: net.ipv4.ip_unprivileged_port_start, value: "0"}
+      containers:
+        - name: nextcloud
+          image: nextcloud:35.0.3-apache
+          # Not set on purpose. REDIS_HOST: the entrypoint then writes a PHP ini file, which needs root.
+          # APACHE_DISABLE_REWRITE_IP: needs root. OVERWRITEHOST: makes every Host header trusted.
+          env: &env
+            - {name: NEXTCLOUD_ADMIN_USER, value: admin}
+            - name: NEXTCLOUD_ADMIN_PASSWORD         # used only by the first install
+              valueFrom: {secretKeyRef: {name: nextcloud, key: NEXTCLOUD_ADMIN_PASSWORD}}
+            - {name: NEXTCLOUD_DATA_DIR, value: /var/www/data}
+            - {name: POSTGRES_HOST, value: nextcloud-db-rw}
+            - {name: POSTGRES_DB, value: nextcloud}
+            - name: POSTGRES_USER
+              valueFrom: {secretKeyRef: {name: nextcloud-db-app, key: username}}
+            - name: POSTGRES_PASSWORD
+              valueFrom: {secretKeyRef: {name: nextcloud-db-app, key: password}}
+            - {name: VALKEY_HOST, value: valkey}
+            - name: VALKEY_PASSWORD
+              valueFrom: {secretKeyRef: {name: nextcloud, key: VALKEY_PASSWORD}}
+            - {name: OVERWRITEPROTOCOL, value: https}
+            - {name: OVERWRITECLIURL, value: "https://drive.private.home.lobor.dev"}
+            - {name: TRUSTED_PROXIES, value: 10.244.0.0/16}
+            # NC_<key> overrides the same key of config.php. Strings only: a boolean "false" reads as true.
+            - name: NC_dbpassword                    # config.php keeps the password of the install day
+              valueFrom: {secretKeyRef: {name: nextcloud-db-app, key: password}}
+            - name: NC_setup_create_db_user          # the installer accepts the string "false" for this key
+              value: "false"
+            - {name: NC_default_phone_region, value: UA}
+            - name: NC_maintenance_window_start      # hour in UTC
+              value: "1"
+            - name: NC_skeletondirectory             # no sample files for a new user
+              value: ""
+            - {name: NC_log_type, value: errorlog}
+          ports:
+            - {name: http, containerPort: 80}
+          startupProbe:                   # Host: localhost is always a trusted domain
+            httpGet: {path: /status.php, port: http, httpHeaders: [{name: Host, value: localhost}]}
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 360         # a kill in the middle of an install or upgrade needs a manual repair
+          readinessProbe:
+            httpGet: {path: /status.php, port: http, httpHeaders: [{name: Host, value: localhost}]}
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 6
+          livenessProbe:                  # no DB query: a database outage does not restart the pod
+            tcpSocket: {port: http}
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 5
+          resources:
+            requests: {cpu: 100m, memory: 512Mi}
+            limits: {memory: 4Gi}
+          securityContext: {allowPrivilegeEscalation: false, capabilities: {drop: [ALL]}}
+          volumeMounts:
+            - {name: html, mountPath: /var/www/html}
+            - {name: data, mountPath: /var/www/data, subPath: data}
+            - {name: tmp, mountPath: /tmp}
+            - {name: hooks, mountPath: /docker-entrypoint-hooks.d/pre-installation}
+            - {name: hooks, mountPath: /docker-entrypoint-hooks.d/pre-upgrade}
+            - {name: hooks, mountPath: /docker-entrypoint-hooks.d/before-starting}
+            - {name: apache, mountPath: /etc/apache2/conf-enabled/zz-cluster.conf, subPath: zz-cluster.conf}
+        - name: cron                      # the image's own cron script needs root
+          image: nextcloud:35.0.3-apache
+          command:
+            - sh
+            - -c
+            - |
+              trap 'exit 0' TERM INT WINCH   # the image sets SIGWINCH as the stop signal, for Apache
+              while :; do
+                # Apache answers only after the entrypoint has finished: no job runs on half-copied code.
+                if curl -fsS -m 10 -H 'Host: localhost' http://127.0.0.1/status.php 2>/dev/null \
+                    | grep -q '"installed":true,"maintenance":false,"needsDbUpgrade":false'; then
+                  php -f /var/www/html/cron.php || true
+                fi
+                sleep 300 & wait $!
+              done
+          env: *env
+          resources:
+            requests: {cpu: 10m, memory: 64Mi}
+            limits: {memory: 1Gi}
+          securityContext: {allowPrivilegeEscalation: false, capabilities: {drop: [ALL]}}
+          volumeMounts:
+            - {name: html, mountPath: /var/www/html}
+            - {name: data, mountPath: /var/www/data, subPath: data}
+            - {name: tmp, mountPath: /tmp}
+      volumes:
+        - {name: html, persistentVolumeClaim: {claimName: nextcloud-html}}
+        - {name: data, persistentVolumeClaim: {claimName: nextcloud-data}}
+        - {name: tmp, emptyDir: {sizeLimit: 2Gi}}
+        - {name: hooks, configMap: {name: nextcloud-hooks, defaultMode: 0555}}
+        - {name: apache, configMap: {name: nextcloud-apache}}

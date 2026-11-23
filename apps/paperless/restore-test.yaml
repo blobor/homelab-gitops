@@ -31,7 +31,7 @@ spec:
             seccompProfile: {type: RuntimeDefault}
           containers:
             - name: restore
-              image: ghcr.io/cloudnative-pg/postgresql:18.7-202611201711-standard-trixie
+              image: ghcr.io/cloudnative-pg/postgresql:18.7-202611230809-standard-trixie
               command:
                 - sh
                 - -c

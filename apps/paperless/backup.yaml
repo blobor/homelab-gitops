@@ -55,7 +55,7 @@ spec:
             seccompProfile: {type: RuntimeDefault}
           initContainers:
             - name: dump
-              image: ghcr.io/cloudnative-pg/postgresql:18.7-202611201711-standard-trixie
+              image: ghcr.io/cloudnative-pg/postgresql:18.7-202611230809-standard-trixie
               command: [sh, -c, 'pg_dump -Fc -f /work/paperless.dump']
               env:
                 - {name: PGHOST, value: paperless-db-rw}

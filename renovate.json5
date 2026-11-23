@@ -72,7 +72,7 @@
       groupName: "cnpg postgres",
       matchPackageNames: ["ghcr.io/cloudnative-pg/postgresql"],
       versioning: "regex:^(?<major>\\d+)\\.(?<minor>\\d+)-(?<patch>\\d+)-(?<compatibility>standard-\\w+)$",
-      prBodyNotes: ["Each CNPG cluster restarts. Authentik login, Ghostfolio, Paperless and Grafana are down for about a minute."],
+      prBodyNotes: ["Each CNPG cluster restarts. Authentik login, Ghostfolio, Paperless, Nextcloud and Grafana are down for about a minute."],
     },
 
     // Versioning for non-semver tags
@@ -143,6 +143,18 @@
       matchPackageNames: ["ghcr.io/paperless-ngx/paperless-ngx"],
       prBodyNotes: [
         "The database migrations run at the start and cannot be undone. First run `kubectl -n paperless create job --from=cronjob/postgres-dump pre-upgrade-<version>` and wait until it completes.",
+      ],
+    },
+    {
+      // Nextcloud cannot skip a major version
+      matchPackageNames: ["nextcloud"],
+      separateMultipleMajor: true,
+    },
+    {
+      matchPackageNames: ["nextcloud"],
+      matchUpdateTypes: ["major"],
+      prBodyNotes: [
+        "Merge the majors in order, one at a time. First back up the database and check that the installed apps support the new version. The upgrade runs at the start of the pod and cannot be undone.",
       ],
     },
 

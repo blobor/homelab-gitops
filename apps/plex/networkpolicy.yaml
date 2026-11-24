@@ -10,7 +10,7 @@ spec:
     - fromEntities: [world]
       toPorts:
         - ports: [{port: "32400", protocol: TCP}]
-    # Seerr uses the LoadBalancer address, but Cilium sees its pod, not world.
+    # A pod that uses the LoadBalancer address keeps its pod identity, so world does not cover it.
     - fromEndpoints:
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: glance
@@ -18,5 +18,11 @@ spec:
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: seerr
             app: seerr
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: sonarr
+            app: sonarr
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: radarr
+            app: radarr
       toPorts:
         - ports: [{port: "32400", protocol: TCP}]

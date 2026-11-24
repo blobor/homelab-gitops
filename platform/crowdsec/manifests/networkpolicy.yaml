@@ -28,7 +28,6 @@ spec:
     matchLabels:
       k8s-app: crowdsec
       type: lapi
-  enableDefaultDeny: {ingress: false}   # observation only: nothing is blocked yet
   ingress:
     - fromEndpoints:
         - matchLabels:

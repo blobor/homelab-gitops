@@ -42,7 +42,6 @@ spec:
     matchLabels:
       app.kubernetes.io/name: server
       app.kubernetes.io/instance: immich
-  enableDefaultDeny: {ingress: false}   # observation only: nothing is blocked yet
   ingress:
     - fromEndpoints:
         - matchLabels:
@@ -66,7 +65,6 @@ spec:
     matchLabels:
       app.kubernetes.io/name: machine-learning
       app.kubernetes.io/instance: immich
-  enableDefaultDeny: {ingress: false}   # observation only: nothing is blocked yet
   ingress:
     - fromEndpoints:
         - matchLabels:

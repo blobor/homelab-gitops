@@ -3,5 +3,6 @@ kind: Kustomization
 namespace: kite
 resources:
   - rbac.yaml
+  - networkpolicy.yaml
 generators:
   - secret-generator.yaml

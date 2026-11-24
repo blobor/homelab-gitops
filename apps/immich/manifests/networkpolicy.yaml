@@ -32,3 +32,45 @@ spec:
         - matchLabels: {app.kubernetes.io/name: server, app.kubernetes.io/instance: immich}
       toPorts:
         - ports: [{port: "6379", protocol: TCP}]
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: immich-server
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: server
+      app.kubernetes.io/instance: immich
+  enableDefaultDeny: {ingress: false}   # observation only: nothing is blocked yet
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: traefik
+            app.kubernetes.io/instance: traefik-internal-traefik
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: traefik
+            app.kubernetes.io/instance: traefik-public-traefik
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: glance
+            app: glance
+      toPorts:
+        - ports: [{port: "2283", protocol: TCP}]
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: immich-machine-learning
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: machine-learning
+      app.kubernetes.io/instance: immich
+  enableDefaultDeny: {ingress: false}   # observation only: nothing is blocked yet
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: server
+            app.kubernetes.io/instance: immich
+      toPorts:
+        - ports: [{port: "3003", protocol: TCP}]

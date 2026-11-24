@@ -7,7 +7,6 @@ spec:
     matchLabels:
       app.kubernetes.io/name: kite
       app.kubernetes.io/instance: kite
-  enableDefaultDeny: {ingress: false}   # observation only: nothing is blocked yet
   ingress:
     - fromEndpoints:
         - matchLabels:

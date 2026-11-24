@@ -29,7 +29,6 @@ spec:
     matchLabels:
       app.kubernetes.io/name: authentik
       app.kubernetes.io/component: server
-  enableDefaultDeny: {ingress: false}   # observation only: nothing is blocked yet
   ingress:
     - fromEndpoints:
         - matchLabels:
@@ -54,6 +53,5 @@ spec:
     matchLabels:
       app.kubernetes.io/name: authentik
       app.kubernetes.io/component: worker
-  enableDefaultDeny: {ingress: false}   # observation only: nothing is blocked yet
   ingress:
     - {}

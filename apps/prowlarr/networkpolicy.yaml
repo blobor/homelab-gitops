@@ -1,0 +1,24 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: prowlarr
+spec:
+  endpointSelector:
+    matchLabels: {app: prowlarr}
+  enableDefaultDeny: {ingress: false}   # observation only: nothing is blocked yet
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: traefik
+            app.kubernetes.io/instance: traefik-internal-traefik
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: glance
+            app: glance
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: sonarr
+            app: sonarr
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: radarr
+            app: radarr
+      toPorts:
+        - ports: [{port: "9696", protocol: TCP}]

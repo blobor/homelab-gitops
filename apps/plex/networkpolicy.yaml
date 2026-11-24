@@ -1,0 +1,22 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: plex
+spec:
+  endpointSelector:
+    matchLabels: {app: plex}
+  enableDefaultDeny: {ingress: false}   # observation only: nothing is blocked yet
+  ingress:
+    - fromEntities: [world]
+      toPorts:
+        - ports: [{port: "32400", protocol: TCP}]
+    # Seerr uses the LoadBalancer address, but Cilium sees its pod, not world.
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: glance
+            app: glance
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: seerr
+            app: seerr
+      toPorts:
+        - ports: [{port: "32400", protocol: TCP}]

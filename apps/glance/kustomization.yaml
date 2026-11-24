@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: glance
 resources:
   - glance.yaml
+  - networkpolicy.yaml
 configMapGenerator:
   - name: glance-config
     files:

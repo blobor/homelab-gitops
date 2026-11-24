@@ -6,5 +6,6 @@ resources:
   - deployment.yaml
   - service.yaml
   - backup.yaml
+  - networkpolicy.yaml
 generators:
   - secret-generator.yaml

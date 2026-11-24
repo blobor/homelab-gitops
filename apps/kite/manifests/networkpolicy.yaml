@@ -1,0 +1,20 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: kite
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: kite
+      app.kubernetes.io/instance: kite
+  enableDefaultDeny: {ingress: false}   # observation only: nothing is blocked yet
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: traefik
+            app.kubernetes.io/instance: traefik-internal-traefik
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: glance
+            app: glance
+      toPorts:
+        - ports: [{port: "8080", protocol: TCP}]

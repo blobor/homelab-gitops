@@ -12,6 +12,8 @@ spec:
     spec:
       backoffLimit: 1
       template:
+        metadata:
+          labels: {app: recyclarr}
         spec:
           restartPolicy: Never
           automountServiceAccountToken: false

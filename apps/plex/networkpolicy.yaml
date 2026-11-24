@@ -5,7 +5,6 @@ metadata:
 spec:
   endpointSelector:
     matchLabels: {app: plex}
-  enableDefaultDeny: {ingress: false}   # observation only: nothing is blocked yet
   ingress:
     - fromEntities: [world]
       toPorts:

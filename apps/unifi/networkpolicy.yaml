@@ -1,0 +1,22 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: unifi
+spec:
+  endpointSelector:
+    matchLabels: {app: unifi}
+  enableDefaultDeny: {ingress: false}   # observation only: nothing is blocked yet
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: traefik
+            app.kubernetes.io/instance: traefik-internal-traefik
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: glance
+            app: glance
+      toPorts:
+        - ports: [{port: "8443", protocol: TCP}]
+    # The devices. With a second worker this traffic can come from another node, and then it is world, not this subnet.
+    - fromCIDR: [10.20.30.0/24]
+      toPorts:
+        - ports: [{port: "8080", protocol: TCP}, {port: "3478", protocol: UDP}]

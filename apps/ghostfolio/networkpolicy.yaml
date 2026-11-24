@@ -40,7 +40,6 @@ metadata:
 spec:
   endpointSelector:
     matchLabels: {app: ghostfolio}
-  enableDefaultDeny: {ingress: false}   # observation only: nothing is blocked yet
   ingress:
     - fromEndpoints:
         - matchLabels:

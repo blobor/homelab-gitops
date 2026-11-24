@@ -50,6 +50,5 @@ spec:
     matchLabels:
       k8s-app: crowdsec
       type: agent
-  enableDefaultDeny: {ingress: false}   # observation only: nothing is blocked yet
   ingress:
     - {}

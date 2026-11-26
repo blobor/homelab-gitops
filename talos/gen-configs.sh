@@ -5,7 +5,7 @@ cd "$(dirname "$0")"
 # renovate: datasource=docker depName=ghcr.io/siderolabs/talosctl
 VERSION=v1.14.7
 # renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
-K8S_VERSION=v1.37.2
+K8S_VERSION=v1.37.3
 SCHEMATIC=ffd4517dc0df0a9c622c37e5b326342173922790f712a01f4437e4df0bb0faf6
 out=_out
 rm -rf "$out"; mkdir -m 700 "$out"

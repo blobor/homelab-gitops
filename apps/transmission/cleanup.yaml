@@ -1,0 +1,56 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cleanup
+spec:
+  schedule: "30 3 * * *"
+  timeZone: Europe/Kyiv
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 600
+      template:
+        metadata:
+          labels: {app: transmission-cleanup}
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1031
+            runAsGroup: 65538
+            seccompProfile: {type: RuntimeDefault}
+          containers:
+            - name: cleanup
+              image: python:3.15.2-alpine3.24
+              command: [python3, -B, /scripts/cleanup.py]
+              env:
+                - {name: DRY_RUN, value: "true"}
+                - {name: RPC_URL, value: http://transmission-web:9091/transmission/rpc}
+                - {name: SCOPE_DIRS, value: "/data/downloads/movies,/data/downloads/tv"}
+                - {name: LAST_SEEDER_EXTRA_DAYS, value: "14"}
+                - name: TRACKER_RULES
+                  valueFrom: {secretKeyRef: {name: transmission-cleanup, key: TRACKER_RULES}}
+                - name: RPC_USER
+                  valueFrom: {secretKeyRef: {name: transmission-rpc, key: USER}}
+                - name: RPC_PASS
+                  valueFrom: {secretKeyRef: {name: transmission-rpc, key: PASS}}
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities: {drop: [ALL]}
+              resources:
+                requests: {cpu: 10m, memory: 32Mi}
+                limits: {memory: 128Mi}
+              volumeMounts:
+                - {name: scripts, mountPath: /scripts, readOnly: true}
+                # Same path as in Transmission, so its downloadDir works as is.
+                - {name: media, mountPath: /data/downloads, subPath: downloads, readOnly: true}
+          volumes:
+            - name: scripts
+              configMap: {name: cleanup-script}
+            - name: media
+              persistentVolumeClaim: {claimName: media, readOnly: true}

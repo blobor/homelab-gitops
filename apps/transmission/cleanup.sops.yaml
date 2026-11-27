@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: transmission-cleanup
+stringData:
+    TRACKER_RULES: ENC[AES256_GCM,data:hldcbtpAAh0+NOcQLRygtUew6w495I0o+n1jw5JmOkb8y9wcHAfPvlroEl1aUhC8yw==,iv:JhEtDCx3uvqMZCPohegRdNjuyeK9XJ4xuwGlU8c6k6g=,tag:GCFGGhHLdWtuGPsPopTJ7w==,type:str]
+sops:
+    age:
+        - enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBzSWx0ZklRZHM1S2tibFJx
+            TzUyZ1REZFlSVWpRSlorK2dkTi91OEcvMm1jCm45SGMrbm1IY2pQYUVVVmxIZFRs
+            RmJaeGYzeHRHd0tDRXVxT1MxNjNVMW8KLS0tIHd3UitjL2JHUVR2WUlhaVM4Yy8z
+            OVY5VzBxZGE0bG5Wc1VQSHRwT0w0MkEKXYn5UQ3tmB1GaO5S8i3d7dke9MUXf9rz
+            uYcl+iP7TRefVLscCAzdxfHgpASUoBUswrrixJJb/HLELsguedCfkQ==
+            -----END AGE ENCRYPTED FILE-----
+          recipient: age1q53shld6cugy5y4c7d4n2ltlc03zpz9shuuqr5tqgzkr8v40ta4qnaj44q
+    encrypted_regex: ^(data|stringData)$
+    lastmodified: "2026-11-27T13:22:55Z"
+    mac: ENC[AES256_GCM,data:6SxlUKBfw4uFBOhst45iRhA3hC8Zx4YPkAP+B9ow42a9rbY9hya07pzWqofefQxZW2kblkAiS+ttQQT3OjMNjXqfvxjcaVkT+dgkuwokE6NargGy9zxERqhuB1hTPnRy9DB4cKL+etkHZxd3kNgWXLaAzyRC7Q8wyGltXejCLbg=,iv:e7LAIeZN8iRAzC/avXXC4poSddG/KeQhbrUYduf0Lv8=,tag:wN5+QZNc+pajLEEn1Pz34Q==,type:str]
+    version: 3.13.3

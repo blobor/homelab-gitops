@@ -7,5 +7,9 @@ resources:
   - service.yaml
   - backup.yaml
   - networkpolicy.yaml
+  - cleanup.yaml
+configMapGenerator:
+  - name: cleanup-script
+    files: [cleanup.py]
 generators:
   - secret-generator.yaml

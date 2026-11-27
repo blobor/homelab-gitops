@@ -7,5 +7,5 @@ patches:
   - target: {kind: DaemonSet, name: intel-gpu-plugin}
     patch: |
       - op: add
-        path: /spec/template/spec/containers/0/args
-        value: ["-shared-dev-num=5"]
+        path: /spec/template/spec/containers/0/args/-
+        value: "-shared-dev-num=5"

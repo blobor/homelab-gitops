@@ -19,6 +19,9 @@ spec:
         - matchLabels:
             k8s:io.kubernetes.pod.namespace: radarr
             app: radarr
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: transmission
+            app: transmission-cleanup
       toPorts:
         - ports: [{port: "9091", protocol: TCP}]
     - fromEntities: [world]
